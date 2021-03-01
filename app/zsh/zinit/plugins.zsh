@@ -10,6 +10,10 @@ zinit snippet PZTM::completion
 zinit ice as"completion"
 zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 
+# docker-compose completion
+zinit ice as"completion"
+zinit snippet https://github.com/docker/compose/blob/master/contrib/completion/zsh/_docker-compose
+
 # zsh-users/autosuggestions
 zinit ice wait lucid atload"!_zsh_autosuggest_start"
 zinit light zsh-users/zsh-autosuggestions
