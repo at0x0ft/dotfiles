@@ -1,10 +1,11 @@
 # zsh-users/fast-syntax-highlighting
-zinit ice wait lucid atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay"
+zinit ice wait lucid atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay"
 zinit light zdharma/fast-syntax-highlighting
 
 # prezto completion
-zinit ice wait lucid svn blockf
+zinit ice svn blockf
 zinit snippet PZTM::completion
+zinit cdclear -q
 
 # docker completion
 zinit ice as"completion"
@@ -26,3 +27,7 @@ zinit load zdharma/history-search-multi-word
 # Load the pure theme, with zsh-async library that's bundled with it.
 zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
 zinit light sindresorhus/pure
+
+# Enable completion
+zinit wait lucid atload"zicompinit; zicdreplay" blockf for \
+    zsh-users/zsh-completions
