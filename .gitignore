@@ -1,0 +1,13 @@
+# general
+!.gitignore
+!README.md
+
+# zsh
+/app/zsh
+!/app/zsh/rc.zsh
+!/app/zsh/keybinds.zsh
+
+# zsh/zinit
+/app/zsh/zinit
+!/app/zsh/zinit/rc.zsh
+!/app/zsh/zinit/plugins.zsh
