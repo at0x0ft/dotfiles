@@ -11,3 +11,7 @@
 /app/zsh/zinit
 !/app/zsh/zinit/rc.zsh
 !/app/zsh/zinit/plugins.zsh
+
+# brew
+/app/brew
+!/app/brew/rc.sh

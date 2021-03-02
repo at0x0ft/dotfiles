@@ -19,6 +19,10 @@ zinit snippet https://github.com/docker/compose/blob/master/contrib/completion/z
 zinit ice wait lucid atload"!_zsh_autosuggest_start"
 zinit light zsh-users/zsh-autosuggestions
 
+# Load history and directory snippet from Prezto modules
+zinit snippet PZTM::history
+zinit snippet PZTM::directory
+
 # zdharma/history-search-multi-word
 zstyle ":history-search-multi-word" page-size "11"
 zinit ice wait"1" lucid
