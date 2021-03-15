@@ -3,15 +3,16 @@
 !README.md
 
 # zsh
-/app/zsh
+/app/zsh/*
 !/app/zsh/rc.zsh
+!/app/zsh/envs.zsh
 !/app/zsh/keybinds.zsh
 
 # zsh/zinit
-/app/zsh/zinit
+/app/zsh/zinit/*
 !/app/zsh/zinit/rc.zsh
 !/app/zsh/zinit/plugins.zsh
 
 # brew
-/app/brew
+/app/brew/*
 !/app/brew/rc.sh
