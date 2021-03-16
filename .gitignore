@@ -1,18 +1,33 @@
-# general
-!.gitignore
-!README.md
+*
+/app/*
+!/app/
+/bak/*
+!/bak/
+
+# brew
+/app/brew/*
+!/app/brew/
+!/app/brew/rc.sh
+
+# vim
+/app/vim/*
+!/app/vim/
+!/app/vim/rc.vim
 
 # zsh
 /app/zsh/*
-!/app/zsh/rc.zsh
+!/app/zsh/
 !/app/zsh/envs.zsh
 !/app/zsh/keybinds.zsh
 
 # zsh/zinit
 /app/zsh/zinit/*
-!/app/zsh/zinit/rc.zsh
+!/app/zsh/zinit/
+!/app/zsh/zinit/rc.template.zsh
 !/app/zsh/zinit/plugins.zsh
 
-# brew
-/app/brew/*
-!/app/brew/rc.sh
+# general
+!.gitignore
+!README.md
+!init.sh
+!reset.sh

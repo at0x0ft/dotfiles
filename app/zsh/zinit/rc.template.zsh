@@ -1,15 +1,7 @@
-local ZINITRC_PATH=`readlink -f $HOME/.zinit`
-
 if [[ -f "$HOME/.zinit/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
     module_path+=( "$HOME/.zinit/bin/zmodules/Src" )
     zmodload zdharma/zplugin
 fi
-
-# Change .zcompdump location
-typeset -A ZINIT
-ZINIT[ZCOMPDUMP_PATH]=$ZINITRC_PATH
-
-unset ZINITRC_PATH
 
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
@@ -24,5 +16,3 @@ source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 ### End of Zinit's installer chunk
-
-source $HOME/.zinit/plugins.zsh
