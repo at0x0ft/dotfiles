@@ -3,6 +3,8 @@
 !/app/
 /bak/*
 !/bak/
+/bin/*
+!/bin/
 
 # brew
 /app/brew/*
@@ -25,6 +27,10 @@
 !/app/zsh/zinit/
 !/app/zsh/zinit/rc.template.zsh
 !/app/zsh/zinit/plugins.zsh
+
+# bin/scripts
+!/bin/init-all.sh
+!/bin/reset-all.sh
 
 # general
 !.gitignore
