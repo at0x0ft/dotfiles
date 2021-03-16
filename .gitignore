@@ -1,36 +1,40 @@
 *
-/app/*
-!/app/
-/bak/*
-!/bak/
-/bin/*
-!/bin/
+/src/*
+!/src/
+/test/*
+!/test/
+/src/app/*
+!/src/app/
+/src/bak/*
+!/src/bak/
+/src/bin/*
+!/src/bin/
 
 # brew
-/app/brew/*
-!/app/brew/
-!/app/brew/rc.sh
+/src/app/brew/*
+!/src/app/brew/
+!/src/app/brew/rc.sh
 
 # vim
-/app/vim/*
-!/app/vim/
-!/app/vim/rc.vim
+/src/app/vim/*
+!/src/app/vim/
+!/src/app/vim/rc.vim
 
 # zsh
-/app/zsh/*
-!/app/zsh/
-!/app/zsh/envs.zsh
-!/app/zsh/keybinds.zsh
+/src/app/zsh/*
+!/src/app/zsh/
+!/src/app/zsh/envs.zsh
+!/src/app/zsh/keybinds.zsh
 
 # zsh/zinit
-/app/zsh/zinit/*
-!/app/zsh/zinit/
-!/app/zsh/zinit/rc.template.zsh
-!/app/zsh/zinit/plugins.zsh
+/src/app/zsh/zinit/*
+!/src/app/zsh/zinit/
+!/src/app/zsh/zinit/rc.template.zsh
+!/src/app/zsh/zinit/plugins.zsh
 
 # bin/scripts
-!/bin/init-all.sh
-!/bin/reset-all.sh
+!/src/bin/init-all.sh
+!/src/bin/reset-all.sh
 
 # general
 !.gitignore
