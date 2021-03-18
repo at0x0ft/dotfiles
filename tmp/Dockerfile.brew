@@ -1,0 +1,50 @@
+# syntax = docker/dockerfile:1.2
+ARG VERSION=20.04
+FROM ubuntu:${VERSION}
+
+ARG USER_NAME=testuser
+ARG USER_PASSWORD=testuser
+ARG DOTFILES_PATH=.
+
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
+    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    sudo \
+ && useradd -s /bin/bash -m -G sudo ${USER_NAME} \
+ && echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd
+
+USER ${USER_NAME}
+ARG USER_HOMEDIR=/home/${USER_NAME}
+WORKDIR ${USER_HOMEDIR}
+ARG DOTFILES_DST=${USER_HOMEDIR}/.dotfiles
+
+RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
+    echo ${USER_PASSWORD} | sudo -S apt-get update && echo ${USER_PASSWORD} | DEBIAN_FRONTEND=noninteractive sudo -S apt-get upgrade -y \
+ && echo ${USER_PASSWORD} | DEBIAN_FRONTEND=noninteractive sudo -S apt-get install -y --no-install-recommends \
+    ca-certificates \
+    build-essential \
+    curl \
+    file \
+    git \
+ && echo ${USER_PASSWORD} | sudo -S apt-get autoremove -y
+
+RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
+    echo ${USER_PASSWORD} | sudo -S sh -c "echo \"${USER_NAME} ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers" \
+ && yes | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
+ && sudo sed -i '$d' /etc/sudoers \
+ && if [ -d ~/.linuxbrew ]; then eval $(~/.linuxbrew/bin/brew shellenv); \
+    elif [ -d /home/linuxbrew/.linuxbrew ]; then eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv); fi \
+ && brew install \
+    gcc \
+    git \
+    zsh \
+    subversion \
+    autoconf \
+    ncurses \
+ && echo ${USER_PASSWORD} | sudo -S sh -c "echo $(which zsh) >> /etc/shells" \
+ && echo ${USER_PASSWORD} | sudo -S chsh ${USER_NAME} -s $(which zsh)
+
+COPY ${DOTFILES_PATH} ${DOTFILES_DST}
+# RUN ${DOTFILES_DST}/src/bin/install.sh
+
+CMD [ "su", "-", "testuser" ]
