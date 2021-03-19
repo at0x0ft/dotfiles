@@ -1,43 +1,7 @@
-/src/*
-!/src/
-/src/app/*
-!/src/app/
-/src/bak/*
-!/src/bak/
-/src/bin/*
-!/src/bin/
+*.log
 
-# brew
-/src/app/brew/*
-!/src/app/brew/
-!/src/app/brew/rc.sh
+# ignore generated links
+/src/current/conf
 
-# vim
-/src/app/vim/*
-!/src/app/vim/
-!/src/app/vim/rc.vim
-
-# zsh
-/src/app/zsh/*
-!/src/app/zsh/
-!/src/app/zsh/envs.zsh
-!/src/app/zsh/keybinds.zsh
-
-# zsh/zinit
-/src/app/zsh/zinit/*
-!/src/app/zsh/zinit/
-!/src/app/zsh/zinit/rc.template.zsh
-!/src/app/zsh/zinit/plugins.zsh
-
-# bin/scripts
-!/src/bin/init-all.sh
-!/src/bin/reset-all.sh
-
-# tests
-/test/*.log
-
-# general
-!.gitignore
-!README.md
-!init.sh
-!reset.sh
+# zsh compiled file
+*.zwc
