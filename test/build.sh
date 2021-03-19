@@ -14,7 +14,10 @@ readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly DOTFILES_ROOT=$(cd "${SCRIPT_ROOT}/.."; pwd -P)
 
 readonly GIVEN_PATH="$(pwd -P)/${1}"
-if [ ! -f ${GIVEN_PATH} ]; then echo "Not exist: ${GIVEN_PATH}"; exit 1; fi
+if [ ! -f ${GIVEN_PATH} ]; then
+    echo "Not exist: ${GIVEN_PATH}" >&2
+    exit 1
+fi
 
 readonly DOCKERFILE_PATH="$(cd $(dirname ${GIVEN_PATH}); pwd -P)/$(basename ${1})"
 readonly DOCKERFILE_ROOT=$(dirname ${DOCKERFILE_PATH})
