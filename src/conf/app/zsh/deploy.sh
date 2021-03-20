@@ -14,7 +14,7 @@ readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly DOTFILES_SRC_ROOT="$(cd "${SCRIPT_ROOT}/../../.."; pwd -P)"
 readonly ZSHRC_PATH="$("${SCRIPT_ROOT}/get-rc-path.sh")"
 
-readonly backup_original_zshrc="${SCRIPT_ROOT}/backup-original.zshrc.sh"
+readonly backup_original_zshrc="${SCRIPT_ROOT}/backup-original-zshrc.sh"
 
 ${backup_original_zshrc}
 

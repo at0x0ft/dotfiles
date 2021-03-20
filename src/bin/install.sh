@@ -15,5 +15,7 @@ readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/.."; pwd -P)
 readonly CURRENT_SETTING_SCRIPTS="${DOTFILES_SRC_ROOT}/current/bin"
 
 readonly provisioning="${CURRENT_SETTING_SCRIPTS}/provisioning.sh"
+readonly deploy="${CURRENT_SETTING_SCRIPTS}/deploy.sh"
 
 ${provisioning}
+${deploy}

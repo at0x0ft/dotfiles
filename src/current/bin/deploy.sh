@@ -12,39 +12,25 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
-readonly DOTFILES_SRC_ROOT="$(cd ${CURRENT_ROOT}/..; pwd -P)"
-readonly DEPLOYED_DIR="${CURRENT_ROOT}/deployed"
-readonly DEPLOYED_APPS="${DEPLOYED_DIR}/app"
-readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
-readonly CURRENT_LIBRARY_SCRIPTS="${CURRENT_ROOT}/lib"
-${CURRENT_LIBRARY_SCRIPTS}/validate-config-link.sh
-readonly CONFIG_LINK=$("${CURRENT_LIBRARY_SCRIPTS}/get-config-link.sh")
+readonly DEPLOY_SCRIPTS="${SCRIPT_ROOT}/deploy"
 
-readonly is_valid_command="${CURRENT_LIBRARY_SCRIPTS}/is-valid-command.sh"
-readonly make_relative_symlink="${LIBRARY_SCRIPTS}/make-relative-symlink.sh"
-readonly app_deploy_script="deploy.sh"
+readonly get_preferred_shell_link="${DEPLOY_SCRIPTS}/get-preferred-shell-link.sh"
+readonly get_preferred_package_manager_link="${DEPLOY_SCRIPTS}/get-preferred-package-manager-link.sh"
+readonly deploy_app="${DEPLOY_SCRIPTS}/deploy-app.sh"
 
-readonly exec_command=$(basename ${1})
-echo ${exec_command}
-if ! $(${is_valid_command} ${exec_command}); then
-    echo "[Error] Given app command (${exec_command}) is not executable." >&2
-    exit 1
-fi
+echo 'Deploying...'
 
-echo ${1}
-echo $(basename $(dirname ${1}))
+echo 'Detecting preferred shell type...'
+readonly pref_shell_reallink=$(${get_preferred_shell_link})
+echo "Detected preferred shell type: $(basename ${pref_shell_reallink})"
+echo 'Deploying...'
+${deploy_app} ${pref_shell_reallink}
 
-${1}/${app_deploy_script}
+echo 'Detecting preferred package manager type...'
+readonly pref_package_manager_reallink=$(${get_preferred_package_manager_link})
+echo "Detected preferred package manager type: $(basename ${pref_package_manager_reallink})"
+echo 'Deploying...'
+${deploy_app} ${pref_package_manager_reallink}
 
-readonly link_org_path="${DEPLOYED_APPS}/${exec_command}"
-${make_relative_symlink} ${link_org_path} ${1}
-
-readonly deploy_type="$(basename $(dirname ${1}))"
-case ${deploy_type} in
-    'shell' )
-        ${make_relative_symlink} "${DEPLOYED_DIR}/shell" ${link_org_path}
-        ;;
-    'package-manager' )
-        ${make_relative_symlink} "${DEPLOYED_DIR}/package-manager" ${link_org_path}
-        ;;
-esac
+echo 'Deploying other apps'
+# TODO

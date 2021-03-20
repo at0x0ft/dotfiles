@@ -11,13 +11,12 @@ readonly SCRIPT_PATH=$(
     echo "$(pwd -P)/${self##*/}"
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
 
-readonly DEPLOYED_SHELL_LINK="${CURRENT_ROOT}/deployed/shell"
-if [ ! -L ${DEPLOYED_SHELL_LINK} ]; then
-    echo "Error: current system deployed shell link (${DEPLOYED_SHELL_LINK}) not found." >&2
+readonly deployed_shell_link="$(${SCRIPT_ROOT}/get-deployed-directory.sh)/shell"
+if [ ! -L ${deployed_shell_link} ]; then
+    echo "Error: current system deployed shell link (${deployed_shell_link}) not found." >&2
     exit 1
 fi
 
-readonly get_rc_path="${DEPLOYED_SHELL_LINK}/get-rc-path.sh"
+readonly get_rc_path="${deployed_shell_link}/get-rc-path.sh"
 echo $(${get_rc_path})

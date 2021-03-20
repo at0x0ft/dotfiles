@@ -11,9 +11,6 @@ readonly SCRIPT_PATH=$(
     echo "$(pwd -P)/${self##*/}"
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly DOTFILES_ROOT=$(cd "${SCRIPT_ROOT}/.."; pwd -P)
-readonly RESET_SCRIPT_PATTERN="${DOTFILES_ROOT}/app/*/reset.sh"
+readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
 
-for f in $(find ${RESET_SCRIPT_PATTERN} -maxdepth 1 -type f); do
-    ${f}
-done
+echo "${CURRENT_ROOT}/deployed"
