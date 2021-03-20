@@ -57,7 +57,7 @@ get_relpath_from() {
     if [ ! "${result}" = '' ]; then
         echo "${result}${dst_path}"
     else
-        echo "${dst_path#/}"
+        echo ".${dst_path}"
     fi
 }
 
