@@ -11,13 +11,10 @@ readonly SCRIPT_PATH=$(
     echo "$(pwd -P)/${self##*/}"
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly CURRENT_SETTING_PATH="$(cd ${SCRIPT_ROOT}/../..; pwd -P)"
-readonly CONFIG_LINK="${CURRENT_SETTING_PATH}/conf"
+readonly CURRENT_SETTING_ROOT="$(cd ${SCRIPT_ROOT}/../..; pwd -P)"
+readonly CURRENT_LIBRARY_SCRIPTS="${CURRENT_SETTING_ROOT}/lib"
+${CURRENT_LIBRARY_SCRIPTS}/validate-config-link.sh
+readonly CONFIG_LINK=$("${CURRENT_LIBRARY_SCRIPTS}/get-config-link.sh")
 readonly PREFERRED_SHELL_LINK="${CONFIG_LINK}/shell/preferred"
-
-if [ ! -L ${CONFIG_LINK} ]; then
-    echo "Error: symlink ${CONFIG_LINK} not found." >&2
-    exit 1
-fi
 
 echo $(cd "$(dirname ${PREFERRED_SHELL_LINK})/"$(readlink ${PREFERRED_SHELL_LINK}); pwd)
