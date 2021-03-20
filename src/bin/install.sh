@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -ex
+set -e
 
 readonly SCRIPT_PATH=$(
     self=${0}
