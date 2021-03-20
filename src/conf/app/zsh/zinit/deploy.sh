@@ -16,7 +16,7 @@ readonly SCRIPT_PATH="$(
     echo "$(pwd -P)/${self##*/}"
 )"
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly ZSHRC_PATH="${HOME}/.zshrc"
+readonly ZSHRC_PATH="$("${SCRIPT_ROOT}/../get-rc-path.sh")"
 readonly ZINITRC_PATH="${SCRIPT_ROOT}/rc.zsh"
 readonly ZINITRC_TEMPLATE_PATH="${SCRIPT_ROOT}/rc.template.zsh"
 
