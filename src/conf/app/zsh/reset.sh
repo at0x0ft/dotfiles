@@ -16,9 +16,9 @@ readonly SCRIPT_PATH=$(
     echo "$(pwd -P)/${self##*/}"
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly DOTFILES_ROOT=$(cd "${SCRIPT_ROOT}/../.."; pwd -P)
+readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/../.."; pwd -P)
 readonly ZSHRC_PATH="${HOME}/.zshrc"
-readonly ZSHRC_BACKUP_PATH="${DOTFILES_ROOT}/bak/zshrc.bak"
+readonly ZSHRC_BACKUP_PATH="${DOTFILES_SRC_ROOT}/bak/zshrc.bak"
 
 for f in $(find ${SCRIPT_ROOT}/* -maxdepth 1 -type d); do
     ${f}/$(basename ${SCRIPT_PATH})
