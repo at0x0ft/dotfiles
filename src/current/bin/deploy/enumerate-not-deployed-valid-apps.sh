@@ -18,7 +18,6 @@ ${LIBRARY_SCRIPTS}/validate-config-link.sh
 readonly CONFIG_LINK=$("${LIBRARY_SCRIPTS}/get-config-link.sh")
 readonly AVAILABLE_APP_PATTERN="${CONFIG_LINK}/app"
 
-readonly is_valid_command="${LIBRARY_SCRIPTS}/is-valid-command.sh"
 readonly get_deployed_apps="${LIBRARY_SCRIPTS}/get-deployed-apps.sh"
 
 is_deployed() {
@@ -32,12 +31,8 @@ is_deployed() {
     echo ${result}
 }
 
-is_valid_app() {
-    echo $(${is_valid_command} $(basename ${1}))
-}
-
 for app in $(find ${AVAILABLE_APP_PATTERN} -maxdepth 1 -type l); do
-    if [ "$(is_valid_app ${app})" = "true" -a "$(is_deployed ${app})" = "false" ]; then
+    if ! $(is_deployed ${app}); then
         echo ${app}
     fi
 done
