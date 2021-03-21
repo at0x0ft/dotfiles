@@ -12,6 +12,6 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly DEPLOYED_DIR="$(${SCRIPT_ROOT}/get-deployed-directory.sh)"
-readonly DEPLOYED_APPS="${DEPLOYED_DIR}/app/*"
+readonly DEPLOYED_APPS="${DEPLOYED_DIR}/app"
 
 find ${DEPLOYED_APPS} -maxdepth 1 -type l

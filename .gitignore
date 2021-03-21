@@ -7,4 +7,4 @@
 *.zwc
 
 # ignore zinit generated rcfile
-/src/conf/app/zsh/zinit/rc.zsh
+/src/conf/app/zinit/rc.zsh
