@@ -13,7 +13,7 @@ readonly SCRIPT_PATH=$(
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/../.."; pwd -P)
 readonly ZSHRC_PATH=$("${SCRIPT_ROOT}/get-rc-path.sh")
-readonly BACKUP_DST_PATH="${DOTFILES_SRC_ROOT}/current/app/bak/zshrc"
+readonly BACKUP_DST_PATH="${DOTFILES_SRC_ROOT}/current/bak/zshrc"
 
 if [ -f ${BACKUP_DST_PATH} ]; then
     mv ${BACKUP_DST_PATH} ${ZSHRC_PATH}
