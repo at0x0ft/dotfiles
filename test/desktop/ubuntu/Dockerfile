@@ -19,7 +19,7 @@ RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/
 USER ${USER_NAME}
 WORKDIR ${USER_HOMEDIR}
 
-RUN mkdir ${USER_HOMEDIR}/.cache
+RUN mkdir ${USER_HOMEDIR}/.cache ${USER_HOMEDIR}/.cache/Homebrew
 RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
     if [ -d ~/.linuxbrew ]; then eval $(~/.linuxbrew/bin/brew shellenv); \
     elif [ -d /home/linuxbrew/.linuxbrew ]; then eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv); fi \
@@ -29,6 +29,7 @@ RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
     zsh \
     subversion \
     autoconf \
+    vim \
  && echo ${USER_PASSWORD} | sudo -S sh -c "echo $(which zsh) >> /etc/shells" \
  && echo ${USER_PASSWORD} | sudo -S chsh ${USER_NAME} -s $(which zsh)
 
