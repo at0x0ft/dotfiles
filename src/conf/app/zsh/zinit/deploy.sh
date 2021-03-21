@@ -24,5 +24,3 @@ cp ${ZINITRC_TEMPLATE_PATH} ${ZINITRC_PATH}
 echo "source \"${SCRIPT_ROOT}/plugins.zsh\"" >> ${ZINITRC_PATH}
 
 echo "source \"${ZINITRC_PATH}\"" >> ${ZSHRC_PATH}
-
-zsh -i -c 'zinit module build; @zinit-scheduler burst || true'

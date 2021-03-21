@@ -3,6 +3,12 @@ if [[ -f "$HOME/.zinit/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
     zmodload zdharma/zplugin
 fi
 
+# Change .zcompdump location
+typeset -A ZINIT
+ZINIT[ZCOMPDUMP_PATH]="$HOME/.zinit"
+
+unset ZINITRC_PATH
+
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
     print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"

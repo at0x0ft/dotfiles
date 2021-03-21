@@ -11,7 +11,7 @@ ARG DOTFILES_DST=${USER_HOMEDIR}/.dotfiles
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
     apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    build-essential \
+    libncurses-dev \
  && useradd -s /bin/bash -m -G sudo ${USER_NAME} \
  && echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd \
  && chown -R ${USER_NAME} /home/linuxbrew/.linuxbrew
@@ -29,7 +29,6 @@ RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
     zsh \
     subversion \
     autoconf \
-    ncurses \
  && echo ${USER_PASSWORD} | sudo -S sh -c "echo $(which zsh) >> /etc/shells" \
  && echo ${USER_PASSWORD} | sudo -S chsh ${USER_NAME} -s $(which zsh)
 

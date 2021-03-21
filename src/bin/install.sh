@@ -12,10 +12,12 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/.."; pwd -P)
-readonly CURRENT_SETTING_SCRIPTS="${DOTFILES_SRC_ROOT}/current/bin"
+readonly CURRENT_SCRIPTS="${DOTFILES_SRC_ROOT}/current/bin"
 
-readonly provisioning="${CURRENT_SETTING_SCRIPTS}/provisioning.sh"
-readonly deploy="${CURRENT_SETTING_SCRIPTS}/deploy.sh"
+readonly provisioning="${CURRENT_SCRIPTS}/provisioning.sh"
+readonly deploy="${CURRENT_SCRIPTS}/deploy.sh"
+readonly compile="${CURRENT_SCRIPTS}/compile.sh"
 
 ${provisioning}
 ${deploy}
+${compile}
