@@ -12,12 +12,15 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/../..; pwd -P)"
-readonly LIBRARY_SCRIPTS="${CURRENT_ROOT}/lib"
-readonly DEPLOYED_DIR="$(${LIBRARY_SCRIPTS}/get-deployed-directory.sh)"
+readonly DOTFILES_SRC_ROOT="$(cd ${CURRENT_ROOT}/..; pwd -P)"
+readonly CURRENT_LIBRARY_SCRIPTS="${CURRENT_ROOT}/lib"
+readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
+readonly DEPLOYED_DIR="$(${CURRENT_LIBRARY_SCRIPTS}/get-deployed-directory.sh)"
 readonly DEPLOYED_APPS="${DEPLOYED_DIR}/app"
 readonly DEPLOYED_PACKAGE_MANAGER_LINK="${DEPLOYED_DIR}/package-manager"
 
 readonly deploy_app="${SCRIPT_ROOT}/deploy-app.sh"
+readonly make_relative_symlink="${LIBRARY_SCRIPTS}/make-relative-symlink.sh"
 
 ${deploy_app} ${1}
 
