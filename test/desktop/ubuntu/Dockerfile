@@ -9,13 +9,17 @@ ARG USER_HOMEDIR=/home/${USER_NAME}
 ARG DOTFILES_DST=${USER_HOMEDIR}/.dotfiles
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
-RUN useradd -s /bin/bash -m -G sudo ${USER_NAME} \
+RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
+    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    build-essential \
+ && useradd -s /bin/bash -m -G sudo ${USER_NAME} \
  && echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd \
  && chown -R ${USER_NAME} /home/linuxbrew/.linuxbrew
 
 USER ${USER_NAME}
 WORKDIR ${USER_HOMEDIR}
 
+RUN mkdir ${USER_HOMEDIR}/.cache
 RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
     if [ -d ~/.linuxbrew ]; then eval $(~/.linuxbrew/bin/brew shellenv); \
     elif [ -d /home/linuxbrew/.linuxbrew ]; then eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv); fi \

@@ -3,5 +3,8 @@
 # ignore generated links
 /src/current/conf
 
-# zsh compiled file
+# ignore zsh compiled file
 *.zwc
+
+# ignore zinit generated rcfile
+/src/conf/app/zsh/zinit/rc.zsh

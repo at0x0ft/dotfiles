@@ -17,4 +17,4 @@ readonly CURRENT_LIBRARY_SCRIPTS="${CURRENT_ROOT}/lib"
 
 readonly rcfile_path=$("${CURRENT_LIBRARY_SCRIPTS}/get-shellrc-path.sh")
 
-echo ". \"${SCRIPT_ROOT}/rc.sh\"" >> ${SHELLRC_LINK}
+echo ". \"${SCRIPT_ROOT}/rc.sh\"" >> ${rcfile_path}
