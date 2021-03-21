@@ -27,4 +27,4 @@ echo "Detected OS type: ${os_type}"
 echo 'Creating link to current system config.'
 ${create_config_link} ${os_type}
 
-echo 'Finish provisioning.'
+echo 'Provisioning finished!'

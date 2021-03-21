@@ -17,6 +17,7 @@ readonly DEPLOY_SCRIPTS="${SCRIPT_ROOT}/deploy"
 readonly get_preferred_shell_link="${DEPLOY_SCRIPTS}/get-preferred-shell-link.sh"
 readonly get_preferred_package_manager_link="${DEPLOY_SCRIPTS}/get-preferred-package-manager-link.sh"
 readonly deploy_app="${DEPLOY_SCRIPTS}/deploy-app.sh"
+readonly enumaerate_not_deployed_valid_apps="${DEPLOY_SCRIPTS}/enumerate-not-deployed-valid-apps.sh"
 
 echo 'Deploying...'
 
@@ -32,5 +33,10 @@ echo "Detected preferred package manager type: $(basename ${pref_package_manager
 echo 'Deploying...'
 ${deploy_app} ${pref_package_manager_reallink}
 
-echo 'Deploying other apps'
-# TODO
+echo 'Deploying other apps...'
+for app in $(${enumaerate_not_deployed_valid_apps}); do
+    echo "Deploying $(basename ${app})..."
+    ${deploy_app} ${app}
+done
+
+echo 'Deployment finished!'
