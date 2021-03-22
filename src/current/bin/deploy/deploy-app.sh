@@ -18,10 +18,9 @@ readonly DEPLOYED_DIR="$(${CURRENT_LIBRARY_SCRIPTS}/get-deployed-directory.sh)"
 readonly DEPLOYED_APPS="${DEPLOYED_DIR}/app"
 readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
 
-readonly is_valid_command="${CURRENT_LIBRARY_SCRIPTS}/is-valid-command.sh"
-readonly make_relative_symlink="${LIBRARY_SCRIPTS}/make-relative-symlink.sh"
 readonly can_deploy_script="can-deploy.sh"
 readonly app_deploy_script="deploy.sh"
+readonly make_relative_symlink="${LIBRARY_SCRIPTS}/make-relative-symlink.sh"
 
 ${1}/${can_deploy_script}
 
