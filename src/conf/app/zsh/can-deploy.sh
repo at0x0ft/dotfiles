@@ -16,10 +16,14 @@ readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
 readonly CURRENT_LIBRARY_SCRIPTS="${CURRENT_ROOT}/lib"
 readonly EXEC_COMMAND="$(basename ${SCRIPT_ROOT})"
 
-readonly is_valid_command="${CURRENT_LIBRARY_SCRIPTS}/is-valid-command.sh"
-
-if ! $(${is_valid_command} ${EXEC_COMMAND}); then
-    echo "[Error] Command (${exec_command}) is not executable." >&2
-    echo "[Error] ${exec_command} cannot deploy." >&2
-    exit 1
-fi
+readonly current_login_shell="$(basename $("${CURRENT_LIBRARY_SCRIPTS}/get-login-shell.sh"))"
+case ${current_login_shell} in
+    "${EXEC_COMMAND}"* )
+        :
+        ;;
+    * )
+        echo "[Error] ${EXEC_COMMAND} is not the login shell." >&2
+        echo "[Error] ${EXEC_COMMAND} cannot deploy." >&2
+        exit 1
+        ;;
+esac

@@ -1,10 +1,12 @@
 *.log
+*.zwc
 
 # ignore generated links
 /src/current/conf
+!/src/current/deployed/
+/src/current/deployed/*
+!/src/current/deployed/app/
+/src/current/deployed/app/*
 
-# ignore zsh compiled file
-*.zwc
-
-# ignore zinit generated rcfile
-/src/conf/app/zinit/rc.zsh
+# Don't ignore .gitignore
+!.gitignore

@@ -15,9 +15,8 @@ readonly ZSH_PATH="${SCRIPT_ROOT}/../zsh"
 readonly ZSHRC_PATH=$("${ZSH_PATH}/get-rc-path.sh")
 readonly ZINITRC_TEMPLATE_PATH="${SCRIPT_ROOT}/rc.template.zsh"
 readonly ZINITRC_PATH="${SCRIPT_ROOT}/rc.zsh"
+readonly ZINIT_PLUGINS_DIRECTIVE="source \"${SCRIPT_ROOT}/plugins.zsh\""
+readonly ZINITRC_DIRECTIVE="source \"${ZINITRC_PATH}\""
 
-cp ${ZINITRC_TEMPLATE_PATH} ${ZINITRC_PATH}
-
-echo "source \"${SCRIPT_ROOT}/plugins.zsh\"" >> ${ZINITRC_PATH}
-
-echo "source \"${ZINITRC_PATH}\"" >> ${ZSHRC_PATH}
+printf '%s\n' "${ZINITRC_DIRECTIVE}" >> "${ZSHRC_PATH}"
+printf '%s\n' "${ZINIT_PLUGINS_DIRECTIVE}" >> "${ZSHRC_PATH}"

@@ -21,3 +21,6 @@ readonly compile="${CURRENT_SCRIPTS}/compile.sh"
 ${provisioning}
 ${deploy}
 ${compile}
+
+printf 'Now, you should restart shell!\n'
+printf 'ex: exec [your preferred shell] -l\n'

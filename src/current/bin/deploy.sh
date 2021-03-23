@@ -23,17 +23,17 @@ readonly deploy_app="${DEPLOY_SCRIPTS}/deploy-app.sh"
 
 echo 'Deploying...'
 
-echo 'Detecting preferred shell type...'
-readonly pref_shell_reallink=$(${get_preferred_shell_link})
-echo "Detected preferred shell type: $(basename ${pref_shell_reallink})"
-echo 'Deploying...'
-${deploy_shell} ${pref_shell_reallink}
-
 echo 'Detecting preferred package manager type...'
 readonly pref_package_manager_reallink=$(${get_preferred_package_manager_link})
 echo "Detected preferred package manager type: $(basename ${pref_package_manager_reallink})"
 echo 'Deploying...'
 ${deploy_package_manager} ${pref_package_manager_reallink}
+
+echo 'Detecting preferred shell type...'
+readonly pref_shell_reallink=$(${get_preferred_shell_link})
+echo "Detected preferred shell type: $(basename ${pref_shell_reallink})"
+echo 'Deploying...'
+${deploy_shell} ${pref_shell_reallink}
 
 echo 'Deploying other apps...'
 for app in $(${enumerate_not_deployed_valid_apps}); do

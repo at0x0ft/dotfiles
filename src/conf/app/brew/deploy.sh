@@ -14,7 +14,7 @@ readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/../../.."; pwd -P)
 readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
 readonly CURRENT_LIBRARY_SCRIPTS="${CURRENT_ROOT}/lib"
+readonly SETTING_DIRECTIVE=". \"${SCRIPT_ROOT}/rc.sh\""
 
-readonly rcfile_path=$("${CURRENT_LIBRARY_SCRIPTS}/get-shellrc-path.sh")
-
-echo ". \"${SCRIPT_ROOT}/rc.sh\"" >> ${rcfile_path}
+readonly shellprofile_path=$("${SCRIPT_ROOT}/get-shellprofile-path.sh")
+printf '%s\n' "${SETTING_DIRECTIVE}" >> "${shellprofile_path}"

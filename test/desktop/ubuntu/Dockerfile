@@ -21,7 +21,7 @@ WORKDIR ${USER_HOMEDIR}
 
 RUN mkdir ${USER_HOMEDIR}/.cache ${USER_HOMEDIR}/.cache/Homebrew
 RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
-    if [ -d ~/.linuxbrew ]; then eval $(~/.linuxbrew/bin/brew shellenv); \
+    if [ -d ${USER_HOMEDIR}/.linuxbrew ]; then eval $(${USER_HOMEDIR}/.linuxbrew/bin/brew shellenv); \
     elif [ -d /home/linuxbrew/.linuxbrew ]; then eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv); fi \
  && brew install \
     gcc \
@@ -31,7 +31,9 @@ RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
     autoconf \
     vim \
  && echo ${USER_PASSWORD} | sudo -S sh -c "echo $(which zsh) >> /etc/shells" \
- && echo ${USER_PASSWORD} | sudo -S chsh ${USER_NAME} -s $(which zsh)
+ && echo ${USER_PASSWORD} | sudo -S chsh ${USER_NAME} -s $(which zsh) \
+ && command mkdir -p "${USER_HOMEDIR}/.zinit" && command chmod g-rwX "${USER_HOMEDIR}/.zinit" \
+ && command git clone https://github.com/zdharma/zinit "${USER_HOMEDIR}/.zinit/bin"
 
 COPY --chown=${USER_NAME}:${USER_NAME} ${DOTFILES_PATH} ${DOTFILES_DST}
 RUN ${DOTFILES_DST}/src/bin/install.sh

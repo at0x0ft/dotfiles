@@ -1,2 +1,16 @@
+./**/*.log
+./**/*.zwc
 tmp
 test
+.dockerignore
+
+# ignore created link
+src/current/conf
+!src/current/deployed/
+src/current/deployed/*
+!src/current/deployed/.gitignore
+!src/current/deployed/app
+src/current/deployed/app/*
+!src/current/deployed/app/.gitignore
+
+!.gitignore

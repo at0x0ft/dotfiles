@@ -12,10 +12,12 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly ZSHRC_PATH="$("${SCRIPT_ROOT}/get-rc-path.sh")"
+readonly ENVS_DIRECTIVE="source \"${SCRIPT_ROOT}/envs.zsh\""
+readonly KEYBINDS_DIRECTIVE="source \"${SCRIPT_ROOT}/keybinds.zsh\""
 
 readonly backup_original_zshrc="${SCRIPT_ROOT}/backup-original-zshrc.sh"
 
 ${backup_original_zshrc}
 
-echo "source \"${SCRIPT_ROOT}/envs.zsh\"" >> ${ZSHRC_PATH}
-echo "source \"${SCRIPT_ROOT}/keybinds.zsh\"" >> ${ZSHRC_PATH}
+printf '%s\n' "${ENVS_DIRECTIVE}" >> "${ZSHRC_PATH}"
+printf '%s\n' "${KEYBINDS_DIRECTIVE}" >> "${ZSHRC_PATH}"
