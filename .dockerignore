@@ -6,7 +6,7 @@ test
 
 # ignore created link
 src/current/conf
-!src/current/deployed/
+!src/current/deployed
 src/current/deployed/*
 !src/current/deployed/.gitignore
 !src/current/deployed/app
