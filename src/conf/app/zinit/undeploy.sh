@@ -15,6 +15,7 @@ readonly DOTFILES_SRC_ROOT="$(cd "${SCRIPT_ROOT}/../../.."; pwd -P)"
 readonly ZSH_PATH="$(cd ${SCRIPT_ROOT}/../zsh; pwd -P)"
 readonly ZSHRC_PATH=$("${ZSH_PATH}/get-rc-path.sh")
 readonly ZINITRC_PATH="${SCRIPT_ROOT}/rc.zsh"
+readonly ZCOMPDUMP_PATH="${HOME}/.zcompdump"
 readonly ZINIT_PLUGINS_DIRECTIVE="source \"${SCRIPT_ROOT}/plugins.zsh\""
 readonly ZINITRC_DIRECTIVE="source \"${ZINITRC_PATH}\""
 
@@ -24,6 +25,7 @@ delete_directive_from_rcfile() {
     return 0
 }
 
+[ -f ${ZCOMPDUMP_PATH} ] && rm -f ${ZCOMPDUMP_PATH}
 
 delete_directive_from_rcfile "${ZINIT_PLUGINS_DIRECTIVE}"
 delete_directive_from_rcfile "${ZINITRC_DIRECTIVE}"
