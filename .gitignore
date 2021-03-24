@@ -3,10 +3,6 @@
 
 # ignore generated links
 /src/current/conf
-!/src/current/deployed
-/src/current/deployed/*
-!/src/current/deployed/app
-/src/current/deployed/app/*
 
 # Don't ignore .gitignore
 !.gitignore
