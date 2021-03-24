@@ -1,10 +1,22 @@
 # dotfiles
-My preferences
 
-# How to initialize
+My preferences.
 
-## For Windows
+# How to install
 
-```ps1
-iwr -useb https://raw.githubusercontent.com/at0x0ft/dotfiles/master/win/test.ps1 | iex
+## Linux (currently, only supporting ubuntu)
+
+**After installing your preferred apps**, exec following command.
+
+```sh
+git clone https://github.com/at0x0ft/dotfiles.git ${HOME}/.dotfiles
+${HOME}/.dotfiles/src/bin/install.sh
+```
+
+Note: If you want to know how to install apps, please refer to Dockerfiles in [`test` directory](./test) .
+
+# How to redeploy
+
+```sh
+${HOME}/.dotfiles/src/bin/redeploy.sh
 ```
