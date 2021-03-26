@@ -7,6 +7,7 @@ ARG USER_PASSWORD=testuser
 ARG DOTFILES_PATH
 ARG USER_HOMEDIR=/home/${USER_NAME}
 ARG DOTFILES_DST=${USER_HOMEDIR}/.dotfiles
+ARG TERM
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
@@ -36,6 +37,7 @@ RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
  && command git clone https://github.com/zdharma/zinit "${USER_HOMEDIR}/.zinit/bin"
 
 COPY --chown=${USER_NAME}:${USER_NAME} ${DOTFILES_PATH} ${DOTFILES_DST}
+ENV TERM ${TERM}
 RUN ${DOTFILES_DST}/src/bin/install.sh
 
 CMD [ "su", "-", "testuser" ]

@@ -30,4 +30,5 @@ DOCKER_BUILDKIT=1 docker image build \
     -f ${DOCKERFILE_PATH} \
     --build-arg VERSION=${TAG_VERSION} \
     --build-arg DOTFILES_PATH=. \
+    --build-arg TERM="${TERM}" \
     ${DOTFILES_ROOT} --progress=plain 2>&1 | tee ${LOG_PATH}
