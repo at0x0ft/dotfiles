@@ -26,4 +26,4 @@ compile() {
 
 compile
 
-sed -i -e "1s|^|source \"${COMPILEDRC_PATH}\"\n|" ${ZSHRC_PATH}
+sed -i -e "1s|^|${COMPILEDRC_DIRECTIVE}\n|" ${ZSHRC_PATH}
