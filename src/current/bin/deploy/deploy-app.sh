@@ -22,7 +22,10 @@ readonly can_deploy_script="can-deploy.sh"
 readonly app_deploy_script="deploy.sh"
 readonly make_relative_symlink="${LIBRARY_SCRIPTS}/make-relative-symlink.sh"
 
-${1}/${can_deploy_script}
+if ! $(${1}/${can_deploy_script}); then
+    echo "[Error] App ($(basename ${1})) cannot deploy." >&2
+    exit 1
+fi
 
 ${1}/${app_deploy_script}
 

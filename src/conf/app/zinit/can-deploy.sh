@@ -29,8 +29,8 @@ zsh_is_deployed() {
     echo ${result}
 }
 
-if ! $(zsh_is_deployed); then
-    echo "[Error] ${ZSH_NAME} is not deployed." >&2
-    echo "[Error] $(basename ${SCRIPT_ROOT}) cannot deploy." >&2
-    exit 1
+if $(zsh_is_deployed); then
+    echo true
+else
+    echo false
 fi

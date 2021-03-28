@@ -18,8 +18,8 @@ readonly EXEC_COMMAND="$(basename ${SCRIPT_ROOT})"
 
 readonly is_valid_command="${CURRENT_LIBRARY_SCRIPTS}/is-valid-command.sh"
 
-if ! $(${is_valid_command} ${EXEC_COMMAND}); then
-    echo "[Error] Command (${exec_command}) is not executable." >&2
-    echo "[Error] ${exec_command} cannot deploy." >&2
-    exit 1
+if $(${is_valid_command} ${EXEC_COMMAND}); then
+    echo true
+else
+    echo false
 fi

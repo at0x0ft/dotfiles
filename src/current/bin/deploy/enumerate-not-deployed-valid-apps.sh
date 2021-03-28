@@ -17,6 +17,7 @@ readonly LIBRARY_SCRIPTS="${CURRENT_ROOT}/lib"
 ${LIBRARY_SCRIPTS}/validate-config-link.sh
 readonly CONFIG_LINK=$("${LIBRARY_SCRIPTS}/get-config-link.sh")
 readonly AVAILABLE_APP_PATTERN="${CONFIG_LINK}/app"
+readonly CAN_DEPLOY_SCRIPT_NAME='can-deploy.sh'
 
 readonly get_deployed_apps="${LIBRARY_SCRIPTS}/get-deployed-apps.sh"
 
@@ -32,7 +33,7 @@ is_deployed() {
 }
 
 for app in $(find ${AVAILABLE_APP_PATTERN} -maxdepth 1 -type l); do
-    if ! $(is_deployed ${app}); then
+    if [ "$(is_deployed ${app})" = 'false' -a "$(${app}/${CAN_DEPLOY_SCRIPT_NAME})" = 'true' ]; then
         echo ${app}
     fi
 done

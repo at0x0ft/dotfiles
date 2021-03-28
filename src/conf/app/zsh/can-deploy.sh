@@ -19,11 +19,9 @@ readonly EXEC_COMMAND="$(basename ${SCRIPT_ROOT})"
 readonly current_login_shell="$(basename $("${CURRENT_LIBRARY_SCRIPTS}/get-login-shell.sh"))"
 case ${current_login_shell} in
     "${EXEC_COMMAND}"* )
-        :
+        echo true
         ;;
     * )
-        echo "[Error] ${EXEC_COMMAND} is not the login shell." >&2
-        echo "[Error] ${EXEC_COMMAND} cannot deploy." >&2
-        exit 1
+        echo false
         ;;
 esac
