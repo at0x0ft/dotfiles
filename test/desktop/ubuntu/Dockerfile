@@ -30,7 +30,11 @@ RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
     zsh \
     subversion \
     autoconf \
-    vim \
+    neovim \
+    fzf \
+    bat \
+    exa \
+    git-delta \
  && echo ${USER_PASSWORD} | sudo -S sh -c "echo $(which zsh) >> /etc/shells" \
  && echo ${USER_PASSWORD} | sudo -S chsh ${USER_NAME} -s $(which zsh) \
  && command mkdir -p "${USER_HOMEDIR}/.zinit" && command chmod g-rwX "${USER_HOMEDIR}/.zinit" \
