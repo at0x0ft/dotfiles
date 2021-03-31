@@ -1,6 +1,3 @@
-# Reverse completion with Shift+Tab
-bindkey "^[[Z" reverse-menu-complete
-
 # Word forward/backword
 bindkey "^[[1;5C" vi-forward-word
 bindkey "^[[1;5D" vi-backward-word

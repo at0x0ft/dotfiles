@@ -24,7 +24,6 @@ readonly ZINITRC_DIRECTIVE="source \"${ZINITRC_PATH}\""
 readonly UBUNTU_SPECIFIC_DIRECTIVE='skip_global_compinit=1'
 
 printf '%s\n' "${ZINITRC_DIRECTIVE}" >> "${ZSHRC_PATH}"
-printf '%s\n' "${ZINIT_PLUGINS_DIRECTIVE}" >> "${ZSHRC_PATH}"
 
 readonly get_os_type="${CURRENT_LIBRARY_SCRIPTS}/get-os-type.sh"
 if [ "$(${get_os_type})" = 'Ubuntu' ]; then

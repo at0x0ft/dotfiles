@@ -1,0 +1,25 @@
+{
+  "settings": {
+    "package_manager": "brew",
+    "shell": "zsh",
+    "plugin_manager": "zinit"
+  },
+  "install": {
+    "default": [
+      "brew",
+      "zinit"
+    ],
+    "brew": [
+      "zsh",
+      "git",
+      "neovim",
+      "fzf",
+      "bat",
+      "exa",
+      "git-delta"
+    ],
+    "zinit": [
+      "p10k"
+    ]
+  }
+}

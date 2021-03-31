@@ -21,3 +21,6 @@ ${backup_original_zshrc}
 
 printf '%s\n' "${ENVS_DIRECTIVE}" >> "${ZSHRC_PATH}"
 printf '%s\n' "${KEYBINDS_DIRECTIVE}" >> "${ZSHRC_PATH}"
+
+# later move this script
+${SCRIPT_ROOT}/../zinit/initialize.sh
