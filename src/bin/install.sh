@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 set -e
 
+# ${1} = [optional]
+
 readonly SCRIPT_PATH=$(
     self=${0}
     while [ -L "${self}" ]; do
@@ -18,7 +20,7 @@ readonly provisioning="${CURRENT_SCRIPTS}/provisioning.sh"
 readonly deploy="${CURRENT_SCRIPTS}/deploy.sh"
 readonly compile="${CURRENT_SCRIPTS}/compile.sh"
 
-${provisioning}
+${provisioning} "${1}"
 ${deploy}
 ${compile}
 

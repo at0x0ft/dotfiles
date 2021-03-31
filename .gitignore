@@ -3,6 +3,7 @@
 
 # ignore generated links
 /src/current/conf
+/src/current/preference
 
 # zsh
 /src/conf/app/shell/zsh/rc.zsh

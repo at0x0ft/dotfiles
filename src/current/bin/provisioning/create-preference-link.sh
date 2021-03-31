@@ -13,10 +13,17 @@ readonly SCRIPT_PATH=$(
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/../..; pwd -P)"
 readonly DOTFILES_SRC_ROOT="$(cd ${CURRENT_ROOT}/..; pwd -P)"
-readonly SYSTEM_CONFIG_ROOT="$(cd ${DOTFILES_SRC_ROOT}/conf/sys; pwd -P)"
+readonly PREFERENCE_SRC_LINK="${CURRENT_ROOT}/preference"
 readonly CONFIG_LINK=$("${CURRENT_ROOT}/lib/get-config-link.sh")
+readonly PREFERENCE_DEFAULT_DST_LINK="${CONFIG_LINK}/preference.json"
 
-readonly get_config_path="${SYSTEM_CONFIG_ROOT}/get-config-path.sh"
 readonly make_relative_symlink="${DOTFILES_SRC_ROOT}/lib/make-relative-symlink.sh"
 
-${make_relative_symlink} -a "${CONFIG_LINK}" "$(${get_config_path} ${1})"
+if [ "${1}" = '' ]; then
+    ${make_relative_symlink} "${PREFERENCE_SRC_LINK}" "${PREFERENCE_DEFAULT_DST_LINK}"
+elif [ -f "${1}" ]; then
+    cp "${1}" "${PREFERENCE_SRC_LINK}"
+else
+    printf 'Error: Given preference path not found.\n' >&2
+    exit 1
+fi
