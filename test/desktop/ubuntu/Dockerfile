@@ -13,6 +13,7 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloa
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
     apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libncurses-dev \
+    jq \
  && useradd -s /bin/bash -m -G sudo ${USER_NAME} \
  && echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd \
  && chown -R ${USER_NAME} /home/linuxbrew/.linuxbrew
@@ -42,6 +43,6 @@ RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
 
 COPY --chown=${USER_NAME}:${USER_NAME} ${DOTFILES_PATH} ${DOTFILES_DST}
 ENV TERM ${TERM}
-RUN ${DOTFILES_DST}/src/bin/install.sh
+# RUN ${DOTFILES_DST}/src/bin/install.sh
 
 CMD [ "su", "-", "testuser" ]
