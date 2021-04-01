@@ -13,7 +13,7 @@ readonly SCRIPT_PATH=$(
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/../..; pwd -P)"
 readonly DOTFILES_SRC_ROOT="$(cd ${CURRENT_ROOT}/..; pwd -P)"
-readonly PREFERENCE_SRC_LINK="${CURRENT_ROOT}/preference"
+readonly PREFERENCE_SRC_LINK="${CURRENT_ROOT}/pref/preference.json"
 readonly CONFIG_LINK=$("${CURRENT_ROOT}/lib/get-config-link.sh")
 readonly PREFERENCE_DEFAULT_DST_LINK="${CONFIG_LINK}/preference.json"
 
