@@ -11,9 +11,9 @@ readonly SCRIPT_PATH=$(
     echo "$(pwd -P)/${self##*/}"
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/../..; pwd -P)"
+readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
 readonly DOTFILES_SRC_ROOT="$(cd ${CURRENT_ROOT}/..; pwd -P)"
-readonly PREFERENCE_SRC_LINK="${CURRENT_ROOT}/pref/preference.json"
+readonly PREFERENCE_SRC_LINK="${SCRIPT_ROOT}/preference.json"
 readonly CONFIG_LINK=$("${CURRENT_ROOT}/lib/get-config-link.sh")
 readonly PREFERENCE_DEFAULT_DST_LINK="${CONFIG_LINK}/preference.json"
 
