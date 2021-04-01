@@ -18,7 +18,7 @@ readonly get_os_type="${CURRENT_ROOT}/lib/get-os-type.sh"
 readonly create_config_link="${PROVISIONING_SCRIPTS}/create-config-link.sh"
 readonly create_preference_link="${PROVISIONING_SCRIPTS}/create-preference-link.sh"
 
-printf 'Provisioning for deployment...\n'
+printf 'Provisioning...\n'
 
 printf 'Detecting OS type...\n'
 readonly os_type=$(${get_os_type})
