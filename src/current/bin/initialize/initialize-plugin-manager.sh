@@ -24,7 +24,7 @@ readonly register_initialized_package_manager="${INITIALIZED_APPS_PATH}/register
 #     exit 1
 # fi
 
-echo "path = ${1}, method = ${2}"
+# echo "path = ${1}, method = ${2}"
 ${1}/${INITIALIZE_SCRIPT_NAME} "${2}"
 
 ${register_initialized_package_manager} "${INITIALIZED_PLUGIN_MANAGER_LINKNAME}" "${1}"
