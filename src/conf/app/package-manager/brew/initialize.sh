@@ -27,5 +27,6 @@ set -e
 #     echo false
 # fi
 
-# later implement installing zinit
-printf "[Debug]: called zinit/initialize.sh with ${1}\n" >&2
+
+# later implement installing brew
+printf "[Debug]: called brew/initialize.sh with ${1}\n" >&2
