@@ -1,17 +1,3 @@
 *.log
 *.zwc
-
-# ignore generated links
-/src/current/conf
-/src/current/preference
-
-# zsh
-/src/conf/app/shell/zsh/rc.zsh
-
-# zinit
-/src/conf/app/plugin-manager/zinit/rc.zsh
-/src/conf/app/plugin-manager/zinit/completion/external.zsh
-/src/conf/app/plugin-manager/zinit/theme/external.zsh
-
-# Don't ignore .gitignore
 !.gitignore
