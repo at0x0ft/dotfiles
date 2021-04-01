@@ -1,25 +1,28 @@
 {
-  "settings": {
-    "package_manager": "brew",
-    "shell": "zsh",
-    "plugin_manager": "zinit"
+  "package_manager": {
+    "name": "brew",
+    "with": "default"
   },
-  "install": {
-    "default": [
-      "brew",
-      "zinit"
-    ],
-    "brew": [
-      "zsh",
-      "git",
-      "neovim",
-      "fzf",
-      "bat",
-      "exa",
-      "git-delta"
-    ],
-    "zinit": [
-      "p10k"
-    ]
-  }
+  "shell": {
+    "name": "zsh",
+    "with": "brew"
+  },
+  "plugin_manager": {
+    "name": "zinit",
+    "with": "default"
+  },
+  "package": [
+    {
+      "name": "exa",
+      "with": "brew"
+    },
+    {
+      "name": "fzf",
+      "with": "brew"
+    },
+    {
+      "name": "p10k",
+      "with": "zinit"
+    }
+  ]
 }
