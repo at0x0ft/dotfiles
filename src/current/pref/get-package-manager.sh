@@ -12,11 +12,6 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly PREFERENCE_PATH="${SCRIPT_ROOT}/preference.json"
-readonly JQ_PATH='.package_manager.name'
-readonly JQ_INIT_METHOD_PATH='.package_manager.with'
+readonly JQ_QUERY='.package_manager | [ .name, .with ] | join(" ")'
 
-if [ "${1}" = '-w' ]; then
-    jq -r "${JQ_INIT_METHOD_PATH}" "${PREFERENCE_PATH}"
-else
-    jq -r "${JQ_PATH}" "${PREFERENCE_PATH}"
-fi
+jq -r "${JQ_QUERY}" "${PREFERENCE_PATH}"
