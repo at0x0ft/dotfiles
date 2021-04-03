@@ -29,4 +29,4 @@ set -e
 
 
 # later implement installing brew
-printf "[Debug]: called brew/initialize.sh\n" >&2
+printf "[Debug]: called brew/install.sh with ${1}\n" >&2
