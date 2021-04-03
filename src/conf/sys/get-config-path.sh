@@ -12,22 +12,22 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 
-readonly DESKTOP_UBUNTU_PATH="${SCRIPT_ROOT}/desktop/ubuntu"
+readonly UBUNTU_PATH="${SCRIPT_ROOT}/ubuntu"
 
 not_exist_or_exit() {
     if [ ! -d ${1} ]; then
-        echo "Error: Corresponding config path (${1}) not found." >&2
+        printf "Error: Corresponding config path (${1}) not found.\n" >&2
         exit 1
     fi
 }
 
 case ${1} in
     "Ubuntu")
-        not_exist_or_exit ${DESKTOP_UBUNTU_PATH}
-        echo ${DESKTOP_UBUNTU_PATH}
+        not_exist_or_exit ${UBUNTU_PATH}
+        echo ${UBUNTU_PATH}
         ;;
     * )
-        echo "Error: Corresponding config path not matched with OS type: \"${1}\"." >&2
+        printf "Error: Corresponding config path not matched with OS type: \"${1}\".\n" >&2
         exit 1
         ;;
 esac
