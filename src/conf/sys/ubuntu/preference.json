@@ -1,0 +1,14 @@
+{
+  "user_package_manager": {
+    "name": "brew",
+    "package": [
+      "zsh",
+      "exa",
+      "fzf"
+    ]
+  },
+  "user_shell": {
+    "name": "zsh",
+    "plugin_manager": "zinit"
+  }
+}
