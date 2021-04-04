@@ -28,5 +28,5 @@ set -e
 # fi
 
 
-# later implement installing zinit
-printf "[Debug]: called zinit/initialize.sh\n" >&2
+# later implement installing fzf
+printf "[Debug]: called fzf/initialize.sh\n" >&2

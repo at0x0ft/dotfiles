@@ -29,4 +29,4 @@ set -e
 
 
 # later implement installing zinit
-printf "[Debug]: called zinit/initialize.sh\n" >&2
+printf "[Debug]: called zinit/install.sh with ${1}\n" >&2

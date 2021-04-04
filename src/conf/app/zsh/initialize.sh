@@ -29,4 +29,4 @@ set -e
 
 
 # later implement installing zsh
-printf "[Debug]: called zsh/initialize.sh with ${1}\n" >&2
+printf "[Debug]: called zsh/initialize.sh\n" >&2
