@@ -12,6 +12,6 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly PREFERENCE_PATH="${SCRIPT_ROOT}/preference.json"
-readonly JQ_QUERY='.package[] | [ .name, .with ] | join("/")'
+readonly JQ_QUERY='has("user_shell")'
 
 jq -r "${JQ_QUERY}" "${PREFERENCE_PATH}"
