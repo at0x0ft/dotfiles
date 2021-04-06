@@ -12,33 +12,19 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
+readonly AVAILABLE_APPS="${CURRENT_ROOT}/available/app"
 readonly DEPLOY_SCRIPTS="${SCRIPT_ROOT}/deploy"
+readonly DEPLOY_SCRIPT_NAME="deploy.sh"
 
-readonly get_preferred_shell_link="${DEPLOY_SCRIPTS}/get-preferred-shell-link.sh"
-readonly get_preferred_package_manager_link="${DEPLOY_SCRIPTS}/get-preferred-package-manager-link.sh"
-readonly deploy_shell="${DEPLOY_SCRIPTS}/deploy-shell.sh"
-readonly deploy_package_manager="${DEPLOY_SCRIPTS}/deploy-package-manager.sh"
-readonly enumerate_not_deployed_valid_apps="${DEPLOY_SCRIPTS}/enumerate-not-deployed-valid-apps.sh"
-readonly deploy_app="${DEPLOY_SCRIPTS}/deploy-app.sh"
+get_available_app_deploy_scripts() {
+    find "${AVAILABLE_APPS}" -follow -name "${DEPLOY_SCRIPT_NAME}" -type f
+}
 
-echo 'Deploying...'
-
-echo 'Detecting preferred package manager type...'
-readonly pref_package_manager_reallink=$(${get_preferred_package_manager_link})
-echo "Detected preferred package manager type: $(basename ${pref_package_manager_reallink})"
-echo 'Deploying...'
-${deploy_package_manager} ${pref_package_manager_reallink}
-
-echo 'Detecting preferred shell type...'
-readonly pref_shell_reallink=$(${get_preferred_shell_link})
-echo "Detected preferred shell type: $(basename ${pref_shell_reallink})"
-echo 'Deploying...'
-${deploy_shell} ${pref_shell_reallink}
-
-echo 'Deploying other apps...'
-for app in $(${enumerate_not_deployed_valid_apps}); do
-    echo "Deploying $(basename ${app})..."
-    ${deploy_app} ${app}
+printf 'Deploying...\n'
+for app_deploy in $(get_available_app_deploy_scripts); do
+    app_name="$(basename $(dirname ${app_deploy}))"
+    printf "Deploying ${app_name}...\n"
+    ${app_deploy}
 done
 
-echo 'Deployment finished!'
+printf 'Deployment finished!\n'
