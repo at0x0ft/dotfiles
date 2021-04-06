@@ -15,12 +15,14 @@ readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/../.."; pwd -P)
 readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
 readonly CURRENT_LIBRARY_SCRIPTS="${CURRENT_ROOT}/lib"
 
-is_valid_command() {
+readonly is_valid_command="${SCRIPT_ROOT}/is-valid-command.sh"
+
+get_command_path() {
     local login_shell="$("${CURRENT_LIBRARY_SCRIPTS}/get-login-shell.sh")"
-    if [ ! "${1}" = '' ] && ${login_shell} -l -c "type ${1} > /dev/null 2>&1"; then
-        printf true
-    else
-        printf false
-    fi
+    ${login_shell} -l -c "which ${1}"
 }
-is_valid_command "$@"
+
+if ! $(${is_valid_command} "${1}"); then
+    return 1
+fi
+get_command_path "$@"
