@@ -12,15 +12,33 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly ZSHRC_PATH="$("${SCRIPT_ROOT}/get-rc-path.sh")"
-readonly ENVS_DIRECTIVE="source \"${SCRIPT_ROOT}/envs.zsh\""
-readonly KEYBINDS_DIRECTIVE="source \"${SCRIPT_ROOT}/keybinds.zsh\""
+readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
+readonly PRELOAD_PATH="${SCRIPT_ROOT}/preload/rc.zsh"
+readonly ENV_PATH="${SCRIPT_ROOT}/env/rc.zsh"
+readonly KEYBIND_PATH="${SCRIPT_ROOT}/keybind/rc.zsh"
+readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external/rc.zsh"
+readonly PRELOAD_DIRECTIVE="source '${PRELOAD_PATH}'"
+readonly ENV_DIRECTIVE="source '${ENV_PATH}'"
+readonly KEYBIND_DIRECTIVE="source '${KEYBIND_PATH}'"
+readonly EXTERNAL_DIRECTIVE="source '${EXTERNAL_PATH}'"
+readonly DEPLOY_SCRIPT_NAME='deploy.sh'
 
 readonly backup_original_zshrc="${SCRIPT_ROOT}/backup-original-zshrc.sh"
 
+get_subdir_deploy_scripts() {
+    find "${SCRIPT_ROOT}" -mindepth 2 -name "${DEPLOY_SCRIPT_NAME}" -type f
+}
+
 ${backup_original_zshrc}
 
-printf '%s\n' "${ENVS_DIRECTIVE}" >> "${ZSHRC_PATH}"
-printf '%s\n' "${KEYBINDS_DIRECTIVE}" >> "${ZSHRC_PATH}"
+for sub_deploy in $(get_subdir_deploy_scripts); do
+    echo "debug: ${sub_deploy}"
+    ${sub_deploy}
+done
 
-# later move this script
-${SCRIPT_ROOT}/../zinit/initialize.sh
+printf '%s\n' "${PRELOAD_DIRECTIVE}" >> "${RC_PATH}"
+printf '%s\n' "${ENV_DIRECTIVE}" >> "${RC_PATH}"
+printf '%s\n' "${KEYBIND_DIRECTIVE}" >> "${RC_PATH}"
+printf '%s\n' "${EXTERNAL_DIRECTIVE}" >> "${RC_PATH}"
+
+ln -snvf "${RC_PATH}" "${ZSHRC_PATH}"
