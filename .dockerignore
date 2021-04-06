@@ -13,6 +13,12 @@ src/conf/app/zsh/keybind/rc.zsh
 src/conf/app/zsh/keybind/external.zsh
 src/conf/app/zsh/preload/rc.zsh
 
+# ignore zinit rcfiles
+src/conf/app/zinit/rc.zsh
+src/conf/app/zinit/completion/rc.zsh
+src/conf/app/zinit/completion/external.zsh
+src/conf/app/zinit/theme/rc.zsh
+
 # ignore created link
 src/current/available/app/*
 !src/current/available/app/.gitignore

@@ -11,12 +11,14 @@ readonly SCRIPT_PATH="$(
     echo "$(pwd -P)/${self##*/}"
 )"
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly EXTERNAL_RC_PATH="${SCRIPT_ROOT}/external.zsh"
+readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external.zsh"
 readonly COMPLETION_BASE_DIRECTIVE='zinit as "completion" \'
 readonly INDENT='  '
 
-if [ ! -s "${EXTERNAL_RC_PATH}" ]; then
-    printf '%s\n' "${COMPLETION_BASE_DIRECTIVE}" > "${EXTERNAL_RC_PATH}"
+readonly init_external="${SCRIPT_ROOT}/init-external.sh"
+
+if [ ! -s "${EXTERNAL_PATH}" ]; then
+    printf "${COMPLETION_BASE_DIRECTIVE}\n" > "${EXTERNAL_PATH}"
 fi
 
 append_backslash_to_last_line() {
@@ -24,6 +26,6 @@ append_backslash_to_last_line() {
     local converted="${last_line} "'\\'
     sed -i -e "s|^${last_line}$|${converted}|g" "${1}"
 }
-append_backslash_to_last_line "${EXTERNAL_RC_PATH}"
+append_backslash_to_last_line "${EXTERNAL_PATH}"
 
-printf '%s\n' "${INDENT}${1}" >> "${EXTERNAL_RC_PATH}"
+printf "${INDENT}${1}\n" >> "${EXTERNAL_PATH}"
