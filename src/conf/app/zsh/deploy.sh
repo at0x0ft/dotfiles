@@ -13,8 +13,10 @@ readonly SCRIPT_PATH=$(
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly DEPLOY_SCRIPT_NAME='deploy.sh'
 
-readonly rc_deploy="${SCRIPT_ROOT}/rc/${DEPLOY_SCRIPT_NAME}"
 readonly env_deploy="${SCRIPT_ROOT}/env/${DEPLOY_SCRIPT_NAME}"
+readonly profile_deploy="${SCRIPT_ROOT}/profile/${DEPLOY_SCRIPT_NAME}"
+readonly rc_deploy="${SCRIPT_ROOT}/rc/${DEPLOY_SCRIPT_NAME}"
 
-${rc_deploy}
 ${env_deploy}
+${profile_deploy}
+${rc_deploy}
