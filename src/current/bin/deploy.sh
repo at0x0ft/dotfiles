@@ -17,7 +17,7 @@ readonly DEPLOY_SCRIPTS="${SCRIPT_ROOT}/deploy"
 readonly DEPLOY_SCRIPT_NAME="deploy.sh"
 
 get_available_app_deploy_scripts() {
-    find "${AVAILABLE_APPS}" -follow -name "${DEPLOY_SCRIPT_NAME}" -type f
+    find "${AVAILABLE_APPS}" -follow -maxdepth 2 -name "${DEPLOY_SCRIPT_NAME}" -type f
 }
 
 printf 'Deploying...\n'
