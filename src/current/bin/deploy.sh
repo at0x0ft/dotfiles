@@ -13,7 +13,6 @@ readonly SCRIPT_PATH=$(
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
 readonly AVAILABLE_APPS="${CURRENT_ROOT}/available/app"
-readonly DEPLOY_SCRIPTS="${SCRIPT_ROOT}/deploy"
 readonly DEPLOY_SCRIPT_NAME="deploy.sh"
 
 get_available_app_deploy_scripts() {
