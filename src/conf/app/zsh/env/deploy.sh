@@ -11,29 +11,34 @@ readonly SCRIPT_PATH=$(
     echo "$(pwd -P)/${self##*/}"
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly ZSHRC_PATH="${HOME}/.zshrc"
+readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/../../../.."; pwd -P)
+readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
+readonly ZSHENV_PATH="${HOME}/.zshenv"
+readonly ZSH_BACKUP_PATH="${CURRENT_ROOT}/bak/zsh"
+readonly BACKUP_DST_PATH="${ZSH_BACKUP_PATH}/zshenv"
 readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
-readonly PRELOAD_PATH="${SCRIPT_ROOT}/preload/rc.zsh"
-readonly ENVAR_PATH="${SCRIPT_ROOT}/envar/rc.zsh"
-readonly KEYBIND_PATH="${SCRIPT_ROOT}/keybind/rc.zsh"
-readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external/rc.zsh"
-readonly PRELOAD_DIRECTIVE="source '${PRELOAD_PATH}'"
-readonly ENVAR_DIRECTIVE="source '${ENVAR_PATH}'"
-readonly KEYBIND_DIRECTIVE="source '${KEYBIND_PATH}'"
+readonly GENERAL_PATH="${SCRIPT_ROOT}/general.zsh"
+readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external.zsh"
+readonly GENERAL_DIRECTIVE="source '${GENERAL_PATH}'"
 readonly EXTERNAL_DIRECTIVE="source '${EXTERNAL_PATH}'"
-readonly DEPLOY_SCRIPT_NAME='deploy.sh'
 
-get_subdir_deploy_scripts() {
-    find "${SCRIPT_ROOT}" -mindepth 2 -name "${DEPLOY_SCRIPT_NAME}" -type f
+backup() {
+    if [ ! -d "${ZSH_BACKUP_PATH}" ]; then
+        mkdir "${ZSH_BACKUP_PATH}"
+    fi
+
+    if [ -f "${ZSHENV_PATH}" -a ! -f "${BACKUP_DST_PATH}" ]; then
+        mv "${ZSHENV_PATH}" "${BACKUP_DST_PATH}"
+    fi
 }
 
-for sub_deploy in $(get_subdir_deploy_scripts); do
-    ${sub_deploy}
-done
+backup
 
-printf "${PRELOAD_DIRECTIVE}\n" >> "${RC_PATH}"
-printf "${ENVAR_DIRECTIVE}\n" >> "${RC_PATH}"
-printf "${KEYBIND_DIRECTIVE}\n" >> "${RC_PATH}"
+if [ ! -f "${EXTERNAL_PATH}" ]; then
+    touch "${EXTERNAL_PATH}"
+fi
+
+printf "${GENERAL_DIRECTIVE}\n" >> "${RC_PATH}"
 printf "${EXTERNAL_DIRECTIVE}\n" >> "${RC_PATH}"
 
-ln -snvf "${RC_PATH}" "${ZSHRC_PATH}"
+ln -snvf "${RC_PATH}" "${ZSHENV_PATH}"

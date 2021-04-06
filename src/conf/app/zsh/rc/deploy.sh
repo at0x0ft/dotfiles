@@ -11,7 +11,11 @@ readonly SCRIPT_PATH=$(
     echo "$(pwd -P)/${self##*/}"
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
+readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/../../../.."; pwd -P)
+readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
 readonly ZSHRC_PATH="${HOME}/.zshrc"
+readonly ZSH_BACKUP_PATH="${CURRENT_ROOT}/bak/zsh"
+readonly BACKUP_DST_PATH="${ZSH_BACKUP_PATH}/zshrc"
 readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
 readonly PRELOAD_PATH="${SCRIPT_ROOT}/preload/rc.zsh"
 readonly ENVAR_PATH="${SCRIPT_ROOT}/envar/rc.zsh"
@@ -23,9 +27,22 @@ readonly KEYBIND_DIRECTIVE="source '${KEYBIND_PATH}'"
 readonly EXTERNAL_DIRECTIVE="source '${EXTERNAL_PATH}'"
 readonly DEPLOY_SCRIPT_NAME='deploy.sh'
 
+
+backup() {
+    if [ ! -d "${ZSH_BACKUP_PATH}" ]; then
+        mkdir "${ZSH_BACKUP_PATH}"
+    fi
+
+    if [ -f "${ZSHRC_PATH}" -a ! -f "${BACKUP_DST_PATH}" ]; then
+        mv "${ZSHRC_PATH}" "${BACKUP_DST_PATH}"
+    fi
+}
+
 get_subdir_deploy_scripts() {
     find "${SCRIPT_ROOT}" -mindepth 2 -name "${DEPLOY_SCRIPT_NAME}" -type f
 }
+
+backup
 
 for sub_deploy in $(get_subdir_deploy_scripts); do
     ${sub_deploy}

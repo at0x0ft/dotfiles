@@ -11,6 +11,9 @@ readonly SCRIPT_PATH=$(
     echo "$(pwd -P)/${self##*/}"
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
+readonly DOTFILES_SRC_ROOT="$(cd ${SCRIPT_ROOT}/../../../..; pwd -P)"
+readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
 readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external.zsh"
 
-printf "${1}\n" >> "${EXTERNAL_PATH}"
+readonly delete_line="${LIBRARY_SCRIPTS}/delete-line.sh"
+${delete_line} "${1}" "${EXTERNAL_PATH}"
