@@ -13,4 +13,6 @@ readonly SCRIPT_PATH=$(
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
 
-[ ! -f "${RC_PATH}" ] && touch "${RC_PATH}"
+if [ ! -f "${RC_PATH}" ]; then
+    touch "${RC_PATH}"
+fi

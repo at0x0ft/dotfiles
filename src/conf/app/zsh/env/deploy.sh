@@ -17,7 +17,9 @@ readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external.zsh"
 readonly GENERAL_DIRECTIVE="source '${GENERAL_PATH}'"
 readonly EXTERNAL_DIRECTIVE="source '${EXTERNAL_PATH}'"
 
-[ ! -f "${EXTERNAL_PATH}" ] && touch "${EXTERNAL_PATH}"
+if [ ! -f "${EXTERNAL_PATH}" ]; then
+    touch "${EXTERNAL_PATH}"
+fi
 
 printf '%s\n' "${GENERAL_DIRECTIVE}" >> "${RC_PATH}"
 printf '%s\n' "${EXTERNAL_DIRECTIVE}" >> "${RC_PATH}"
