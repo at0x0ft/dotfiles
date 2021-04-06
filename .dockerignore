@@ -5,13 +5,15 @@ test
 .dockerignore
 
 # ignore zsh rcfiles
-src/conf/app/zsh/rc.zsh
+src/conf/app/zsh/rc/rc.zsh
+src/conf/app/zsh/rc/envar/rc.zsh
+src/conf/app/zsh/rc/envar/external.zsh
+src/conf/app/zsh/rc/external/rc.zsh
+src/conf/app/zsh/rc/keybind/rc.zsh
+src/conf/app/zsh/rc/keybind/external.zsh
+src/conf/app/zsh/rc/preload/rc.zsh
 src/conf/app/zsh/env/rc.zsh
 src/conf/app/zsh/env/external.zsh
-src/conf/app/zsh/external/rc.zsh
-src/conf/app/zsh/keybind/rc.zsh
-src/conf/app/zsh/keybind/external.zsh
-src/conf/app/zsh/preload/rc.zsh
 
 # ignore zinit rcfiles
 src/conf/app/zinit/rc.zsh

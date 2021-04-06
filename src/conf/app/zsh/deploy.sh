@@ -13,11 +13,8 @@ readonly SCRIPT_PATH=$(
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly DEPLOY_SCRIPT_NAME='deploy.sh'
 
-readonly backup_original="${SCRIPT_ROOT}/backup-original.sh"
 readonly rc_deploy="${SCRIPT_ROOT}/rc/${DEPLOY_SCRIPT_NAME}"
 readonly env_deploy="${SCRIPT_ROOT}/env/${DEPLOY_SCRIPT_NAME}"
-
-${backup_original}
 
 ${rc_deploy}
 ${env_deploy}
