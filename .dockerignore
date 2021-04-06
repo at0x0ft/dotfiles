@@ -6,6 +6,8 @@ test
 
 # ignore zsh rcfiles
 src/conf/app/zsh/rc/rc.zsh
+src/conf/app/zsh/rc/alias/rc.zsh
+src/conf/app/zsh/rc/alias/external.zsh
 src/conf/app/zsh/rc/envar/rc.zsh
 src/conf/app/zsh/rc/envar/external.zsh
 src/conf/app/zsh/rc/external/rc.zsh
