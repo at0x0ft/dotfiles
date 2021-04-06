@@ -13,5 +13,4 @@ delete_line() {
     sed -i "${directive_lineno}d" "${2}"
     return 0
 }
-
 delete_line "${@}"
