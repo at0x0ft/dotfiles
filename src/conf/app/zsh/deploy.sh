@@ -32,7 +32,6 @@ get_subdir_deploy_scripts() {
 ${backup_original_zshrc}
 
 for sub_deploy in $(get_subdir_deploy_scripts); do
-    echo "debug: ${sub_deploy}"
     ${sub_deploy}
 done
 
