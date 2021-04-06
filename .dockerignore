@@ -4,13 +4,31 @@ tmp
 test
 .dockerignore
 
+# ignore zsh rcfiles
+src/conf/app/zsh/rc.zsh
+src/conf/app/zsh/env/rc.zsh
+src/conf/app/zsh/env/external.zsh
+src/conf/app/zsh/external/rc.zsh
+src/conf/app/zsh/keybind/rc.zsh
+src/conf/app/zsh/keybind/external.zsh
+src/conf/app/zsh/preload/rc.zsh
+
 # ignore created link
+src/current/available/app/*
+!src/current/available/app/.gitignore
+src/current/available/shell/*
+!src/current/available/shell/.gitignore
+src/current/available/system-package-manager/*
+!src/current/available/system-package-manager/.gitignore
+src/current/available/system-package-manager/package/*
+!src/current/available/system-package-manager/package/.gitignore
+src/current/available/user-package-manager/*
+!src/current/available/user-package-manager/.gitignore
+src/current/available/user-package-manager/package/*
+!src/current/available/user-package-manager/package/.gitignore
+src/current/bak/*
+!src/current/bak/.gitignore
 src/current/conf
-!src/current/deployed
-src/current/deployed/*
-!src/current/deployed/.gitignore
-!src/current/deployed/app
-src/current/deployed/app/*
-!src/current/deployed/app/.gitignore
+src/current/bak/pref/preference.json
 
 !.gitignore
