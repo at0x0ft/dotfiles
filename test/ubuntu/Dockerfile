@@ -43,6 +43,6 @@ RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
 
 COPY --chown=${USER_NAME}:${USER_NAME} ${DOTFILES_PATH} ${DOTFILES_DST}
 ENV TERM ${TERM}
-# RUN ${DOTFILES_DST}/src/bin/install.sh
+RUN ${DOTFILES_DST}/src/bin/install.sh
 
 CMD [ "su", "-", "testuser" ]
