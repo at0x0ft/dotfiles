@@ -12,25 +12,18 @@ readonly SCRIPT_PATH=$(
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
-readonly UNDEPLOY_SCRIPTS="${SCRIPT_ROOT}/undeploy"
+readonly AVAILABLE_APPS="${CURRENT_ROOT}/available/app"
+readonly UNDEPLOY_SCRIPT_NAME="undeploy.sh"
 
-readonly enumerate_normal_deployed_apps="${UNDEPLOY_SCRIPTS}/enumerate-normal-deployed-apps.sh"
-readonly undeploy_app="${UNDEPLOY_SCRIPTS}/undeploy-app.sh"
-readonly undeploy_package_manager="${UNDEPLOY_SCRIPTS}/undeploy-package-manager.sh"
-readonly undeploy_shell="${UNDEPLOY_SCRIPTS}/undeploy-shell.sh"
+get_available_app_undeploy_scripts() {
+    find "${AVAILABLE_APPS}" -follow -maxdepth 2 -name "${UNDEPLOY_SCRIPT_NAME}" -type f
+}
 
-echo 'Undeploying...'
-
-echo 'Undeploying other apps...'
-for app in $(${enumerate_normal_deployed_apps}); do
-    echo "Deploying $(basename ${app})..."
-    ${undeploy_app} ${app}
+printf 'Undeploying...\n'
+for app_undeploy in $(get_available_app_undeploy_scripts); do
+    app_name="$(basename $(dirname ${app_undeploy}))"
+    printf "Undeploying ${app_name}...\n"
+    ${app_undeploy}
 done
 
-echo 'Undeploying shell...'
-${undeploy_shell}
-
-echo 'Undeploying package manager...'
-${undeploy_package_manager}
-
-echo 'Undeployment finished!'
+printf 'Undeployment finished!\n'

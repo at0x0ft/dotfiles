@@ -11,10 +11,11 @@ readonly SCRIPT_PATH=$(
     echo "$(pwd -P)/${self##*/}"
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly SETTING_DIRECTIVE=". \"${SCRIPT_ROOT}\""
+readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/../../.."; pwd -P)
+readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
+readonly RC_PATH="${SCRIPT_ROOT}/rc.sh"
+readonly RC_DIRECTIVE=". '${RC_PATH}'"
 
-readonly shellprofile_path=$("${SCRIPT_ROOT}/get-shellprofile-path.sh")
-readonly directive_lineno=$(grep -n "${SETTING_DIRECTIVE}" "${shellprofile_path}" | cut -d ':' -f1)
-sed -i "${directive_lineno}d" "${shellprofile_path}" && [ ! -s "${shellprofile_path}" ] && rm -f "${shellprofile_path}"
+readonly delete_directive_to_profile="${CURRENT_ROOT}/available/shell/link/profile/delete-directive.sh"
 
-return 0
+${delete_directive_to_profile} "${RC_DIRECTIVE}"
