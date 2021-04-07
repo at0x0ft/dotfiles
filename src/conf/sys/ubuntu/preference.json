@@ -2,9 +2,7 @@
   "user_package_manager": {
     "name": "brew",
     "package": [
-      "zsh",
-      "exa",
-      "fzf"
+      "zsh"
     ]
   },
   "user_shell": {

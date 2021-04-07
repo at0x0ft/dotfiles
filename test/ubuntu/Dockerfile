@@ -13,6 +13,7 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloa
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
     apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libncurses-dev \
+    unzip \
     jq \
  && useradd -s /bin/bash -m -G sudo ${USER_NAME} \
  && echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd \
@@ -29,13 +30,8 @@ RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
     gcc \
     git \
     zsh \
-    subversion \
     autoconf \
     neovim \
-    fzf \
-    bat \
-    exa \
-    git-delta \
  && echo ${USER_PASSWORD} | sudo -S sh -c "echo $(which zsh) >> /etc/shells" \
  && echo ${USER_PASSWORD} | sudo -S chsh ${USER_NAME} -s $(which zsh) \
  && command mkdir -p "${USER_HOMEDIR}/.zinit" && command chmod g-rwX "${USER_HOMEDIR}/.zinit" \
