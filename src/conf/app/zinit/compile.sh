@@ -23,7 +23,6 @@ compile() {
     local login_zsh_shell="$("${CURRENT_LIBRARY_SCRIPTS}/get-login-shell.sh")"
     ${login_zsh_shell} -i -l -c 'zinit module build; @zinit-scheduler burst || true'
 }
-
 compile
 
 ${add_directive_to_zshrc_preload} "${COMPILEDRC_DIRECTIVE}"
