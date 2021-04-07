@@ -1,0 +1,11 @@
+{
+  "default_package_manager": {
+    "package": [
+      "zsh"
+    ]
+  },
+  "user_shell": {
+    "name": "zsh",
+    "plugin_manager": "zinit"
+  }
+}
