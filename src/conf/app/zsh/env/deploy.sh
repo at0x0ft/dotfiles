@@ -27,7 +27,7 @@ backup() {
         mkdir "${ZSH_BACKUP_PATH}"
     fi
 
-    if [ -f "${ZSHENV_PATH}"] && [ ! -f "${BACKUP_DST_PATH}" ]; then
+    if [ -f "${ZSHENV_PATH}" ] && [ ! -f "${BACKUP_DST_PATH}" ]; then
         mv "${ZSHENV_PATH}" "${BACKUP_DST_PATH}"
     fi
 }
