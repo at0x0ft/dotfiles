@@ -17,6 +17,8 @@ src/conf/app/zsh/rc/envar/external.zsh
 src/conf/app/zsh/rc/external/rc.zsh
 src/conf/app/zsh/rc/keybind/rc.zsh
 src/conf/app/zsh/rc/keybind/external.zsh
+src/conf/app/zsh/rc/opt/rc.zsh
+src/conf/app/zsh/rc/opt/external.zsh
 src/conf/app/zsh/rc/preload/rc.zsh
 
 # ignore zinit rcfiles
