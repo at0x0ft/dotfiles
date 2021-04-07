@@ -11,16 +11,19 @@ readonly SCRIPT_PATH=$(
     echo "$(pwd -P)/${self##*/}"
 )
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly SCRIPT_NAME="$(basename ${SCRIPT_PATH})"
 readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
-readonly LIBRARY_SCRIPTS="${CURRENT_ROOT}/lib"
-readonly DEPLOYED_DIR="$(${LIBRARY_SCRIPTS}/get-deployed-directory.sh)"
-readonly DEPLOYED_APPS="${DEPLOYED_DIR}/app"
+readonly AVAILABLE_APPS="${CURRENT_ROOT}/available/app"
+readonly DECOMPILE_SCRIPT_NAME='decompile.sh'
 
-echo 'Decompiling if needed'
-for app_compile_script in $(find ${DEPLOYED_APPS} -follow -name ${SCRIPT_NAME} -type f); do
-    echo "Decompiling $(basename $(dirname ${app_compile_script}))..."
-    ${app_compile_script}
+get_available_app_decompile_scripts() {
+    find "${AVAILABLE_APPS}" -follow -maxdepth 2 -name "${DECOMPILE_SCRIPT_NAME}" -type f
+}
+
+printf 'Decompiling if needed.\n'
+for app_decompile in $(get_available_app_decompile_scripts); do
+    app_name="$(basename $(dirname ${app_decompile}))"
+    printf "Decompiling ${app_name}...\n"
+    ${app_decompile}
 done
 
-echo 'Decompiling finished!'
+printf 'Decompiling finished!\n'

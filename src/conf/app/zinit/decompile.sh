@@ -11,15 +11,20 @@ readonly SCRIPT_PATH="$(
     echo "$(pwd -P)/${self##*/}"
 )"
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
+readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/../../.."; pwd -P)
+readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
 readonly COMPILEDRC_PATH="${SCRIPT_ROOT}/compiled-module-rc.zsh"
-readonly ZSH_PATH="$(cd ${SCRIPT_ROOT}/../zsh; pwd -P)"
-readonly ZSHRC_PATH="$("${ZSH_PATH}/get-rc-path.sh")"
-readonly COMPILEDRC_DIRECTIVE="source \"${COMPILEDRC_PATH}\""
+readonly COMPILEDRC_DIRECTIVE="source '${COMPILEDRC_PATH}'"
 readonly ZSH_COMPILED_EXT='.zwc'
 
-readonly directive_lineno=$(grep -n "${COMPILEDRC_DIRECTIVE}" "${ZSHRC_PATH}" | cut -d ':' -f 1)
-sed -i "${directive_lineno}d" "${ZSHRC_PATH}" && [ ! -s "${ZSHRC_PATH}" ] && rm -f "${ZSHRC_PATH}"
+readonly delete_directive_from_zshrc_preload="${CURRENT_ROOT}/available/shell/link/rc/preload/delete-directive.sh"
 
-for compiled_file in $(find ${HOME} -name "*${ZSH_COMPILED_EXT}" -type f); do
+${delete_directive_from_zshrc_preload} "${COMPILEDRC_DIRECTIVE}"
+
+get_compiled_files() {
+    find ${HOME} -name "*${ZSH_COMPILED_EXT}*" -type f
+}
+
+for compiled_file in $(get_compiled_files); do
     rm -f ${compiled_file}
 done
