@@ -28,5 +28,5 @@ set -e
 # fi
 
 
-# later implement installing brew
-printf "[Debug]: called apt/initialize.sh\n" >&2
+# later implement installing apk
+printf "[Debug]: called apk/initialize.sh\n" >&2

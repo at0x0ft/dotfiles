@@ -41,15 +41,14 @@ get_shell_plugin_manager_path() {
     printf "${SHELL_DIRECTORY}/${1}/plugin-manager/${2}"
 }
 
-
 if $(${has_user_shell_key}); then
     readonly user_shell=$(${get_user_shell})
     printf 'Initializing user shell.\n'
     if [ ! -L "${AVAILABLE_APPS}/${user_shell}" ]; then
         printf "Install ${user_shell}...\n"
-        ${SHELL_DIRECTORY}/${user_shell}/${INSTALL_SCRIPT_NAME}
+        ${SHELL_DIRECTORY}/${user_shell}/'link'/${INSTALL_SCRIPT_NAME}
         printf "Initialize ${user_shell}...\n"
-        ${SHELL_DIRECTORY}/${user_shell}/${INITIALIZE_SCRIPT_NAME}
+        ${SHELL_DIRECTORY}/${user_shell}/'link'/${INITIALIZE_SCRIPT_NAME}
         ${make_relative_symlink} "${AVAILABLE_APPS}/${user_shell}" "${APPS_DIRECTORY}/${user_shell}"
     fi
     ${make_relative_symlink} "${AVAILABLE_SHELL_LINK}" "${AVAILABLE_APPS}/${user_shell}"

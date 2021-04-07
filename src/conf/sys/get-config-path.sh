@@ -13,6 +13,7 @@ readonly SCRIPT_PATH=$(
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 
 readonly UBUNTU_PATH="${SCRIPT_ROOT}/ubuntu"
+readonly ALPINE_PATH="${SCRIPT_ROOT}/alpine"
 
 not_exist_or_exit() {
     if [ ! -d ${1} ]; then
@@ -23,8 +24,12 @@ not_exist_or_exit() {
 
 case ${1} in
     "Ubuntu")
-        not_exist_or_exit ${UBUNTU_PATH}
-        echo ${UBUNTU_PATH}
+        not_exist_or_exit "${UBUNTU_PATH}"
+        printf "${UBUNTU_PATH}"
+        ;;
+    "Alpine")
+        not_exist_or_exit "${ALPINE_PATH}"
+        printf "${ALPINE_PATH}"
         ;;
     * )
         printf "Error: Corresponding config path not matched with OS type: \"${1}\".\n" >&2
