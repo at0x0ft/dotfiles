@@ -27,7 +27,7 @@ backup() {
         mkdir "${ZSH_BACKUP_PATH}"
     fi
 
-    if [ -f "${ZPROFILE_PATH}" -a ! -f "${BACKUP_DST_PATH}" ]; then
+    if [ -f "${ZPROFILE_PATH}" ] && [ ! -f "${BACKUP_DST_PATH}" ]; then
         mv "${ZPROFILE_PATH}" "${BACKUP_DST_PATH}"
     fi
 }

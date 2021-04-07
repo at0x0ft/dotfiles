@@ -36,7 +36,7 @@ backup() {
         mkdir "${ZSH_BACKUP_PATH}"
     fi
 
-    if [ -f "${ZSHRC_PATH}" -a ! -f "${BACKUP_DST_PATH}" ]; then
+    if [ -f "${ZSHRC_PATH}" ] && [ ! -f "${BACKUP_DST_PATH}" ]; then
         mv "${ZSHRC_PATH}" "${BACKUP_DST_PATH}"
     fi
 }
