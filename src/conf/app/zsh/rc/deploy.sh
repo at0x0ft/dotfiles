@@ -31,7 +31,6 @@ readonly ALIAS_DIRECTIVE="source '${ALIAS_PATH}'"
 readonly EXTERNAL_DIRECTIVE="source '${EXTERNAL_PATH}'"
 readonly DEPLOY_SCRIPT_NAME='deploy.sh'
 
-
 backup() {
     if [ ! -d "${ZSH_BACKUP_PATH}" ]; then
         mkdir "${ZSH_BACKUP_PATH}"
