@@ -5,7 +5,7 @@
 # sudo_exec apt install -y build-essential curl file git
 
 # ln -s $(wslpath -u $(cmd.exe /c echo %USERPROFILE% 2>/dev/null) | sed 's/\r//') ~/winhome
-# echo '[automount]\noptions = "metadata"' | sudo tee -a /etc/wsl.conf
+# printf '[automount]\noptions = "metadata"\n' | sudo tee -a /etc/wsl.conf
 
 # echo "" | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 # test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
@@ -13,11 +13,14 @@
 # test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
 # echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
 # echo "eval \$($(brew --prefix)/bin/brew shellenv)" >> ~/.zshrc
-# brew install gcc git zsh subversion autoconf
+# brew install gcc git zsh autoconf
 # echo `which zsh` | sudo tee -a /etc/shells
 # chsh -s `which zsh`
 
 # zsh
+
+command mkdir -p "${HOME}/.zinit" && command chmod g-rwX "${HOME}/.zinit"
+command git clone https://github.com/zdharma/zinit "${HOME}/.zinit/bin"
 
 # yes | sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
 # echo "\nsource $HOME/.zinit/plugins.zsh" >> $HOME/.zshrc
