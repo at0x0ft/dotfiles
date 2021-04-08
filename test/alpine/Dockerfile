@@ -1,0 +1,34 @@
+ARG VERSION
+FROM alpine:${VERSION}
+
+ARG USER_NAME=testuser
+ARG USER_PASSWORD=testuser
+ARG DOTFILES_PATH
+ARG USER_HOMEDIR=/home/${USER_NAME}
+ARG DOTFILES_DST=${USER_HOMEDIR}/.dotfiles
+ARG TERM
+
+RUN apk update && apk add --no-cache \
+    sudo \
+    su-exec \
+    zsh \
+    ncurses-dev \
+    unzip \
+    jq \
+    gcc \
+    git \
+    autoconf \
+ && adduser -s $(which zsh) -h ${USER_HOMEDIR} -S ${USER_NAME} ${USER_NAME} \
+ && printf "${USER_NAME}:${USER_PASSWORD}" | chpasswd
+
+USER ${USER_NAME}
+WORKDIR ${USER_HOMEDIR}
+
+RUN command mkdir -p "${USER_HOMEDIR}/.zinit" && command chmod g-rwX "${USER_HOMEDIR}/.zinit" \
+ && command git clone https://github.com/zdharma/zinit "${USER_HOMEDIR}/.zinit/bin"
+
+COPY --chown=${USER_NAME}:${USER_NAME} ${DOTFILES_PATH} ${DOTFILES_DST}
+ENV TERM ${TERM}
+RUN ${DOTFILES_DST}/src/bin/install.sh
+
+CMD [ "/bin/zsh", "-l" ]
