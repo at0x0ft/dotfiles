@@ -4,7 +4,7 @@ My preferences.
 
 # How to install
 
-## Linux (currently, only supporting ubuntu)
+## Linux (currently, only supporting Debian/Ubuntu)
 
 **After installing your preferred apps**, exec following command.
 
@@ -20,3 +20,7 @@ Note: If you want to know how to install apps, please refer to Dockerfiles in [`
 ```sh
 ${HOME}/.dotfiles/src/bin/redeploy.sh
 ```
+
+# Note
+
+Now this does not work properly in __alpine Linux__.

@@ -12,5 +12,6 @@ For example...
 
 ```sh
 ./build.sh ubuntu/Dockerfile 20.04
+./build.sh debian/Dockerfile latest
 ```
 

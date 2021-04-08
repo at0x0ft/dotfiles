@@ -21,7 +21,7 @@ readonly create_preference_link="${CURRENT_ROOT}/pref/create-preference-link.sh"
 printf 'Provisioning...\n'
 
 printf 'Detecting OS type...\n'
-readonly os_type=$(${get_os_type})
+readonly os_type="$(${get_os_type})"
 printf "Detected OS type: ${os_type}\n"
 
 printf 'Creating link to current system config.\n'

@@ -13,6 +13,7 @@ readonly SCRIPT_PATH=$(
 readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 
 readonly UBUNTU_PATH="${SCRIPT_ROOT}/ubuntu"
+readonly DEBIAN_PATH="${SCRIPT_ROOT}/debian"
 readonly ALPINE_PATH="${SCRIPT_ROOT}/alpine"
 
 not_exist_or_exit() {
@@ -26,6 +27,10 @@ case ${1} in
     "Ubuntu")
         not_exist_or_exit "${UBUNTU_PATH}"
         printf "${UBUNTU_PATH}"
+        ;;
+    "Debian"*)
+        not_exist_or_exit "${DEBIAN_PATH}"
+        printf "${DEBIAN_PATH}"
         ;;
     "Alpine")
         not_exist_or_exit "${ALPINE_PATH}"
