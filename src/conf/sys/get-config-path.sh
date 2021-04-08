@@ -14,6 +14,7 @@ readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 
 readonly UBUNTU_PATH="${SCRIPT_ROOT}/ubuntu"
 readonly DEBIAN_PATH="${SCRIPT_ROOT}/debian"
+readonly PENGWIN_PATH="${SCRIPT_ROOT}/pengwin"
 readonly ALPINE_PATH="${SCRIPT_ROOT}/alpine"
 
 not_exist_or_exit() {
@@ -31,6 +32,10 @@ case ${1} in
     "Debian"*)
         not_exist_or_exit "${DEBIAN_PATH}"
         printf "${DEBIAN_PATH}"
+        ;;
+    "Pengwin")
+        not_exist_or_exit "${PENGWIN_PATH}"
+        printf "${PENGWIN_PATH}"
         ;;
     "Alpine")
         not_exist_or_exit "${ALPINE_PATH}"
