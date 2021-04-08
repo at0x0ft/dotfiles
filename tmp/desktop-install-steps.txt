@@ -3,7 +3,15 @@ set -e
 sudo_exec apt update
 sudo_exec apt upgrade -y
 sudo_exec apt autoremove -y
-sudo_exec apt install -y build-essential curl file git
+sudo_exec apt install -y \
+    build-essential \
+    libncurses-dev \
+    unzip \
+    curl \
+    file \
+    git \
+    gcc \
+    jq
 
 ln -s $(wslpath -u $(cmd.exe /c echo %USERPROFILE% 2>/dev/null) | sed 's/\r//') ~/winhome
 printf '[automount]\noptions = "metadata"\n' | sudo tee -a /etc/wsl.conf
@@ -11,7 +19,7 @@ printf '[automount]\noptions = "metadata"\n' | sudo tee -a /etc/wsl.conf
 echo "" | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 if [ -d ${USER_HOMEDIR}/.linuxbrew ]; then eval $(${USER_HOMEDIR}/.linuxbrew/bin/brew shellenv); \
 elif [ -d /home/linuxbrew/.linuxbrew ]; then eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv); fi
-brew install gcc git zsh autoconf
+brew install git zsh
 echo `which zsh` | sudo tee -a /etc/shells
 chsh -s `which zsh`
 
