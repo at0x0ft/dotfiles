@@ -1,3 +1,4 @@
+# zinit ice wait lucid
 zinit light zinit-zsh/z-a-bin-gem-node
 
 zinit ice wait lucid from"gh-r" mv"exa* -> exa" sbin"bin/exa -> exa"
@@ -12,6 +13,17 @@ zinit load dandavison/delta
 function ddiff() {
     diff -u ${1} ${2} | delta
 }
+
+# zinit ice wait lucid from"gh-r" as"program" mv"direnv* -> direnv" \
+#     atclone"./direnv hook zsh > zhook.zsh" atpull"%atclone" \
+#     pick"direnv" src"zhook.zsh"
+# zinit load direnv/direnv
+# zinit ice wait lucid from"gh-r" as"program" mv"direnv* -> direnv" atclone"./direnv hook zsh > zhook.zsh" atpull"%atclone" pick"direnv" src"zhook.zsh"
+# zinit load direnv/direnv
+
+# zinit ice wait lucid from"gh-r" as"program" mv"direnv* -> direnv" atclone"./direnv hook zsh > zhook.zsh" atpull"%atclone" pick"direnv" src"zhook.zsh"
+zinit ice wait lucid from"gh-r" mv"direnv* -> direnv" sbin"direnv* -> direnv" atclone"./direnv hook zsh > zhook.zsh" atpull"%atclone" pick"direnv" src"zhook.zsh"
+zinit load direnv/direnv
 
 zinit ice wait lucid from"gh-r" sbin"fzf -> fzf"
 zinit load junegunn/fzf
