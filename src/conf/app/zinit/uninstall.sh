@@ -29,9 +29,8 @@ set -e
 readonly ZINIT_PATH="${HOME}/.zinit"
 
 # later implement installing zinit
-printf "[Debug]: called zinit/install.sh with ${1}\n" >&2
-printf "[Debug]: install requirements packages (libncurses-dev, unzip, curl, file, gcc, make, autoconf) with ${1}...\n" >&2
+printf "[Debug]: called zinit/uninstall.sh with ${1}\n" >&2
+# printf "[Debug]: uninstall requirements packages (libncurses-dev, unzip, curl, file, gcc, make, autoconf) with ${1}...\n" >&2
 
-printf "Installing zinit...\n"
-command mkdir -p "${ZINIT_PATH}" && command chmod g-rwX "${ZINIT_PATH}"
-command git clone https://github.com/zdharma/zinit "${ZINIT_PATH}/bin"
+printf "Uninstalling zinit...\n"
+rm -rf "${ZINIT_PATH}"

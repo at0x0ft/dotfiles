@@ -31,9 +31,7 @@ RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
     git \
     zsh \
  && echo ${USER_PASSWORD} | sudo -S sh -c "echo $(which zsh) >> /etc/shells" \
- && echo ${USER_PASSWORD} | sudo -S chsh ${USER_NAME} -s $(which zsh) \
- && command mkdir -p "${USER_HOMEDIR}/.zinit" && command chmod g-rwX "${USER_HOMEDIR}/.zinit" \
- && command git clone https://github.com/zdharma/zinit "${USER_HOMEDIR}/.zinit/bin"
+ && echo ${USER_PASSWORD} | sudo -S chsh ${USER_NAME} -s $(which zsh)
 
 COPY --chown=${USER_NAME}:${USER_NAME} ${DOTFILES_PATH} ${DOTFILES_DST}
 ENV TERM ${TERM}

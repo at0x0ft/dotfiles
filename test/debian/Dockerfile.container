@@ -22,14 +22,12 @@ RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/
     git \
     gcc \
     make \
+    autoconf \
  && useradd -s $(which zsh) -m -G sudo ${USER_NAME} \
  && echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd
 
 USER ${USER_NAME}
 WORKDIR ${USER_HOMEDIR}
-
-RUN command mkdir -p "${USER_HOMEDIR}/.zinit" && command chmod g-rwX "${USER_HOMEDIR}/.zinit" \
- && command git clone https://github.com/zdharma/zinit "${USER_HOMEDIR}/.zinit/bin"
 
 COPY --chown=${USER_NAME}:${USER_NAME} ${DOTFILES_PATH} ${DOTFILES_DST}
 ENV TERM ${TERM}
