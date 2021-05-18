@@ -1,5 +1,5 @@
 {
-  "default_package_manager": {
+  "system_package_manager": {
     "package": [
       "zsh"
     ]
