@@ -1,0 +1,5 @@
+{
+  "system_login_shell": {
+    "plugin_manager": "zinit"
+  }
+}

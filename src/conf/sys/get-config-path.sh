@@ -16,6 +16,7 @@ readonly UBUNTU_PATH="${SCRIPT_ROOT}/ubuntu"
 readonly DEBIAN_PATH="${SCRIPT_ROOT}/debian"
 readonly PENGWIN_PATH="${SCRIPT_ROOT}/pengwin"
 readonly ALPINE_PATH="${SCRIPT_ROOT}/alpine"
+readonly DARWIN_PATH="${SCRIPT_ROOT}/darwin"
 
 not_exist_or_exit() {
     if [ ! -d ${1} ]; then
@@ -40,6 +41,10 @@ case ${1} in
     "Alpine")
         not_exist_or_exit "${ALPINE_PATH}"
         printf "${ALPINE_PATH}"
+        ;;
+    "Darwin")
+        not_exist_or_exit "${DARWIN_PATH}"
+        printf "${DARWIN_PATH}"
         ;;
     * )
         printf "Error: Corresponding config path not matched with OS type: \"${1}\".\n" >&2
