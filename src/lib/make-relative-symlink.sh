@@ -25,7 +25,7 @@ while getopts a OPT; do
             shift
             ;;
         * )
-            echo '[Error]: unknown option given.' >&2
+            printf '[Error]: unknown option given.' >&2
             exit 1
             ;;
     esac
@@ -34,30 +34,34 @@ done
 get_abspath() {
     local path=${1}
     if [ ! -d ${path} ]; then
-        echo "$(cd $(dirname ${path}); print_wd)/$(basename ${path})"
+        printf "$(cd $(dirname ${path}); print_wd)/$(basename ${path})"
     else
-        echo "$(cd ${path}; print_wd)"
+        printf "$(cd ${path}; print_wd)"
     fi
 }
 
 is_ancestor_path() {
-    echo ${2} | grep "^${1}"
+    if printf ${2} | grep "^${1}" 2>&1 >/dev/null; [ "${?}" -eq "0" ]; then
+        printf true
+    else
+        printf false
+    fi
 }
 
 get_relpath_from() {
     local org_path=$(get_abspath ${1})
     local dst_path=$(get_abspath ${2})
     local result=''
-    while [ ! ${org_path} = '/' -a ! $(is_ancestor_path ${org_path} ${dst_path}) ]; do
+    while [ ! ${org_path} = '/' -a "$(is_ancestor_path ${org_path} ${dst_path})" = "false" ]; do
         [ ! ${result} = '' ] && result="${result}/"
         org_path=$(cd "${org_path}/.."; print_wd)
         result="${result}.."
     done
-    dst_path=$(echo ${dst_path} | sed -e "s%^${org_path}%%g")
+    dst_path=$(printf "${dst_path}" | sed -e "s%^${org_path}%%g")
     if [ ! "${result}" = '' ]; then
-        echo "${result}${dst_path}"
+        printf "${result}${dst_path}"
     else
-        echo ".${dst_path}"
+        printf ".${dst_path}"
     fi
 }
 
