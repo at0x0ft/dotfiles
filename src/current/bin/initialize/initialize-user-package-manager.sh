@@ -35,7 +35,7 @@ readonly get_user_package_manager_packages="${PREFERENCE_ROOT}/get-user-package-
 readonly make_relative_symlink="${LIBRARY_SCRIPTS}/make-relative-symlink.sh"
 
 if ! $(${has_user_package_manager_key}); then
-    return 0
+    exit 0
 fi
 
 printf 'Initializing user package manager.\n'

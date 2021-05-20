@@ -67,7 +67,7 @@ if $(${has_user_shell_key}); then
     printf 'Finish initializing user shell!\n'
 else
     printf 'Initializing system login shell.\n'
-    readonly system_login_shell_name="$(basename $(readlink ${SYSTEM_LOGIN_SHELL_LINK}))"
+    readonly system_login_shell_name="$(basename $(realpath ${SYSTEM_LOGIN_SHELL_LINK}))"
     ${SYSTEM_LOGIN_SHELL_LINK}/${INITIALIZE_SCRIPT_NAME}
     ${make_relative_symlink} "${AVAILABLE_APPS}/${system_login_shell_name}" "${APPS_DIRECTORY}/${system_login_shell_name}"
     ${make_relative_symlink} "${AVAILABLE_SHELL_LINK}" "${AVAILABLE_APPS}/${system_login_shell_name}"
