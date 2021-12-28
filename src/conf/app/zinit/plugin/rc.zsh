@@ -1,5 +1,5 @@
 # zinit ice wait lucid
-zinit light zinit-zsh/z-a-bin-gem-node
+zinit light zdharma-continuum/zinit-annex-bin-gem-node
 
 zinit ice wait lucid from"gh-r" mv"exa* -> exa" sbin"bin/exa -> exa"
 zinit load ogham/exa
