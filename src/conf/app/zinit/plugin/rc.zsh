@@ -11,7 +11,7 @@ zinit load sharkdp/bat
 zinit ice wait lucid from"gh-r" mv"delta* -> delta" sbin"**/delta(.exe|) -> delta"
 zinit load dandavison/delta
 function ddiff() {
-    diff -u ${1} ${2} | delta
+    diff -u ${1} ${2} | delta --side-by-side
 }
 
 # zinit ice wait lucid from"gh-r" as"program" mv"direnv* -> direnv" atclone"./direnv hook zsh > zhook.zsh" atpull"%atclone" pick"direnv" src"zhook.zsh"
