@@ -33,10 +33,7 @@ function ddiff() {
 # fi
 # end direnv source
 
-zinit ice wait lucid from"gh-r" sbin"fzf -> fzf"
-zinit load junegunn/fzf
-zinit ice wait lucid pick"shell/completion.zsh" id-as"junegunn/fzf_completion"
-zinit load junegunn/fzf
+zinit pack"default+keys" for fzf
 
 zinit ice wait lucid blockf
 zinit load Aloxaf/fzf-tab
