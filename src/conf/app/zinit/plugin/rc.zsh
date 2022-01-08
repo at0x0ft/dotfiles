@@ -1,5 +1,5 @@
 # zinit ice wait lucid
-zinit light zdharma-continuum/zinit-annex-bin-gem-node
+# zinit light zdharma-continuum/zinit-annex-bin-gem-node
 
 zinit ice wait lucid from"gh-r" mv"exa* -> exa" sbin"bin/exa -> exa"
 zinit load ogham/exa
@@ -33,7 +33,7 @@ function ddiff() {
 # fi
 # end direnv source
 
-zinit pack"default+keys" for fzf
+zinit pack"binary+keys" for fzf
 
 zinit ice wait lucid blockf
 zinit load Aloxaf/fzf-tab
