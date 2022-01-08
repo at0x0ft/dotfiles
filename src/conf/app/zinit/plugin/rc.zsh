@@ -1,9 +1,9 @@
 # zinit ice wait lucid
-# zinit light zdharma-continuum/zinit-annex-bin-gem-node
+zinit light zdharma-continuum/zinit-annex-bin-gem-node
 
-zinit ice wait lucid from"gh-r" mv"exa* -> exa" sbin"bin/exa -> exa"
-zinit load ogham/exa
-alias ls='exa -bh --color=auto'
+zinit ice wait lucid from"gh-r" mv"lsd* -> lsd" sbin"**/lsd(.exe|) -> lsd"
+zinit load Peltoche/lsd
+alias ls='lsd --color=always'
 
 zinit ice wait lucid from"gh-r" mv"bat* -> bat" sbin"**/bat(.exe|) -> bat"
 zinit load sharkdp/bat
@@ -33,9 +33,30 @@ function ddiff() {
 # fi
 # end direnv source
 
-zinit pack"binary+keys" for fzf
+# not available fzf-completion
+# zinit pack"bgn-binary" for fzf
+zinit ice wait lucid from"gh-r" sbin"fzf -> fzf"
+zinit load junegunn/fzf
+zinit ice wait lucid pick"shell/completion.zsh" id-as"junegunn/fzf_completion"
+zinit load junegunn/fzf
+
 
 zinit ice wait lucid blockf
 zinit load Aloxaf/fzf-tab
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-# zstyle ':fzf-tab:complete:ls:*' fzf-preview 'bat --color=always {}'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always ${(Q)realpath}'
+zstyle ':fzf-tab:complete:lsd:*' fzf-preview 'bat --color=always ${(Q)realpath}'
+zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|expand):*' fzf-preview 'echo ${(P)word}'
+zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview 'git diff $word | delta --side-by-side'|
+zstyle ':fzf-tab:complete:git-log:*' fzf-preview 'git log --color=always $word'
+zstyle ':fzf-tab:complete:git-help:*' fzf-preview 'git help $word | bat -plman --color=always'
+zstyle ':fzf-tab:complete:git-show:*' fzf-preview \
+    'case "$group" in
+    "commit tag")   git show --color=always $word ;;
+    *)              git show --color=always $word | delta --side-by-side ;;
+    esac'
+zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
+    'case "$group" in
+    "modified file")                git diff $word | delta --side-by-side ;;
+    "recent commit object name")    git show --color=always $word | delta --side-by-side ;;
+    *)                              git log --color=always $word ;;
+    esac'
