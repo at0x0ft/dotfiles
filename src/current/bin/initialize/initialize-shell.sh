@@ -41,6 +41,42 @@ get_shell_plugin_manager_path() {
     printf "${SHELL_DIRECTORY}/${1}/plugin-manager/${2}"
 }
 
+# ref: https://github.com/ko1nksm/readlinkf/blob/master/readlinkf.sh
+function readlinkf() {
+    [ "${1:-}" ] || return 1
+    max_symlinks=40
+    CDPATH='' # to avoid changing to an unexpected directory
+
+    target=$1
+    [ -e "${target%/}" ] || target=${1%"${1##*[!/]}"} # trim trailing slashes
+    [ -d "${target:-/}" ] && target="$target/"
+
+    cd -P . 2>/dev/null || return 1
+    while [ "$max_symlinks" -ge 0 ] && max_symlinks=$((max_symlinks - 1)); do
+        if [ ! "$target" = "${target%/*}" ]; then
+            case $target in
+                /*) cd -P "${target%/*}/" 2>/dev/null || break ;;
+                *) cd -P "./${target%/*}" 2>/dev/null || break ;;
+            esac
+            target=${target##*/}
+        fi
+
+        if [ ! -L "$target" ]; then
+            target="${PWD%/}${target:+/}${target}"
+            printf '%s\n' "${target:-/}"
+            return 0
+        fi
+
+        # `ls -dl` format: "%s %u %s %s %u %s %s -> %s\n",
+        #   <file mode>, <number of links>, <owner name>, <group name>,
+        #   <size>, <date and time>, <pathname of link>, <contents of link>
+        # https://pubs.opengroup.org/onlinepubs/9699919799/utilities/ls.html
+        link=$(ls -dl -- "$target" 2>/dev/null) || break
+        target=${link#*" $target -> "}
+    done
+    return 1
+}
+
 if $(${has_user_shell_key}); then
     readonly user_shell=$(${get_user_shell})
     printf 'Initializing user shell.\n'
@@ -67,7 +103,7 @@ if $(${has_user_shell_key}); then
     printf 'Finish initializing user shell!\n'
 else
     printf 'Initializing system login shell.\n'
-    readonly system_login_shell_name="$(basename $(realpath ${SYSTEM_LOGIN_SHELL_LINK}))"
+    readonly system_login_shell_name="$(basename $(readlinkf ${SYSTEM_LOGIN_SHELL_LINK}))"
     ${SYSTEM_LOGIN_SHELL_LINK}/${INITIALIZE_SCRIPT_NAME}
     ${make_relative_symlink} "${AVAILABLE_APPS}/${system_login_shell_name}" "${APPS_DIRECTORY}/${system_login_shell_name}"
     ${make_relative_symlink} "${AVAILABLE_SHELL_LINK}" "${AVAILABLE_APPS}/${system_login_shell_name}"
