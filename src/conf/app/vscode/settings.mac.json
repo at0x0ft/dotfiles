@@ -2,8 +2,10 @@
     "workbench.colorTheme": "Material Theme Darker High Contrast",
     "workbench.iconTheme": "vscode-icons",
     "vsicons.dontShowNewVersionMessage": true,
-    "editor.fontFamily": "Myrica M",
-    "terminal.integrated.fontFamily": "Myrica M",
+    "editor.fontSize": 16,
+    "editor.fontFamily": "MyricaM",
+    "terminal.integrated.fontSize": 16,
+    "terminal.integrated.fontFamily": "MyricaM",
     "workbench.startupEditor": "newUntitledFile",
     "editor.renderWhitespace": "all",
     "files.trimTrailingWhitespace": true,
@@ -31,5 +33,5 @@
         "editor.insertSpaces": true,
         "editor.tabSize": 2,
         "editor.autoIndent": "advanced"
-    }
+    },
 }

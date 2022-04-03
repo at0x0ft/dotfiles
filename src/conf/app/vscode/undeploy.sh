@@ -49,8 +49,8 @@ get_keybindings_destination_path() {
     return 0
 }
 
-rm $(get_settings_destination_path "${os_type}")
-rm $(get_keybindings_destination_path "${os_type}")
+rm "$(get_settings_destination_path ${os_type})"
+rm "$(get_keybindings_destination_path ${os_type})"
 for extension_id in $(cat "${EXTENSIONS_FILE_PATH}"); do
     code --uninstall-extension "${extension_id}"
 done

@@ -59,8 +59,8 @@ get_keybindings_destination_path() {
     return 0
 }
 
-ln -snvf $(get_settings_source_path "${os_type}") $(get_settings_destination_path "${os_type}")
-ln -snvf $(get_keybindings_source_path "${os_type}") $(get_keybindings_destination_path "${os_type}")
+ln -snvf "$(get_settings_source_path ${os_type})" "$(get_settings_destination_path ${os_type})"
+ln -snvf "$(get_keybindings_source_path ${os_type})" "$(get_keybindings_destination_path ${os_type})"
 for extension_id in $(cat "${EXTENSIONS_FILE_PATH}"); do
     code --install-extension "${extension_id}"
 done
