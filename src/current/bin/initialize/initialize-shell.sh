@@ -42,7 +42,7 @@ get_shell_plugin_manager_path() {
 }
 
 # ref: https://github.com/ko1nksm/readlinkf/blob/master/readlinkf.sh
-function readlinkf() {
+readlinkf() {
     [ "${1:-}" ] || return 1
     max_symlinks=40
     CDPATH='' # to avoid changing to an unexpected directory
