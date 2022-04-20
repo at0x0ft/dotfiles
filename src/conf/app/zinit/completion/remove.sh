@@ -24,7 +24,7 @@ ${delete_line} "${1}" "${EXTERNAL_PATH}"
 delete_backslash_from_last_line() {
     local last_line="$(sed -n $(cat ${1} | grep -c '^')p ${1})"
     local last_content="${last_line% \\}"
-    sed -i -e "s|^${last_content}"' \\'"$|${last_content}|g" "${1}"
+    cat "${1}" | (rm "${1}" && sed -e "s|^${last_content}"' \\'"$|${last_content}|g" > "${1}")
 }
 delete_backslash_from_last_line "${EXTERNAL_PATH}"
 

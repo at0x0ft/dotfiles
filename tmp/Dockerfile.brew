@@ -31,6 +31,7 @@ RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/
 RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
     echo ${USER_PASSWORD} | sudo -S sh -c "echo \"${USER_NAME} ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers" \
  && yes | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
+#  'sed -i' should replace to 'cat ... | (rm ... && sed ... > ...)'
  && sudo sed -i '$d' /etc/sudoers \
  && if [ -d ~/.linuxbrew ]; then eval $(~/.linuxbrew/bin/brew shellenv); \
     elif [ -d /home/linuxbrew/.linuxbrew ]; then eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv); fi \
