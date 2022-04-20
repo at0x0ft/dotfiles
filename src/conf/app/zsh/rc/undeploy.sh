@@ -24,12 +24,14 @@ readonly ENVAR_PATH="${SCRIPT_ROOT}/envar/rc.zsh"
 readonly KEYBIND_PATH="${SCRIPT_ROOT}/keybind/rc.zsh"
 readonly ALIAS_PATH="${SCRIPT_ROOT}/alias/rc.zsh"
 readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external/rc.zsh"
+readonly POSTLOAD_PATH="${SCRIPT_ROOT}/postload/rc.zsh"
 readonly PRELOAD_DIRECTIVE="source '${PRELOAD_PATH}'"
 readonly OPT_DIRECTIVE="source '${OPT_PATH}'"
 readonly ENVAR_DIRECTIVE="source '${ENVAR_PATH}'"
 readonly KEYBIND_DIRECTIVE="source '${KEYBIND_PATH}'"
 readonly ALIAS_DIRECTIVE="source '${ALIAS_PATH}'"
 readonly EXTERNAL_DIRECTIVE="source '${EXTERNAL_PATH}'"
+readonly POSTLOAD_DIRECTIVE="source '${POSTLOAD_PATH}'"
 readonly UNDEPLOY_SCRIPT_NAME='deploy.sh'
 
 readonly delete_line="${LIBRARY_SCRIPTS}/delete-line.sh"
@@ -50,6 +52,7 @@ get_subdir_undeploy_scripts() {
 
 rm "${ZSHRC_PATH}"
 
+${delete_line} "${POSTLOAD_DIRECTIVE}" "${RC_PATH}"
 ${delete_line} "${EXTERNAL_DIRECTIVE}" "${RC_PATH}"
 ${delete_line} "${ALIAS_DIRECTIVE}" "${RC_PATH}"
 ${delete_line} "${KEYBIND_DIRECTIVE}" "${RC_PATH}"
