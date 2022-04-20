@@ -24,7 +24,7 @@ fi
 append_backslash_to_last_line() {
     local last_line="$(sed -n $(cat ${1} | grep -c '^')p ${1})"
     local converted="${last_line} "'\\'
-    sed -i -e "s|^${last_line}$|${converted}|g" "${1}"
+    cat "${1}" | (rm "${1}" && sed -e "s|^${last_line}$|${converted}|g" > "${1}")
 }
 append_backslash_to_last_line "${EXTERNAL_PATH}"
 
