@@ -23,7 +23,7 @@ printf 'Decompiling if needed.\n'
 for app_decompile in $(get_available_app_decompile_scripts); do
     app_name="$(basename $(dirname ${app_decompile}))"
     printf "Decompiling ${app_name}...\n"
-    ${app_decompile}
+    [ "${app_name}" != 'zinit' ] && ${app_decompile}
 done
 
 printf 'Decompiling finished!\n'

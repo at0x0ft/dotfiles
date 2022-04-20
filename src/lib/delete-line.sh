@@ -10,7 +10,7 @@ delete_line() {
     local search_result="$(grep -n "${1}" "${2}")"
     [ "${search_result}" = '' ] && return 1
     local directive_lineno=$(printf '%s' "${search_result}" | cut -d ':' -f 1)
-    sed -i "${directive_lineno}d" "${2}"
+    cat "${2}" | (rm "${2}" && sed "${directive_lineno}d" > "${2}")
     return 0
 }
 delete_line "${@}"
