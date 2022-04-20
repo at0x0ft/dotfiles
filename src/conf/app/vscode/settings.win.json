@@ -1,0 +1,35 @@
+{
+    "workbench.colorTheme": "Material Theme Darker High Contrast",
+    "workbench.iconTheme": "vscode-icons",
+    "vsicons.dontShowNewVersionMessage": true,
+    "editor.fontFamily": "Consolas NF, Meiryo UI",
+    "terminal.integrated.fontFamily": "Consolas NF",
+    "workbench.startupEditor": "newUntitledFile",
+    "editor.renderWhitespace": "all",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.suggestSelection": "first",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "git.ignoreMissingGitWarning": true,
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true
+    },
+    "security.workspace.trust.untrustedFiles": "open",
+    "[shellscript]": {
+        "editor.detectIndentation": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced"
+    },
+    "[ruby]": {
+        "editor.detectIndentation": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced"
+    },
+    "[yaml]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced"
+    }
+}

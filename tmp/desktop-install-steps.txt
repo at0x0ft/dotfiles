@@ -10,6 +10,7 @@ sudo_exec apt install -y \
     curl \
     file \
     git \
+    autoconf \
     gcc \
     jq
 
