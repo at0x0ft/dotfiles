@@ -1,38 +1,61 @@
 # syntax = docker/dockerfile:1.2
-ARG VERSION
-FROM homebrew/ubuntu${VERSION}:latest
+ARG VERSION='20.04'
+FROM ubuntu:${VERSION}
 
-ARG USER_NAME=testuser
-ARG USER_PASSWORD=testuser
-ARG DOTFILES_PATH
+ARG USER_NAME='testuser'
+ARG USER_PASSWORD='testuser'
+ARG USER_UID=1000
+ARG USER_GID=${USER_UID}
 ARG USER_HOMEDIR=/home/${USER_NAME}
+ARG DOTFILES_PATH
 ARG DOTFILES_DST=${USER_HOMEDIR}/.dotfiles
+ARG PASSWORD_ECHO_SCRIPT_PATH='/tmp/echo_password.sh'
 ARG TERM
 
-RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+# Preparation
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
     apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    sudo \
+    # homebrew requirements
+    build-essential \
+    procps \
+    curl \
+    file \
+    git \
+    # for additional brew implicit requirements in docker container
+    ca-certificates \
+    # zinit requirements
     libncurses-dev \
     unzip \
-    jq \
- && useradd -s /bin/bash -m -G sudo ${USER_NAME} \
- && echo "${USER_NAME}:${USER_PASSWORD}" | chpasswd \
- && chown -R ${USER_NAME} /home/linuxbrew/.linuxbrew
+    autoconf \
+    jq && \
+    command -v useradd >/dev/null 2>&2 && \
+    if [ "${?}" = 0 ]; then groupadd --gid "${USER_GID}" "${USER_NAME}" && \
+    useradd -s /bin/bash --uid "${USER_UID}" --gid "${USER_GID}" -m "${USER_NAME}"; \
+    else addgroup -g "${USER_GID}" "${USER_NAME}" && adduser -u "${USER_UID}" "${USER_NAME}"; fi && \
+    usermod -aG sudo "${USER_NAME}" && \
+    printf "${USER_NAME}:${USER_PASSWORD}" | chpasswd
 
 USER ${USER_NAME}
 WORKDIR ${USER_HOMEDIR}
 
+# Install homebrew.
 RUN mkdir ${USER_HOMEDIR}/.cache ${USER_HOMEDIR}/.cache/Homebrew
 RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
-    if [ -d ${USER_HOMEDIR}/.linuxbrew ]; then eval $(${USER_HOMEDIR}/.linuxbrew/bin/brew shellenv); \
-    elif [ -d /home/linuxbrew/.linuxbrew ]; then eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv); fi \
- && brew install \
+    printf "#!/usr/bin/env sh\nprintf '%s'\n" "${USER_PASSWORD}" >"${PASSWORD_ECHO_SCRIPT_PATH}" && \
+    chmod +x "${PASSWORD_ECHO_SCRIPT_PATH}" && \
+    NONINTERACTIVE=1 SUDO_ASKPASS="${PASSWORD_ECHO_SCRIPT_PATH}" /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
+    if [ -d "${USER_HOMEDIR}/.linuxbrew" ]; then eval $("${USER_HOMEDIR}/.linuxbrew/bin/brew" shellenv); \
+    elif [ -d /home/linuxbrew/.linuxbrew ]; then eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv); fi && \
+    brew install \
     gcc \
     git \
-    zsh \
- && echo ${USER_PASSWORD} | sudo -S sh -c "echo $(which zsh) >> /etc/shells" \
- && echo ${USER_PASSWORD} | sudo -S chsh ${USER_NAME} -s $(which zsh)
+    zsh && \
+    which zsh | SUDO_ASKPASS="${PASSWORD_ECHO_SCRIPT_PATH}" sudo -A tee -a /etc/shells && \
+    SUDO_ASKPASS="${PASSWORD_ECHO_SCRIPT_PATH}" sudo -A chsh $(whoami) -s $(which zsh) && \
+    rm -rf "${PASSWORD_ECHO_SCRIPT_PATH}"
 
+# Copy dotfiles
 COPY --chown=${USER_NAME}:${USER_NAME} ${DOTFILES_PATH} ${DOTFILES_DST}
 ENV TERM ${TERM}
 RUN ${DOTFILES_DST}/src/bin/install.sh -d
