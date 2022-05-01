@@ -28,8 +28,8 @@ readonly RC_DIRECTIVE="source '${RC_PATH}'"
 readonly UBUNTU_SPECIFIC_DIRECTIVE='skip_global_compinit=1'
 readonly UNDEPLOY_SCRIPT_NAME='undeploy.sh'
 readonly ZCOMPDUMP_PATH="${HOME}/.zcompdump"
-readonly ZINIT_PATH="${HOME}/.zinit"
-readonly ZINIT_SRC_PATH_BASENAME='bin'
+readonly ZINIT_PATH="${HOME}/.local/share/zinit"
+readonly ZINIT_SRC_PATH_BASENAME='zinit.git'
 
 readonly delete_directive_to_zshrc="${CURRENT_ROOT}/available/shell/link/rc/external/delete-directive.sh"
 readonly delete_directive_to_zshenv="${CURRENT_ROOT}/available/shell/link/env/delete-directive.sh"

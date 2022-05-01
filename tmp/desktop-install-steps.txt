@@ -24,5 +24,5 @@ brew install gcc git zsh
 echo `which zsh` | sudo tee -a /etc/shells
 chsh -s `which zsh`
 
-command mkdir -p "${HOME}/.zinit" && command chmod g-rwX "${HOME}/.zinit"
-command git clone https://github.com/zdharma-continuum/zinit "${HOME}/.zinit/bin"
+command mkdir -p "${HOME}/.local/share/zinit" && command chmod g-rwX "${HOME}/.local/share/zinit"
+command git clone https://github.com/zdharma-continuum/zinit "${HOME}/.local/share/zinit/zinit.git"

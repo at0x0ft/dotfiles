@@ -26,7 +26,7 @@ set -e
 # else
 #     echo false
 # fi
-readonly ZINIT_PATH="${HOME}/.zinit"
+readonly ZINIT_PATH="${HOME}/.local/share/zinit"
 
 # later implement installing zinit
 printf "[Debug]: called zinit/uninstall.sh with ${1}\n" >&2

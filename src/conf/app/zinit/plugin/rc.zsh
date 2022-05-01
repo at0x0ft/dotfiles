@@ -23,7 +23,7 @@ function ddiff() {
 # start direnv source ( = zhook.zsh)
 # _direnv_hook() {
 #   trap -- '' SIGINT;
-#   eval "$("${HOME}/.zinit/polaris/bin/direnv" export zsh)";
+#   eval "$("${HOME}/.local/share/zinit/polaris/bin/direnv" export zsh)";
 #   trap - SIGINT;
 # }
 # typeset -ag precmd_functions;
