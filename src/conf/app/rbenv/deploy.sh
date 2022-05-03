@@ -18,6 +18,6 @@ readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
 # only supporting zsh
 readonly RC_DIRECTIVE="source '${RC_PATH}'"
 
-readonly add_directive_to_zshrc_postload="${CURRENT_ROOT}/available/shell/link/rc/postload/add-directive.sh"
+readonly add_directive_to_zshrc_postload="${CURRENT_ROOT}/available/shell/link/rc/postload/add_directive.sh"
 
 ${add_directive_to_zshrc_postload} "${RC_DIRECTIVE}"

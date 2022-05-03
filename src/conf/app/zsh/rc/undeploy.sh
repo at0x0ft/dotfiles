@@ -1,70 +1,105 @@
 #!/usr/bin/env sh
-set -e
+set -eu
 
-readonly SCRIPT_PATH=$(
-    self=${0}
-    while [ -L "${self}" ]; do
-        cd "${self%/*}"
-        self=$(readlink "${self}")
+undeploy() {
+  # ref: https://github.com/ko1nksm/readlinkf/blob/master/readlinkf.sh
+  readlinkf() {
+    [ "${1:-}" ] || return 1
+    max_symlinks=40
+    CDPATH='' # to avoid changing to an unexpected directory
+
+    target=$1
+    [ -e "${target%/}" ] || target=${1%"${1##*[!/]}"} # trim trailing slashes
+    [ -d "${target:-/}" ] && target="$target/"
+
+    cd -P . 2>/dev/null || return 1
+    while [ "$max_symlinks" -ge 0 ] && max_symlinks=$((max_symlinks - 1)); do
+      if [ ! "$target" = "${target%/*}" ]; then
+        case $target in
+          /*) cd -P "${target%/*}/" 2>/dev/null || break ;;
+          *) cd -P "./${target%/*}" 2>/dev/null || break ;;
+        esac
+        target=${target##*/}
+      fi
+
+      if [ ! -L "$target" ]; then
+        target="${PWD%/}${target:+/}${target}"
+        printf '%s\n' "${target:-/}"
+        return 0
+      fi
+
+      # `ls -dl` format: "%s %u %s %s %u %s %s -> %s\n",
+      #   <file mode>, <number of links>, <owner name>, <group name>,
+      #   <size>, <date and time>, <pathname of link>, <contents of link>
+      # https://pubs.opengroup.org/onlinepubs/9699919799/utilities/ls.html
+      link=$(ls -dl -- "$target" 2>/dev/null) || break
+      target=${link#*" $target -> "}
     done
-    cd "${self%/*}"
-    echo "$(pwd -P)/${self##*/}"
-)
-readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly DOTFILES_SRC_ROOT=$(cd "${SCRIPT_ROOT}/../../../.."; pwd -P)
-readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
-readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
-readonly ZSHRC_PATH="${HOME}/.zshrc"
-readonly ZSH_BACKUP_PATH="${CURRENT_ROOT}/bak/zsh"
-readonly BACKUP_DST_PATH="${ZSH_BACKUP_PATH}/zshrc"
-readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
-readonly PRELOAD_PATH="${SCRIPT_ROOT}/preload/rc.zsh"
-readonly OPT_PATH="${SCRIPT_ROOT}/opt/rc.zsh"
-readonly ENVAR_PATH="${SCRIPT_ROOT}/envar/rc.zsh"
-readonly KEYBIND_PATH="${SCRIPT_ROOT}/keybind/rc.zsh"
-readonly ALIAS_PATH="${SCRIPT_ROOT}/alias/rc.zsh"
-readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external/rc.zsh"
-readonly POSTLOAD_PATH="${SCRIPT_ROOT}/postload/rc.zsh"
-readonly PRELOAD_DIRECTIVE="source '${PRELOAD_PATH}'"
-readonly OPT_DIRECTIVE="source '${OPT_PATH}'"
-readonly ENVAR_DIRECTIVE="source '${ENVAR_PATH}'"
-readonly KEYBIND_DIRECTIVE="source '${KEYBIND_PATH}'"
-readonly ALIAS_DIRECTIVE="source '${ALIAS_PATH}'"
-readonly EXTERNAL_DIRECTIVE="source '${EXTERNAL_PATH}'"
-readonly POSTLOAD_DIRECTIVE="source '${POSTLOAD_PATH}'"
-readonly UNDEPLOY_SCRIPT_NAME='deploy.sh'
+    return 1
+  }
 
-readonly delete_line="${LIBRARY_SCRIPTS}/delete-line.sh"
+  local readonly SCRIPT_PATH=$(readlinkf "${0}")
+  local readonly SCRIPT_ROOT=$(dirname -- "${SCRIPT_PATH}")
+  local readonly DOTFILES_SRC_ROOT=$(readlinkf "${SCRIPT_ROOT}/../../../..")
+  local readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
+  local readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
 
-restore() {
-    if [ -f "${BACKUP_DST_PATH}" ]; then
-        mv "${BACKUP_DST_PATH}" "${ZSHRC_PATH}"
-    fi
+  local readonly ZSHRC_PATH="${HOME}/.zshrc"
+  local readonly ZSH_BACKUP_PATH="${CURRENT_ROOT}/bak/zsh"
+  local readonly BACKUP_DST_PATH="${ZSH_BACKUP_PATH}/zshrc"
+  local readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
+  local readonly PRELOAD_PATH="${SCRIPT_ROOT}/preload/rc.zsh"
+  local readonly OPT_PATH="${SCRIPT_ROOT}/opt/rc.zsh"
+  local readonly ENVAR_PATH="${SCRIPT_ROOT}/envar/rc.zsh"
+  local readonly KEYBIND_PATH="${SCRIPT_ROOT}/keybind/rc.zsh"
+  local readonly ALIAS_PATH="${SCRIPT_ROOT}/alias/rc.zsh"
+  local readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external/rc.zsh"
+  local readonly POSTLOAD_PATH="${SCRIPT_ROOT}/postload/rc.zsh"
+  local readonly PRELOAD_DIRECTIVE="source '${PRELOAD_PATH}'"
+  local readonly OPT_DIRECTIVE="source '${OPT_PATH}'"
+  local readonly ENVAR_DIRECTIVE="source '${ENVAR_PATH}'"
+  local readonly KEYBIND_DIRECTIVE="source '${KEYBIND_PATH}'"
+  local readonly ALIAS_DIRECTIVE="source '${ALIAS_PATH}'"
+  local readonly EXTERNAL_DIRECTIVE="source '${EXTERNAL_PATH}'"
+  local readonly POSTLOAD_DIRECTIVE="source '${POSTLOAD_PATH}'"
+  local readonly UNDEPLOY_SCRIPT_NAME='undeploy.sh'
 
-    if [ -d "${ZSH_BACKUP_PATH}" ] && [ -z "$(ls "${ZSH_BACKUP_PATH}")" ]; then
-        rmdir "${ZSH_BACKUP_PATH}"
-    fi
-}
+  local readonly delete_line="${LIBRARY_SCRIPTS}/delete_line.sh"
 
-get_subdir_undeploy_scripts() {
-    find "${SCRIPT_ROOT}" -mindepth 2 -name "${UNDEPLOY_SCRIPT_NAME}" -type f
-}
+  rm "${ZSHRC_PATH}"
 
-rm "${ZSHRC_PATH}"
+  ${delete_line} "${POSTLOAD_DIRECTIVE}" "${RC_PATH}"
+  ${delete_line} "${EXTERNAL_DIRECTIVE}" "${RC_PATH}"
+  ${delete_line} "${ALIAS_DIRECTIVE}" "${RC_PATH}"
+  ${delete_line} "${KEYBIND_DIRECTIVE}" "${RC_PATH}"
+  ${delete_line} "${ENVAR_DIRECTIVE}" "${RC_PATH}"
+  ${delete_line} "${OPT_DIRECTIVE}" "${RC_PATH}"
+  ${delete_line} "${PRELOAD_DIRECTIVE}" "${RC_PATH}"
 
-${delete_line} "${POSTLOAD_DIRECTIVE}" "${RC_PATH}"
-${delete_line} "${EXTERNAL_DIRECTIVE}" "${RC_PATH}"
-${delete_line} "${ALIAS_DIRECTIVE}" "${RC_PATH}"
-${delete_line} "${KEYBIND_DIRECTIVE}" "${RC_PATH}"
-${delete_line} "${ENVAR_DIRECTIVE}" "${RC_PATH}"
-${delete_line} "${OPT_DIRECTIVE}" "${RC_PATH}"
-${delete_line} "${PRELOAD_DIRECTIVE}" "${RC_PATH}"
-if [ ! -s "${RC_PATH}" ]; then
+  if [ -e "${RC_PATH}" -a ! -s "${RC_PATH}" ]; then
     rm "${RC_PATH}"
-fi
+  fi
 
-for sub_undeploy in $(get_subdir_undeploy_scripts); do
+  get_subdir_undeploy_scripts() {
+    find "${SCRIPT_ROOT}" -mindepth 2 -name "${UNDEPLOY_SCRIPT_NAME}" -type f
+    return 0
+  }
+  for sub_undeploy in $(get_subdir_undeploy_scripts); do
     ${sub_undeploy}
-done
+  done
 
-restore
+  restore() {
+    if [ -f "${BACKUP_DST_PATH}" ]; then
+      mv "${BACKUP_DST_PATH}" "${ZSHRC_PATH}"
+    fi
+
+    if [ -d "${ZSH_BACKUP_PATH}" -a -z $(ls "${ZSH_BACKUP_PATH}") ]; then
+      rmdir "${ZSH_BACKUP_PATH}"
+    fi
+    return 0
+  }
+  restore
+
+  return 0
+}
+undeploy

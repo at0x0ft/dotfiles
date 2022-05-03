@@ -14,8 +14,8 @@ readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
 readonly PROVISIONING_SCRIPTS="${SCRIPT_ROOT}/provisioning"
 
-readonly get_os_type="${CURRENT_ROOT}/lib/get-os-type.sh"
-readonly create_config_link="${PROVISIONING_SCRIPTS}/create-config-link.sh"
+readonly get_os_type="${CURRENT_ROOT}/lib/get_os_type.sh"
+readonly create_config_link="${PROVISIONING_SCRIPTS}/create_config_link.sh"
 readonly create_preference_link="${CURRENT_ROOT}/pref/create-preference-link.sh"
 
 printf 'Provisioning...\n'

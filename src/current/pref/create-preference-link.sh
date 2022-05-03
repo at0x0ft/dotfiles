@@ -14,12 +14,12 @@ readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
 readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
 readonly DOTFILES_SRC_ROOT="$(cd ${CURRENT_ROOT}/..; pwd -P)"
 readonly PREFERENCE_SRC_LINK="${SCRIPT_ROOT}/preference.json"
-readonly CONFIG_LINK=$("${CURRENT_ROOT}/lib/get-config-link.sh")
+readonly CONFIG_LINK=$("${CURRENT_ROOT}/lib/get_config_link.sh")
 readonly PREFERENCE_DEFAULT_DST_LINK="${CONFIG_LINK}/preference.json"
 readonly PREFERENCE_CONTAINER_DST_LINK="${CONFIG_LINK}/preference.container.json"
 
-readonly is_container="${CURRENT_ROOT}/lib/is-container.sh"
-readonly make_relative_symlink="${DOTFILES_SRC_ROOT}/lib/make-relative-symlink.sh"
+readonly is_container="${CURRENT_ROOT}/lib/is_container.sh"
+readonly make_relative_symlink="${DOTFILES_SRC_ROOT}/lib/make_relative_symlink.sh"
 
 get_preference_type() {
     if [ "${1}" = '' ]; then

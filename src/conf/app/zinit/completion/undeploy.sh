@@ -1,32 +1,65 @@
 #!/usr/bin/env sh
-set -e
+set -eu
 
-readonly SCRIPT_PATH="$(
-    self=${0}
-    while [ -L "${self}" ]; do
-        cd "${self%/*}"
-        self=$(readlink "${self}")
+undeploy() {
+  # ref: https://github.com/ko1nksm/readlinkf/blob/master/readlinkf.sh
+  readlinkf() {
+    [ "${1:-}" ] || return 1
+    max_symlinks=40
+    CDPATH='' # to avoid changing to an unexpected directory
+
+    target=$1
+    [ -e "${target%/}" ] || target=${1%"${1##*[!/]}"} # trim trailing slashes
+    [ -d "${target:-/}" ] && target="$target/"
+
+    cd -P . 2>/dev/null || return 1
+    while [ "$max_symlinks" -ge 0 ] && max_symlinks=$((max_symlinks - 1)); do
+      if [ ! "$target" = "${target%/*}" ]; then
+        case $target in
+          /*) cd -P "${target%/*}/" 2>/dev/null || break ;;
+          *) cd -P "./${target%/*}" 2>/dev/null || break ;;
+        esac
+        target=${target##*/}
+      fi
+
+      if [ ! -L "$target" ]; then
+        target="${PWD%/}${target:+/}${target}"
+        printf '%s\n' "${target:-/}"
+        return 0
+      fi
+
+      # `ls -dl` format: "%s %u %s %s %u %s %s -> %s\n",
+      #   <file mode>, <number of links>, <owner name>, <group name>,
+      #   <size>, <date and time>, <pathname of link>, <contents of link>
+      # https://pubs.opengroup.org/onlinepubs/9699919799/utilities/ls.html
+      link=$(ls -dl -- "$target" 2>/dev/null) || break
+      target=${link#*" $target -> "}
     done
-    cd "${self%/*}"
-    echo "$(pwd -P)/${self##*/}"
-)"
-readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly DOTFILES_SRC_ROOT="$(cd ${SCRIPT_ROOT}/../../../..; pwd -P)"
-readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
-readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
-readonly GENERAL_PATH="${SCRIPT_ROOT}/general.zsh"
-readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external.zsh"
-readonly GENERAL_DIRECTIVE="source '${GENERAL_PATH}'"
-readonly EXTERNAL_DIRECTIVE="source '${EXTERNAL_PATH}'"
+    return 1
+  }
 
-readonly delete_line="${LIBRARY_SCRIPTS}/delete-line.sh"
+  local readonly SCRIPT_PATH=$(readlinkf "${0}")
+  local readonly SCRIPT_ROOT=$(dirname -- "${SCRIPT_PATH}")
+  local readonly DOTFILES_SRC_ROOT=$(readlinkf "${SCRIPT_ROOT}/../../../..")
+  local readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
+  local readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
+  local readonly GENERAL_PATH="${SCRIPT_ROOT}/general.zsh"
+  local readonly EXTERNAL_PATH="${SCRIPT_ROOT}/external.zsh"
+  local readonly GENERAL_DIRECTIVE="source '${GENERAL_PATH}'"
+  local readonly EXTERNAL_DIRECTIVE="source '${EXTERNAL_PATH}'"
 
-${delete_line} "${EXTERNAL_DIRECTIVE}" "${RC_PATH}"
-${delete_line} "${GENERAL_DIRECTIVE}" "${RC_PATH}"
-if [ ! -s "${RC_PATH}" ]; then
+  local readonly delete_line="${LIBRARY_SCRIPTS}/delete_line.sh"
+
+  ${delete_line} "${EXTERNAL_DIRECTIVE}" "${RC_PATH}"
+  ${delete_line} "${GENERAL_DIRECTIVE}" "${RC_PATH}"
+  if [ -e "${RC_PATH}" -a ! -s "${RC_PATH}" ]; then
     rm "${RC_PATH}"
-fi
+  fi
 
-if [ -f "${EXTERNAL_PATH}" ] && [ ! -s "${EXTERNAL_PATH}" ]; then
+  if [ -e "${EXTERNAL_PATH}" -a ! -s "${EXTERNAL_PATH}" ]; then
     rm "${EXTERNAL_PATH}"
-fi
+  fi
+
+  return 0
+}
+undeploy

@@ -1,29 +1,63 @@
 #!/usr/bin/env sh
-set -e
+set -eu
 
-readonly SCRIPT_PATH=$(
-    self=${0}
-    while [ -L "${self}" ]; do
-        cd "${self%/*}"
-        self=$(readlink "${self}")
+decompile() {
+  # ref: https://github.com/ko1nksm/readlinkf/blob/master/readlinkf.sh
+  readlinkf() {
+    [ "${1:-}" ] || return 1
+    max_symlinks=40
+    CDPATH='' # to avoid changing to an unexpected directory
+
+    target=$1
+    [ -e "${target%/}" ] || target=${1%"${1##*[!/]}"} # trim trailing slashes
+    [ -d "${target:-/}" ] && target="$target/"
+
+    cd -P . 2>/dev/null || return 1
+    while [ "$max_symlinks" -ge 0 ] && max_symlinks=$((max_symlinks - 1)); do
+      if [ ! "$target" = "${target%/*}" ]; then
+        case $target in
+          /*) cd -P "${target%/*}/" 2>/dev/null || break ;;
+          *) cd -P "./${target%/*}" 2>/dev/null || break ;;
+        esac
+        target=${target##*/}
+      fi
+
+      if [ ! -L "$target" ]; then
+        target="${PWD%/}${target:+/}${target}"
+        printf '%s\n' "${target:-/}"
+        return 0
+      fi
+
+      # `ls -dl` format: "%s %u %s %s %u %s %s -> %s\n",
+      #   <file mode>, <number of links>, <owner name>, <group name>,
+      #   <size>, <date and time>, <pathname of link>, <contents of link>
+      # https://pubs.opengroup.org/onlinepubs/9699919799/utilities/ls.html
+      link=$(ls -dl -- "$target" 2>/dev/null) || break
+      target=${link#*" $target -> "}
     done
-    cd "${self%/*}"
-    echo "$(pwd -P)/${self##*/}"
-)
-readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly CURRENT_ROOT="$(cd ${SCRIPT_ROOT}/..; pwd -P)"
-readonly AVAILABLE_APPS="${CURRENT_ROOT}/available/app"
-readonly DECOMPILE_SCRIPT_NAME='decompile.sh'
+    return 1
+  }
 
-get_available_app_decompile_scripts() {
+  local readonly SCRIPT_PATH=$(readlinkf "${0}")
+  local readonly SCRIPT_ROOT=$(dirname -- "${SCRIPT_PATH}")
+  local readonly CURRENT_ROOT=$(readlinkf "${SCRIPT_ROOT}/..")
+  local readonly AVAILABLE_APPS="${CURRENT_ROOT}/available/app"
+  local readonly DECOMPILE_SCRIPT_NAME='decompile.sh'
+
+  get_available_app_decompile_scripts() {
     find "${AVAILABLE_APPS}" -follow -maxdepth 2 -name "${DECOMPILE_SCRIPT_NAME}" -type f
-}
+    return 0
+  }
 
-printf 'Decompiling if needed.\n'
-for app_decompile in $(get_available_app_decompile_scripts); do
-    app_name="$(basename $(dirname ${app_decompile}))"
-    printf "Decompiling ${app_name}...\n"
+  printf 'Decompiling if needed.\n'
+  for app_decompile in $(get_available_app_decompile_scripts); do
+    app_name=$(basename -- $(dirname -- "${app_decompile}"))
+    printf 'Decompiling %s...\n' "${app_name}"
     ${app_decompile}
-done
+  done
 
-printf 'Decompiling finished!\n'
+  printf 'Decompiling finished!\n'
+
+  return 0
+}
+decompile

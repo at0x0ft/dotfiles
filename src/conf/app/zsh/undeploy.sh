@@ -1,22 +1,55 @@
 #!/usr/bin/env sh
-set -e
+set -eu
 
-readonly SCRIPT_PATH=$(
-    self=${0}
-    while [ -L "${self}" ]; do
-        cd "${self%/*}"
-        self=$(readlink "${self}")
+undeploy() {
+  # ref: https://github.com/ko1nksm/readlinkf/blob/master/readlinkf.sh
+  readlinkf() {
+    [ "${1:-}" ] || return 1
+    max_symlinks=40
+    CDPATH='' # to avoid changing to an unexpected directory
+
+    target=$1
+    [ -e "${target%/}" ] || target=${1%"${1##*[!/]}"} # trim trailing slashes
+    [ -d "${target:-/}" ] && target="$target/"
+
+    cd -P . 2>/dev/null || return 1
+    while [ "$max_symlinks" -ge 0 ] && max_symlinks=$((max_symlinks - 1)); do
+      if [ ! "$target" = "${target%/*}" ]; then
+        case $target in
+          /*) cd -P "${target%/*}/" 2>/dev/null || break ;;
+          *) cd -P "./${target%/*}" 2>/dev/null || break ;;
+        esac
+        target=${target##*/}
+      fi
+
+      if [ ! -L "$target" ]; then
+        target="${PWD%/}${target:+/}${target}"
+        printf '%s\n' "${target:-/}"
+        return 0
+      fi
+
+      # `ls -dl` format: "%s %u %s %s %u %s %s -> %s\n",
+      #   <file mode>, <number of links>, <owner name>, <group name>,
+      #   <size>, <date and time>, <pathname of link>, <contents of link>
+      # https://pubs.opengroup.org/onlinepubs/9699919799/utilities/ls.html
+      link=$(ls -dl -- "$target" 2>/dev/null) || break
+      target=${link#*" $target -> "}
     done
-    cd "${self%/*}"
-    echo "$(pwd -P)/${self##*/}"
-)
-readonly SCRIPT_ROOT="$(dirname ${SCRIPT_PATH})"
-readonly UNDEPLOY_SCRIPT_NAME='undeploy.sh'
+    return 1
+  }
 
-readonly env_undeploy="${SCRIPT_ROOT}/env/${UNDEPLOY_SCRIPT_NAME}"
-readonly profile_undeploy="${SCRIPT_ROOT}/profile/${UNDEPLOY_SCRIPT_NAME}"
-readonly rc_undeploy="${SCRIPT_ROOT}/rc/${UNDEPLOY_SCRIPT_NAME}"
+  local readonly SCRIPT_PATH=$(readlinkf "${0}")
+  local readonly SCRIPT_ROOT=$(dirname -- "${SCRIPT_PATH}")
+  local readonly UNDEPLOY_SCRIPT_NAME='undeploy.sh'
 
-${rc_undeploy}
-${profile_undeploy}
-${env_undeploy}
+  local readonly env_undeploy="${SCRIPT_ROOT}/env/${UNDEPLOY_SCRIPT_NAME}"
+  local readonly profile_undeploy="${SCRIPT_ROOT}/profile/${UNDEPLOY_SCRIPT_NAME}"
+  local readonly rc_undeploy="${SCRIPT_ROOT}/rc/${UNDEPLOY_SCRIPT_NAME}"
+
+  ${rc_undeploy}
+  ${profile_undeploy}
+  ${env_undeploy}
+
+  return 0
+}
+undeploy

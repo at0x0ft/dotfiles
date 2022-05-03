@@ -18,8 +18,10 @@ readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
 readonly PREFERENCE_ROOT="${CURRENT_ROOT}/pref"
 readonly AVAILABLE_ROOT="${CURRENT_ROOT}/available"
 readonly AVAILABLE_APPS="${AVAILABLE_ROOT}/app"
-${CURRENT_LIBRARY_SCRIPTS}/validate-config-link.sh
-readonly CONFIG_LINK=$("${CURRENT_LIBRARY_SCRIPTS}/get-config-link.sh")
+readonly validate_config_link="${CURRENT_LIBRARY_SCRIPTS}/validate_config_link.sh"
+${validate_config_link}
+readonly get_config_link="${CURRENT_LIBRARY_SCRIPTS}/get_config_link.sh"
+readonly CONFIG_LINK=$(${get_config_link})
 readonly SYSTEM_PACKAGE_MANAGER_LINK="${CONFIG_LINK}/system-package-manager"
 readonly AVAILABLE_SYSTEM_PACKAGE_MANAGER="${AVAILABLE_ROOT}/system-package-manager"
 readonly AVAILABLE_SYSTEM_PACKAGE_MANAGER_LINK="${AVAILABLE_SYSTEM_PACKAGE_MANAGER}/link"
@@ -30,7 +32,7 @@ readonly INSTALL_SCRIPT_NAME='install.sh'
 
 readonly has_system_package_manager_key="${PREFERENCE_ROOT}/has-system-package-manager-key.sh"
 readonly get_system_package_manager_packages_key="${PREFERENCE_ROOT}/get-system-package-manager-packages.sh"
-readonly make_relative_symlink="${LIBRARY_SCRIPTS}/make-relative-symlink.sh"
+readonly make_relative_symlink="${LIBRARY_SCRIPTS}/make_relative_symlink.sh"
 
 get_package_manager_name() {
     basename $(readlink "${1}")

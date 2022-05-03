@@ -18,8 +18,10 @@ readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
 readonly PREFERENCE_ROOT="${CURRENT_ROOT}/pref"
 readonly AVAILABLE_ROOT="${CURRENT_ROOT}/available"
 readonly AVAILABLE_APPS="${AVAILABLE_ROOT}/app"
-${CURRENT_LIBRARY_SCRIPTS}/validate-config-link.sh
-readonly CONFIG_LINK=$("${CURRENT_LIBRARY_SCRIPTS}/get-config-link.sh")
+readonly validate_config_link="${CURRENT_LIBRARY_SCRIPTS}/validate_config_link.sh"
+${validate_config_link}
+readonly get_config_link="${CURRENT_LIBRARY_SCRIPTS}/get_config_link.sh"
+readonly CONFIG_LINK=$(${get_config_link})
 readonly PACKAGE_MANAGER_DIRECTORY="${CONFIG_LINK}/package-manager"
 readonly AVAILABLE_USER_PACKAGE_MANAGER="${AVAILABLE_ROOT}/user-package-manager"
 readonly AVAILABLE_USER_PACKAGE_MANAGER_LINK="${AVAILABLE_USER_PACKAGE_MANAGER}/link"
@@ -32,7 +34,7 @@ readonly has_user_package_manager_key="${PREFERENCE_ROOT}/has-user-package-manag
 readonly get_user_package_manager="${PREFERENCE_ROOT}/get-user-package-manager.sh"
 readonly has_user_package_manager_package_key="${PREFERENCE_ROOT}/has-user-package-manager-package-key.sh"
 readonly get_user_package_manager_packages="${PREFERENCE_ROOT}/get-user-package-manager-packages.sh"
-readonly make_relative_symlink="${LIBRARY_SCRIPTS}/make-relative-symlink.sh"
+readonly make_relative_symlink="${LIBRARY_SCRIPTS}/make_relative_symlink.sh"
 
 if ! $(${has_user_package_manager_key}); then
     exit 0

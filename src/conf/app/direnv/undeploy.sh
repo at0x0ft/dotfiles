@@ -17,6 +17,6 @@ readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
 readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
 readonly RC_DIRECTIVE="source '${RC_PATH}'"
 
-readonly delete_directive_from_zshrc_postload="${CURRENT_ROOT}/available/shell/link/rc/postload/delete-directive.sh"
+readonly delete_directive_from_zshrc_postload="${CURRENT_ROOT}/available/shell/link/rc/postload/delete_directive.sh"
 
 ${delete_directive_from_zshrc_postload} "${RC_DIRECTIVE}"

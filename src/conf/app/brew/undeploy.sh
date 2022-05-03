@@ -16,6 +16,6 @@ readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
 readonly RC_PATH="${SCRIPT_ROOT}/rc.sh"
 readonly RC_DIRECTIVE=". '${RC_PATH}'"
 
-readonly delete_directive_to_profile="${CURRENT_ROOT}/available/shell/link/profile/delete-directive.sh"
+readonly delete_directive_to_profile="${CURRENT_ROOT}/available/shell/link/profile/delete_directive.sh"
 
 ${delete_directive_to_profile} "${RC_DIRECTIVE}"

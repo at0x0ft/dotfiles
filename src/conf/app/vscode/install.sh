@@ -17,7 +17,7 @@ set -e
 # readonly BREWRC_PATH="${SCRIPT_ROOT}/rc.sh"
 # readonly EXEC_COMMAND="$(basename ${SCRIPT_ROOT})"
 
-# readonly is_valid_command="${CURRENT_LIBRARY_SCRIPTS}/is-valid-command.sh"
+# readonly is_valid_command="${CURRENT_LIBRARY_SCRIPTS}/is_valid_command.sh"
 
 # . ${BREWRC_PATH}
 
