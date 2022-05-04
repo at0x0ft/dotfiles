@@ -58,6 +58,6 @@ RUN --mount=type=cache,target=/home/testuser/.cache/Homebrew \
 # Copy dotfiles
 COPY --chown=${USER_NAME}:${USER_NAME} ${DOTFILES_PATH} ${DOTFILES_DST}
 ENV TERM ${TERM}
-RUN ${DOTFILES_DST}/src/bin/install.sh -d
+RUN ${DOTFILES_DST}/src/bin/install.sh -edesktop
 
 CMD [ "su", "-", "testuser" ]
