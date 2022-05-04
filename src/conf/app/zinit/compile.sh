@@ -43,7 +43,7 @@ compile() {
   local readonly DOTFILES_SRC_ROOT=$(readlinkf "${SCRIPT_ROOT}/../../..")
   local readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
   local readonly CURRENT_LIBRARY_SCRIPTS="${CURRENT_ROOT}/lib"
-  local readonly COMPILEDRC_PATH="${SCRIPT_ROOT}/compiled-module-rc.zsh"
+  local readonly COMPILEDRC_PATH="${SCRIPT_ROOT}/compiled_module_load.zsh"
   local readonly COMPILEDRC_DIRECTIVE="source '${COMPILEDRC_PATH}'"
 
   local readonly add_directive_to_zshrc_preload="${CURRENT_ROOT}/available/shell/link/rc/preload/add_directive.sh"

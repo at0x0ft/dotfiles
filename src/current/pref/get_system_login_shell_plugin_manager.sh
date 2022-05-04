@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -eu
 
-decompile() {
+get_system_login_shell_plugin_manager() {
   # ref: https://github.com/ko1nksm/readlinkf/blob/master/readlinkf.sh
   readlinkf() {
     [ "${1:-}" ] || return 1
@@ -40,24 +40,10 @@ decompile() {
 
   local readonly SCRIPT_PATH=$(readlinkf "${0}")
   local readonly SCRIPT_ROOT=$(dirname -- "${SCRIPT_PATH}")
-  local readonly DOTFILES_SRC_ROOT=$(readlinkf "${SCRIPT_ROOT}/../../..")
-  local readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
-  local readonly COMPILEDRC_PATH="${SCRIPT_ROOT}/compiled_module_load.zsh"
-  local readonly COMPILEDRC_DIRECTIVE="source '${COMPILEDRC_PATH}'"
-  local readonly ZSH_COMPILED_EXT='.zwc'
+  local readonly PREFERENCE_PATH="${SCRIPT_ROOT}/preference.json"
+  local readonly JQ_QUERY='.system_login_shell.plugin_manager'
 
-  local readonly delete_directive_from_zshrc_preload="${CURRENT_ROOT}/available/shell/link/rc/preload/delete_directive.sh"
-
-  ${delete_directive_from_zshrc_preload} "${COMPILEDRC_DIRECTIVE}"
-
-  get_compiled_files() {
-    find "${HOME}" -name "*${ZSH_COMPILED_EXT}*" -type f
-    return 0
-  }
-  for compiled_file in $(get_compiled_files); do
-      rm -f "${compiled_file}"
-  done
-
+  jq -r "${JQ_QUERY}" "${PREFERENCE_PATH}"
   return 0
 }
-decompile
+get_system_login_shell_plugin_manager

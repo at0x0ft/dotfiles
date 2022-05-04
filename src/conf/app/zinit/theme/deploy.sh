@@ -43,10 +43,10 @@ deploy() {
   local readonly DOTFILES_SRC_ROOT=$(readlinkf "${SCRIPT_ROOT}/../../../..")
   local readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
   local readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
-  local readonly FAST_SYNTAX_HIGHLIGHTING_PATH="${SCRIPT_ROOT}/fast-syntax-highlighing.zsh"
-  local readonly P10K_LOAD_PATH="${SCRIPT_ROOT}/p10k-load.zsh"
+  local readonly FAST_SYNTAX_HIGHLIGHTING_PATH="${SCRIPT_ROOT}/fast_syntax_highlighting.zsh"
+  local readonly P10K_LOAD_PATH="${SCRIPT_ROOT}/p10k_load.zsh"
   local readonly P10K_PATH="${SCRIPT_ROOT}/p10k.zsh"
-  local readonly P10K_INSTANT_PROMPT_PATH="${SCRIPT_ROOT}/p10k-instant-prompt.zsh"
+  local readonly P10K_INSTANT_PROMPT_PATH="${SCRIPT_ROOT}/p10k_instant_prompt.zsh"
   local readonly FAST_SYNTAX_HIGHLIGHTING_DIRECTIVE="source '${FAST_SYNTAX_HIGHLIGHTING_PATH}'"
   local readonly P10K_LOAD_DIRECTIVE="source '${P10K_LOAD_PATH}'"
   local readonly P10K_DIRECTIVE="source '${P10K_PATH}'"

@@ -40,7 +40,6 @@ readlinkf() {
 calculate_relative_path() {
   local readonly origin=$(readlinkf "${1}")
   local readonly destination=$(readlinkf "${2}")
-  # printf "debug = %s -> %s\n" "${1}" "${origin}" >&2
 
   if [ ! -d "${origin}" ]; then
     printf '[Error]: 1st argument path must be the path to directory.\n' >&2
@@ -51,7 +50,6 @@ calculate_relative_path() {
   get_common_ancestor_path() {
     local path1="${1#/}"
     local path2="${2#/}"
-      # printf "debug = %s -> %s\n" "${1}" "${path1}" >&2
     local result=''
     while true; do
       local dirname1="${path1%%/*}"
@@ -63,13 +61,11 @@ calculate_relative_path() {
         return 0
       fi
       result="${result}/${dirname1}"
-      # printf "result = %s\n" "${result}" >&2
     done
     return 1
   }
 
   local readonly common_ancestor_path=$(get_common_ancestor_path "${origin}" "${destination}")
-  printf "debug = ${common_ancestor_path}\n" >&2
 
   get_relative_path_from_common() {
     local readonly path="${1}"
@@ -80,8 +76,6 @@ calculate_relative_path() {
   }
   local readonly common_to_origin_relative_path=$(get_relative_path_from_common "${origin}" "${common_ancestor_path}")
   local readonly common_to_destination_relative_path=$(get_relative_path_from_common "${destination}" "${common_ancestor_path}")
-  printf "debug = ${common_to_origin_relative_path}\n" >&2
-  printf "debug = ${common_to_destination_relative_path}\n" >&2
 
   calculate_relative_ancestor_path() {
     local path="${1}"
@@ -99,7 +93,6 @@ calculate_relative_path() {
     return 0
   }
   local readonly relative_ancestor_path=$(calculate_relative_ancestor_path "${common_to_origin_relative_path}")
-  printf "debug = ${relative_ancestor_path}\n" >&2
 
   connect_origin_to_destination_relative_path() {
     local readonly relative_ancestor_path="${1}"

@@ -39,11 +39,11 @@ build() {
   }
   local readonly SCRIPT_PATH=$(readlinkf "${0}")
   local readonly SCRIPT_ROOT=$(dirname -- "${SCRIPT_PATH}")
-  local readonly DOTFILES_ROOT=$(cd "${SCRIPT_ROOT}/.."; pwd -P)
+  local readonly DOTFILES_ROOT=$(readlinkf "${SCRIPT_ROOT}/..")
   local readonly DOCKERFILE_BASE_NAME='Dockerfile'
 
   # arguments
-  local readonly dockerfile_root=$(cd $(pwd -P)"/${1}"; pwd -P)
+  local readonly dockerfile_root=$(readlinkf "${1}")
   if [ ! -d ${dockerfile_root} ]; then
     printf "Not exist: ${dockerfile_root}\n" >&2
     exit 1

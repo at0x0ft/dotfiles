@@ -69,8 +69,9 @@ undeploy() {
     return 0
   }
 
-  readonly get_os_type="${CURRENT_LIBRARY_SCRIPTS}/get_os_type.sh"
-  if [ $(${get_os_type}) = 'Ubuntu' ]; then
+  local readonly get_os_type="${CURRENT_LIBRARY_SCRIPTS}/get_os_type.sh"
+  local readonly os_type=$(${get_os_type})
+  if [ "${os_type}" = 'Ubuntu' ]; then
     ${delete_directive_to_zshenv} "${UBUNTU_SPECIFIC_DIRECTIVE}"
   fi
 
