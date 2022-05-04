@@ -44,7 +44,7 @@ undeploy() {
   local readonly LIBRARY_SCRIPTS="${DOTFILES_SRC_ROOT}/lib"
   local readonly CURRENT_ROOT="${DOTFILES_SRC_ROOT}/current"
   local readonly RC_PATH="${SCRIPT_ROOT}/rc.zsh"
-  local readonly FAST_SYNTAX_HIGHLIGHTING_PATH="${SCRIPT_ROOT}/fast_syntax_highlighing.zsh"
+  local readonly FAST_SYNTAX_HIGHLIGHTING_PATH="${SCRIPT_ROOT}/fast_syntax_highlighting.zsh"
   local readonly P10K_LOAD_PATH="${SCRIPT_ROOT}/p10k_load.zsh"
   local readonly P10K_PATH="${SCRIPT_ROOT}/p10k.zsh"
   local readonly P10K_INSTANT_PROMPT_PATH="${SCRIPT_ROOT}/p10k_instant_prompt.zsh"
