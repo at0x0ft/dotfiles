@@ -35,6 +35,3 @@ printf "[Debug]: install requirements packages (libncurses-dev, unzip, curl, fil
 printf "Installing zinit...\n"
 command mkdir -p "${ZINIT_PATH}" && command chmod g-rwX "${ZINIT_PATH}"
 command git clone https://github.com/zdharma-continuum/zinit "${ZINIT_PATH}/zinit.git"
-
-# TEMP: zinit version fix
-cd "${ZINIT_PATH}/zinit.git" && git checkout 537e895c1d3d89b4a302cd253fd9fb2d6aa3328d
