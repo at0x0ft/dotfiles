@@ -1,5 +1,5 @@
 zinit ice wait lucid from"gh-r" mv"lsd* -> lsd" sbin"**/lsd(.exe|) -> lsd"
-zinit load Peltoche/lsd
+zinit load lsd-rs/lsd
 alias ls='lsd --color=always'
 
 zinit ice wait lucid from"gh-r" mv"bat* -> bat" sbin"**/bat(.exe|) -> bat"
