@@ -6,7 +6,7 @@
   home.stateVersion = "25.11";
 
   imports = [
-    ./modules/shell-hooks.nix
+    ./modules/shell-hook.nix
     ./modules/base.nix
   ];
 

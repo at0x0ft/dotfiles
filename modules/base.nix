@@ -18,7 +18,7 @@
     pkgs.zsh-fast-syntax-highlighting
   ];
 
-  shell.hooks.entries = [
+  shell.hook.entries = [
     {
       loader = "main";
       priority = 10;
@@ -63,10 +63,10 @@
     [[ -o interactive ]] || return
 
     # load shell hooks
-    if [ -r "${config.xdg.configHome}/${config.shell.hooks.scriptPath}" ]; then
-      source "${config.xdg.configHome}/${config.shell.hooks.scriptPath}"
+    if [ -r "${config.xdg.configHome}/${config.shell.hook.scriptPath}" ]; then
+      source "${config.xdg.configHome}/${config.shell.hook.scriptPath}"
     else
-      printf 'failed to load shell hook script: not found: "%s" load error.\n' "${config.xdg.configHome}/${config.shell.hooks.scriptPath}" >&2
+      printf 'failed to load shell hook script: not found: "%s" load error.\n' "${config.xdg.configHome}/${config.shell.hook.scriptPath}" >&2
     fi
   '';
 }

@@ -29,7 +29,7 @@ Currently runs on WSL2 (x86_64-linux) with Zsh as the primary shell.
 ├── flake.lock                       # Dependency version lock file
 ├── home.nix                         # Main Home Manager configuration
 ├── modules/
-│   └── shell-hooks.nix              # Custom module: shell hook mechanism
+│   └── shell-hook.nix              # Custom module: shell hook mechanism
 ├── shell-hook-sources/              # Hook script source files
 │   ├── zsh/                         # Zsh-specific settings
 │   │   ├── zinit.zsh                # Zinit plugin manager initialization
@@ -42,7 +42,7 @@ Currently runs on WSL2 (x86_64-linux) with Zsh as the primary shell.
 │   │   └── lsd.sh                   # lsd aliases
 │   └── bash/                        # Bash-specific settings
 │       └── direnv.bash              # direnv hook (Bash)
-└── shell-hooks/                     # Home Manager generated output (symlinks)
+└── shell-hook/                     # Home Manager generated output (symlinks)
     ├── hook.sh                      # Auto-generated hook loader
     ├── main.d/
     └── postload.d/
@@ -74,7 +74,7 @@ Currently runs on WSL2 (x86_64-linux) with Zsh as the primary shell.
 | `zsh-history-search-multi-word` | Zsh plugin | Package only (config managed separately, req. 7) |
 | `zsh-fast-syntax-highlighting` | Zsh plugin | Package only (config managed separately, req. 7) |
 
-### 2.5 shell-hooks Module Design
+### 2.5 shell-hook Module Design
 
 A simple module aligned with requirement 3, handling only load-order control:
 
@@ -90,7 +90,7 @@ A simple module aligned with requirement 3, handling only load-order control:
 |-------------|-------------------|---------|
 | Req. 1: Cross-platform | **Non-compliant** | `system = "x86_64-linux"` is hardcoded in `flake.nix`. No mechanism for arm64-linux, aarch64-darwin, etc. |
 | Req. 2: Lean dotfiles | **Compliant** | Tool configs are plain shell scripts in `shell-hook-sources/`, independent of home-manager. No `programs.*` usage |
-| Req. 3: Simple modules | **Compliant** | `shell-hooks.nix` implements only load-order control, no inter-tool dependency resolution |
+| Req. 3: Simple modules | **Compliant** | `shell-hook.nix` implements only load-order control, no inter-tool dependency resolution |
 | Req. 4: No login shell management | **Mostly compliant** | Does not use `programs.zsh`, generates `.zshrc` directly. However, `.zshrc` generation and some scripts (`zsh/`) are Zsh-specific, with no equivalent path for bash/fish |
 | Req. 5: Plugin manager as loader only | **Compliant** | zinit is used only for sourcing plugins in `zinit.zsh`. Package version management is strict via `home.packages` + `flake.lock` |
 | Req. 6: Base + override | **Non-compliant** | All packages are listed flat in `home.nix`, no environment-specific switching mechanism |
@@ -101,7 +101,7 @@ A simple module aligned with requirement 3, handling only load-order control:
 ## 3. Design Principles
 
 1. **Limit home-manager's role**: home-manager handles only "package management" and "file placement". Tool configuration files are written as plain shell scripts / standard formats — `programs.*` config generation is not used. home-manager may only generate loaders (`hook.sh`) and rc file entry points (`.zshrc`)
-2. **Load-order control only**: The `shell-hooks` module handles only load order (phases + priorities), with no inter-tool dependency resolution or tool-specific logic
+2. **Load-order control only**: The `shell-hook` module handles only load order (phases + priorities), with no inter-tool dependency resolution or tool-specific logic
 3. **Separate package management from configuration**: Package installation (`home.packages`) and config file placement (`shell-hook-sources/`) are separate concerns. Nix strictly manages package versions; config files remain portable
 4. **Cross-platform commonality**: Linux (x86_64, arm64) / Darwin differences are absorbed via `flake.nix` system parameters and module conditionals; `home.nix` and shell scripts remain maximally shared
 5. **Environment-specific overrides**: Layer environment-specific deltas on top of a base package/config set. Leverage `imports` and Nix module system's `mkDefault` / `mkForce`
@@ -137,7 +137,7 @@ Currently all packages/configs are flat in `home.nix` with no environment-specif
 
 ```
 modules/
-├── shell-hooks.nix                  # Existing: hook mechanism (shared foundation)
+├── shell-hook.nix                  # Existing: hook mechanism (shared foundation)
 ├── base.nix                         # New: cross-environment common packages + config
 └── overrides/
     ├── wsl.nix                      # New: WSL-specific additions/overrides
@@ -157,7 +157,7 @@ Currently `home.nix` handles package definitions, hook entries, and `.zshrc` gen
 ```
 home.nix (target state)
 ├── home.username / home.homeDirectory / home.stateVersion
-├── imports = [ ./modules/shell-hooks.nix ./modules/base.nix ./modules/overrides/... ]
+├── imports = [ ./modules/shell-hook.nix ./modules/base.nix ./modules/overrides/... ]
 └── programs.home-manager.enable = true
 ```
 
@@ -168,16 +168,16 @@ home.nix (target state)
 ### 4.4 Multi-Shell RC File Generation (Req. 4)
 
 Currently only `.zshrc` is generated; no rc file generation path for bash/fish.
-`bash/direnv.bash` exists but is not registered in `shell.hooks.entries`.
+`bash/direnv.bash` exists but is not registered in `shell.hook.entries`.
 
 **Policy**: Organize per-shell rc file generation and hook entry registration.
 
 - `.zshrc`: Maintain current behavior (source zsh hooks)
 - `.bashrc`: Consider adding similar loader structure to source bash hooks
 - The `common/` / `zsh/` / `bash/` separation in `shell-hook-sources/` is already appropriate
-- Consider adding a shell-type tag to hook entries in `shell-hooks.nix` so each shell loads only its appropriate hooks
+- Consider adding a shell-type tag to hook entries in `shell-hook.nix` so each shell loads only its appropriate hooks
 
-### 4.5 shell-hooks Module Improvement (Req. 3)
+### 4.5 shell-hook Module Improvement (Req. 3)
 
 Address the TODO comment in the module (`# TODO: refactor as config.xdg.configFile.(...).target;`).
 

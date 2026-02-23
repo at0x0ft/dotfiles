@@ -29,7 +29,7 @@ Nix Flakes + Home Manager による、ユーザー `at0x0ft` のホームディ�
 ├── flake.lock                       # 依存バージョンのロックファイル
 ├── home.nix                         # メイン Home Manager 設定
 ├── modules/
-│   └── shell-hooks.nix              # カスタムモジュール: シェルフック機構
+│   └── shell-hook.nix              # カスタムモジュール: シェルフック機構
 ├── shell-hook-sources/              # フックスクリプトのソースファイル群
 │   ├── zsh/                         # Zsh 専用設定
 │   │   ├── zinit.zsh                # Zinit プラグインマネージャ初期化
@@ -42,7 +42,7 @@ Nix Flakes + Home Manager による、ユーザー `at0x0ft` のホームディ�
 │   │   └── lsd.sh                   # lsd エイリアス
 │   └── bash/                        # Bash 専用設定
 │       └── direnv.bash              # direnv フック (Bash 用)
-└── shell-hooks/                     # Home Manager が生成する出力 (symlink 群)
+└── shell-hook/                     # Home Manager が生成する出力 (symlink 群)
     ├── hook.sh                      # 自動生成されるフックローダー
     ├── main.d/
     └── postload.d/
@@ -74,7 +74,7 @@ Nix Flakes + Home Manager による、ユーザー `at0x0ft` のホームディ�
 | `zsh-history-search-multi-word` | Zsh プラグイン | パッケージのみ (設定は別途管理、要件7) |
 | `zsh-fast-syntax-highlighting` | Zsh プラグイン | パッケージのみ (設定は別途管理、要件7) |
 
-### 2.5 shell-hooks モジュールの設計
+### 2.5 shell-hook モジュールの設計
 
 要件3に合致した読み込み順制御のみを担うシンプルなモジュール:
 
@@ -90,7 +90,7 @@ Nix Flakes + Home Manager による、ユーザー `at0x0ft` のホームディ�
 |------|-------------|------|
 | 要件1: クロスプラットフォーム | **不適合** | `flake.nix` で `system = "x86_64-linux"` がハードコードされている。arm64-linux, aarch64-darwin 等への対応機構がない |
 | 要件2: lean dotfiles | **適合** | ツール設定は素のシェルスクリプトとして `shell-hook-sources/` に配置されており、home-manager 非依存の形式を維持。`programs.*` は使用していない |
-| 要件3: シンプルなモジュール | **適合** | `shell-hooks.nix` は読み込み順制御のみを実装しており、ツール間の依存解決はしていない |
+| 要件3: シンプルなモジュール | **適合** | `shell-hook.nix` は読み込み順制御のみを実装しており、ツール間の依存解決はしていない |
 | 要件4: ログインシェル非管理 | **概ね適合** | `programs.zsh` は使わず `.zshrc` を直接生成。ただし `.zshrc` の生成自体と一部スクリプト (`zsh/` 配下) が Zsh 固有で、bash/fish で同等の仕組みを使う経路が未整備 |
 | 要件5: プラグインマネージャはローダー専任 | **適合** | zinit は `zinit.zsh` でプラグインの source のみに使用。パッケージのバージョン管理は home-manager の `home.packages` + `flake.lock` で厳密管理 |
 | 要件6: base + override | **不適合** | `home.nix` に全パッケージがフラットに列挙されており、環境別の切り替え機構がない |
@@ -101,7 +101,7 @@ Nix Flakes + Home Manager による、ユーザー `at0x0ft` のホームディ�
 ## 3. 設計原則
 
 1. **home-manager の役割限定**: home-manager は「パッケージ管理」と「ファイル配置」に徹する。ツールの設定ファイル自体は素のシェルスクリプト / 標準形式で記述し、`programs.*` による設定生成は使わない。home-manager が生成してよいのは、設定ファイルを読み込むためのローダー (`hook.sh`) や rc ファイルのエントリポイント (`.zshrc`) に限る
-2. **読み込み順制御のみ**: `shell-hooks` モジュールは読み込み順 (フェーズ + 優先度) の制御のみを担い、ツール間の依存解決やツール固有のロジックを持たない
+2. **読み込み順制御のみ**: `shell-hook` モジュールは読み込み順 (フェーズ + 優先度) の制御のみを担い、ツール間の依存解決やツール固有のロジックを持たない
 3. **パッケージ管理と設定の分離**: パッケージのインストール (`home.packages`) と設定ファイルの配置 (`shell-hook-sources/`) は別の関心事として分離する。Nix はパッケージのバージョンを厳密に管理し、設定ファイルはポータブルな形式を保つ
 4. **クロスプラットフォーム共通化**: Linux (x86_64, arm64) / Darwin の差異は `flake.nix` の system パラメータとモジュールの条件分岐で吸収し、`home.nix` およびシェルスクリプト群は最大限共通で使う
 5. **環境別オーバーライド**: base となるパッケージ/設定セットの上に、環境固有の差分を重ねる層構造を持つ。`imports` と Nix モジュールシステムの `mkDefault` / `mkForce` を活用する
@@ -137,7 +137,7 @@ flake.nix (改善後のイメージ)
 
 ```
 modules/
-├── shell-hooks.nix                  # 既存: フック機構 (共通基盤)
+├── shell-hook.nix                  # 既存: フック機構 (共通基盤)
 ├── base.nix                         # 新規: 全環境共通のパッケージ + 設定
 └── overrides/
     ├── wsl.nix                      # 新規: WSL 固有の追加/上書き
@@ -157,7 +157,7 @@ modules/
 ```
 home.nix (改善後のイメージ)
 ├── home.username / home.homeDirectory / home.stateVersion
-├── imports = [ ./modules/shell-hooks.nix ./modules/base.nix ./modules/overrides/... ]
+├── imports = [ ./modules/shell-hook.nix ./modules/base.nix ./modules/overrides/... ]
 └── programs.home-manager.enable = true
 ```
 
@@ -168,16 +168,16 @@ home.nix (改善後のイメージ)
 ### 4.4 マルチシェル rc ファイル生成 (要件4)
 
 現状 `.zshrc` のみが生成され、bash/fish 用の rc ファイル生成経路がない。
-`bash/direnv.bash` が存在するが `shell.hooks.entries` には未登録。
+`bash/direnv.bash` が存在するが `shell.hook.entries` には未登録。
 
 **方針**: シェル種別ごとの rc ファイル生成とフックエントリ登録を整理する。
 
 - `.zshrc`: 現状維持 (zsh 用フックを source)
 - `.bashrc`: 同様のローダー構造で bash 用フックを source する生成を追加検討
 - `shell-hook-sources/` の `common/` / `zsh/` / `bash/` の分離は既に適切
-- `shell-hooks.nix` のフック登録にシェル種別のタグを追加し、シェルごとに適切なフックのみロードする仕組みの検討
+- `shell-hook.nix` のフック登録にシェル種別のタグを追加し、シェルごとに適切なフックのみロードする仕組みの検討
 
-### 4.5 shell-hooks モジュールの改善 (要件3)
+### 4.5 shell-hook モジュールの改善 (要件3)
 
 モジュール内の TODO (`# TODO: refactor as config.xdg.configFile.(...).target;`) への対応。
 

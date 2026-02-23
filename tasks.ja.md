@@ -17,11 +17,11 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 - [ ] `modules/base.nix` を新規作成
   - `home.packages` のリストを home.nix から移動
-  - `shell.hooks.entries` のリストを home.nix から移動
+  - `shell.hook.entries` のリストを home.nix から移動
   - `.zshrc` 生成ロジックを home.nix から移動
 - [ ] home.nix を最小構成に整理
   - `home.username` / `home.homeDirectory` / `home.stateVersion`
-  - `imports = [ ./modules/shell-hooks.nix ./modules/base.nix ]`
+  - `imports = [ ./modules/shell-hook.nix ./modules/base.nix ]`
   - `programs.home-manager.enable = true`
 - [ ] `home-manager build --flake .#at0x0ft` で差分なしビルドを確認（既存動作の維持）
 
@@ -31,7 +31,7 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 ---
 
-### 1.2 shell-hooks モジュールの整理（改善方針 4.5）
+### 1.2 shell-hook モジュールの整理（改善方針 4.5）
 
 **目的**: TODO コメントの解消と `baseDir` オプションの一貫性改善。
 
@@ -45,13 +45,13 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 - [ ] フェーズ/優先度の制御ロジックには手を加えない（要件3: シンプルさ維持）
 - [ ] ビルド確認
 
-**変更ファイル**: `modules/shell-hooks.nix`（編集）
+**変更ファイル**: `modules/shell-hook.nix`（編集）
 
 ---
 
 ## Phase 2: マルチシェル対応
 
-### 2.1 shell-hooks にシェル種別タグを導入（改善方針 4.4 前半）
+### 2.1 shell-hook にシェル種別タグを導入（改善方針 4.4 前半）
 
 **目的**: フックエントリにシェル種別を持たせ、シェルごとに適切なフックのみロードする仕組みを作る。
 
@@ -59,18 +59,18 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 **タスク**:
 
-- [ ] `shell-hooks.nix` の entry submodule に `shell` オプションを追加
+- [ ] `shell-hook.nix` の entry submodule に `shell` オプションを追加
   - 型: `types.enum [ "common" "zsh" "bash" ]`（またはリスト型）
   - デフォルト: `"common"`
 - [ ] シェル種別ごとに別ディレクトリへ symlink を配置するよう config を拡張
-  - 例: `shell-hooks/zsh/main.d/`, `shell-hooks/common/main.d/`
+  - 例: `shell-hook/zsh/main.d/`, `shell-hook/common/main.d/`
 - [ ] `hook.sh` の生成ロジックをシェル種別対応に更新
   - zsh 用ローダー: common + zsh ディレクトリを走査
   - bash 用ローダー: common + bash ディレクトリを走査
-- [ ] 既存の `shell.hooks.entries`（home.nix or base.nix）に `shell` タグを付与
+- [ ] 既存の `shell.hook.entries`（home.nix or base.nix）に `shell` タグを付与
 - [ ] ビルド確認
 
-**変更ファイル**: `modules/shell-hooks.nix`（編集）, `modules/base.nix`（編集）
+**変更ファイル**: `modules/shell-hook.nix`（編集）, `modules/base.nix`（編集）
 
 **注意**: 要件3 を遵守し、ツール間の依存解決は導入しない。あくまでシェル種別によるフィルタリングのみ。
 
@@ -78,15 +78,15 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 ### 2.2 マルチシェル rc ファイル生成（改善方針 4.4 後半）
 
-**目的**: `.bashrc` 等のローダーエントリポイントを生成し、bash でも shell-hooks が利用可能にする。
+**目的**: `.bashrc` 等のローダーエントリポイントを生成し、bash でも shell-hook が利用可能にする。
 
-**現状**: `.zshrc` のみ生成。`bash/direnv.bash` が存在するが `shell.hooks.entries` に未登録。
+**現状**: `.zshrc` のみ生成。`bash/direnv.bash` が存在するが `shell.hook.entries` に未登録。
 
 **タスク**:
 
 - [ ] `.bashrc` を `home.file` で生成（`.zshrc` と同様のローダー構造）
   - bash 用 `hook.sh`（common + bash フック）を source
-- [ ] `bash/direnv.bash` を `shell.hooks.entries` に登録（`shell = "bash"`）
+- [ ] `bash/direnv.bash` を `shell.hook.entries` に登録（`shell = "bash"`）
 - [ ] rc ファイル生成ロジックをシェル初期化専用モジュール（例: `modules/shell-rc.nix`）へ分離を検討
 - [ ] 各シェルでの動作確認（`zsh`, `bash`）
 
@@ -168,7 +168,7 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 ```
 Phase 1 (基盤整理)
   1.1 home.nix の分割 ─────────┐
-  1.2 shell-hooks の整理 ──────┤
+  1.2 shell-hook の整理 ──────┤
                                v
 Phase 2 (マルチシェル)         │
   2.1 シェル種別タグ導入 ──────┤ (1.2 に依存)
@@ -187,5 +187,5 @@ Phase 3 (クロスプラットフォーム)
 - **`programs.*` を使わない**（`programs.home-manager.enable` のみ例外）
 - **ログインシェルを管理しない**
 - **未設定のパッケージ/コードを削除しない**
-- **shell-hooks モジュールをシンプルに保つ**（読み込み順制御のみ）
+- **shell-hook モジュールをシンプルに保つ**（読み込み順制御のみ）
 - 各タスク完了時に `home-manager build` で既存動作の維持を確認する

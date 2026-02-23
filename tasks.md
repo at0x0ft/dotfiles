@@ -17,11 +17,11 @@ Listed in execution order considering dependencies.
 
 - [ ] Create `modules/base.nix`
   - Move `home.packages` list from home.nix
-  - Move `shell.hooks.entries` list from home.nix
+  - Move `shell.hook.entries` list from home.nix
   - Move `.zshrc` generation logic from home.nix
 - [ ] Reduce home.nix to minimal composition
   - `home.username` / `home.homeDirectory` / `home.stateVersion`
-  - `imports = [ ./modules/shell-hooks.nix ./modules/base.nix ]`
+  - `imports = [ ./modules/shell-hook.nix ./modules/base.nix ]`
   - `programs.home-manager.enable = true`
 - [ ] Verify no-diff build with `home-manager build --flake .#at0x0ft` (preserve existing behavior)
 
@@ -31,7 +31,7 @@ Listed in execution order considering dependencies.
 
 ---
 
-### 1.2 Clean Up shell-hooks Module (Policy 4.5)
+### 1.2 Clean Up shell-hook Module (Policy 4.5)
 
 **Goal**: Resolve the TODO comment and improve `baseDir` option consistency.
 
@@ -45,13 +45,13 @@ Listed in execution order considering dependencies.
 - [ ] Do not modify phase/priority control logic (req. 3: keep it simple)
 - [ ] Verify build
 
-**Changed files**: `modules/shell-hooks.nix` (edit)
+**Changed files**: `modules/shell-hook.nix` (edit)
 
 ---
 
 ## Phase 2: Multi-Shell Support
 
-### 2.1 Add Shell-Type Tag to shell-hooks (Policy 4.4, first half)
+### 2.1 Add Shell-Type Tag to shell-hook (Policy 4.4, first half)
 
 **Goal**: Add a shell-type attribute to hook entries so each shell loads only its appropriate hooks.
 
@@ -59,18 +59,18 @@ Listed in execution order considering dependencies.
 
 **Tasks**:
 
-- [ ] Add `shell` option to entry submodule in `shell-hooks.nix`
+- [ ] Add `shell` option to entry submodule in `shell-hook.nix`
   - Type: `types.enum [ "common" "zsh" "bash" ]` (or list type)
   - Default: `"common"`
 - [ ] Extend config to place symlinks in per-shell directories
-  - e.g. `shell-hooks/zsh/main.d/`, `shell-hooks/common/main.d/`
+  - e.g. `shell-hook/zsh/main.d/`, `shell-hook/common/main.d/`
 - [ ] Update `hook.sh` generation logic for shell-type awareness
   - zsh loader: walks common + zsh directories
   - bash loader: walks common + bash directories
-- [ ] Add `shell` tags to existing `shell.hooks.entries` (in home.nix or base.nix)
+- [ ] Add `shell` tags to existing `shell.hook.entries` (in home.nix or base.nix)
 - [ ] Verify build
 
-**Changed files**: `modules/shell-hooks.nix` (edit), `modules/base.nix` (edit)
+**Changed files**: `modules/shell-hook.nix` (edit), `modules/base.nix` (edit)
 
 **Note**: Adhere to req. 3 — no inter-tool dependency resolution. Only shell-type filtering.
 
@@ -78,15 +78,15 @@ Listed in execution order considering dependencies.
 
 ### 2.2 Multi-Shell RC File Generation (Policy 4.4, second half)
 
-**Goal**: Generate `.bashrc` and other loader entry points so shell-hooks work in bash too.
+**Goal**: Generate `.bashrc` and other loader entry points so shell-hook work in bash too.
 
-**Current state**: Only `.zshrc` is generated. `bash/direnv.bash` exists but is not registered in `shell.hooks.entries`.
+**Current state**: Only `.zshrc` is generated. `bash/direnv.bash` exists but is not registered in `shell.hook.entries`.
 
 **Tasks**:
 
 - [ ] Generate `.bashrc` via `home.file` (same loader structure as `.zshrc`)
   - Source bash-specific `hook.sh` (common + bash hooks)
-- [ ] Register `bash/direnv.bash` in `shell.hooks.entries` (`shell = "bash"`)
+- [ ] Register `bash/direnv.bash` in `shell.hook.entries` (`shell = "bash"`)
 - [ ] Consider extracting rc file generation into a dedicated module (e.g. `modules/shell-rc.nix`)
 - [ ] Test in both shells (`zsh`, `bash`)
 
@@ -168,7 +168,7 @@ Listed in execution order considering dependencies.
 ```
 Phase 1 (Foundation)
   1.1 Split home.nix ──────────┐
-  1.2 Clean up shell-hooks ────┤
+  1.2 Clean up shell-hook ────┤
                                v
 Phase 2 (Multi-shell)          │
   2.1 Shell-type tag ──────────┤ (depends on 1.2)
@@ -187,5 +187,5 @@ The following must be observed across all tasks:
 - **Do not use `programs.*`** (only exception: `programs.home-manager.enable`)
 - **Do not manage login shells**
 - **Do not delete unconfigured packages/code**
-- **Keep the shell-hooks module simple** (load-order control only)
+- **Keep the shell-hook module simple** (load-order control only)
 - Verify existing behavior with `home-manager build` after completing each task
