@@ -15,15 +15,15 @@ Listed in execution order considering dependencies.
 
 **Tasks**:
 
-- [ ] Create `modules/base.nix`
+- [x] Create `modules/base.nix`
   - Move `home.packages` list from home.nix
   - Move `shell.hook.entries` list from home.nix
   - Move `.zshrc` generation logic from home.nix
-- [ ] Reduce home.nix to minimal composition
+- [x] Reduce home.nix to minimal composition
   - `home.username` / `home.homeDirectory` / `home.stateVersion`
   - `imports = [ ./modules/shell-hook.nix ./modules/base.nix ]`
   - `programs.home-manager.enable = true`
-- [ ] Verify no-diff build with `home-manager build --flake .#at0x0ft` (preserve existing behavior)
+- [x] Verify no-diff build with `home-manager build --flake .#at0x0ft` (preserve existing behavior)
 
 **Changed files**: `home.nix` (edit), `modules/base.nix` (new)
 
@@ -39,11 +39,11 @@ Listed in execution order considering dependencies.
 
 **Tasks**:
 
-- [ ] Clarify `baseDir` option usage as the `xdg.configFile` target path
+- [x] Clarify `baseDir` option usage as the `xdg.configFile` target path
   - Already placing files via `xdg.configFile`, so confirm the TODO's intent and clean up
-- [ ] Resolve the TODO comment (refactor or remove)
-- [ ] Do not modify phase/priority control logic (req. 3: keep it simple)
-- [ ] Verify build
+- [x] Resolve the TODO comment (refactor or remove)
+- [x] Do not modify phase/priority control logic (req. 3: keep it simple)
+- [x] Verify build
 
 **Changed files**: `modules/shell-hook.nix` (edit)
 

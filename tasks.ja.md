@@ -15,15 +15,15 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 **タスク**:
 
-- [ ] `modules/base.nix` を新規作成
+- [x] `modules/base.nix` を新規作成
   - `home.packages` のリストを home.nix から移動
   - `shell.hook.entries` のリストを home.nix から移動
   - `.zshrc` 生成ロジックを home.nix から移動
-- [ ] home.nix を最小構成に整理
+- [x] home.nix を最小構成に整理
   - `home.username` / `home.homeDirectory` / `home.stateVersion`
   - `imports = [ ./modules/shell-hook.nix ./modules/base.nix ]`
   - `programs.home-manager.enable = true`
-- [ ] `home-manager build --flake .#at0x0ft` で差分なしビルドを確認（既存動作の維持）
+- [x] `home-manager build --flake .#at0x0ft` で差分なしビルドを確認（既存動作の維持）
 
 **変更ファイル**: `home.nix`（編集）, `modules/base.nix`（新規）
 
@@ -39,11 +39,11 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 **タスク**:
 
-- [ ] `baseDir` オプションの用途を `xdg.configFile` の target パスとして明確化
+- [x] `baseDir` オプションの用途を `xdg.configFile` の target パスとして明確化
   - 現状すでに `xdg.configFile` 経由で配置しているため、TODO コメントの趣旨を確認し整理
-- [ ] TODO コメントを解消（リファクタリングまたはコメント削除）
-- [ ] フェーズ/優先度の制御ロジックには手を加えない（要件3: シンプルさ維持）
-- [ ] ビルド確認
+- [x] TODO コメントを解消（リファクタリングまたはコメント削除）
+- [x] フェーズ/優先度の制御ロジックには手を加えない（要件3: シンプルさ維持）
+- [x] ビルド確認
 
 **変更ファイル**: `modules/shell-hook.nix`（編集）
 
