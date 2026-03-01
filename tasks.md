@@ -49,56 +49,9 @@ Listed in execution order considering dependencies.
 
 ---
 
-## Phase 2: Multi-Shell Support
+## Phase 2: Cross-Platform & Environment-Specific Support
 
-### 2.1 Add Shell-Type Tag to shell-hook (Policy 4.4, first half)
-
-**Goal**: Add a shell-type attribute to hook entries so each shell loads only its appropriate hooks.
-
-**Current state**: All entries are loaded without distinction. `shell-hook-sources/` is already separated into `zsh/`, `common/`, `bash/`.
-
-**Tasks**:
-
-- [ ] Add `shell` option to entry submodule in `shell-hook.nix`
-  - Type: `types.enum [ "common" "zsh" "bash" ]` (or list type)
-  - Default: `"common"`
-- [ ] Extend config to place symlinks in per-shell directories
-  - e.g. `shell-hook/zsh/main.d/`, `shell-hook/common/main.d/`
-- [ ] Update `hook.sh` generation logic for shell-type awareness
-  - zsh loader: walks common + zsh directories
-  - bash loader: walks common + bash directories
-- [ ] Add `shell` tags to existing `shell.hook.entries` (in home.nix or base.nix)
-- [ ] Verify build
-
-**Changed files**: `modules/shell-hook.nix` (edit), `modules/base.nix` (edit)
-
-**Note**: Adhere to req. 3 — no inter-tool dependency resolution. Only shell-type filtering.
-
----
-
-### 2.2 Multi-Shell RC File Generation (Policy 4.4, second half)
-
-**Goal**: Generate `.bashrc` and other loader entry points so shell-hook work in bash too.
-
-**Current state**: Only `.zshrc` is generated. `bash/direnv.bash` exists but is not registered in `shell.hook.entries`.
-
-**Tasks**:
-
-- [ ] Generate `.bashrc` via `home.file` (same loader structure as `.zshrc`)
-  - Source bash-specific `hook.sh` (common + bash hooks)
-- [ ] Register `bash/direnv.bash` in `shell.hook.entries` (`shell = "bash"`)
-- [ ] Consider extracting rc file generation into a dedicated module (e.g. `modules/shell-rc.nix`)
-- [ ] Test in both shells (`zsh`, `bash`)
-
-**Changed files**: `modules/base.nix` (edit), possibly `modules/shell-rc.nix` (new)
-
-**Note**: Req. 4 — do not manage login shells. Only place rc files.
-
----
-
-## Phase 3: Cross-Platform & Environment-Specific Support
-
-### 3.1 Multi-System Support in flake.nix (Policy 4.1)
+### 2.1 Multi-System Support in flake.nix (Policy 4.1)
 
 **Goal**: Enable builds on systems other than x86_64-linux (aarch64-linux, aarch64-darwin).
 
@@ -120,7 +73,7 @@ Listed in execution order considering dependencies.
 
 ---
 
-### 3.2 Introduce Environment-Specific Override Mechanism (Policy 4.2)
+### 2.2 Introduce Environment-Specific Override Mechanism (Policy 4.2)
 
 **Goal**: Layer environment-specific deltas on top of a base package set.
 
@@ -143,7 +96,7 @@ Listed in execution order considering dependencies.
 
 ---
 
-### 3.3 Unfree Package Handling Cleanup (Policy 4.6)
+### 2.3 Unfree Package Handling Cleanup (Policy 4.6)
 
 **Goal**: Make the unfree allowlist overridable.
 
@@ -170,14 +123,10 @@ Phase 1 (Foundation)
   1.1 Split home.nix ──────────┐
   1.2 Clean up shell-hook ────┤
                                v
-Phase 2 (Multi-shell)          │
-  2.1 Shell-type tag ──────────┤ (depends on 1.2)
-  2.2 Multi-shell rc gen ──────┤ (depends on 1.1, 2.1)
-                               v
-Phase 3 (Cross-platform)
-  3.1 Multi-system support ────┤ (depends on 1.1)
-  3.2 Environment overrides ───┤ (depends on 1.1, 3.1)
-  3.3 Unfree cleanup ──────────┘ (depends on 3.1, 3.2)
+Phase 2 (Cross-platform)
+  2.1 Multi-system support ────┤ (depends on 1.1)
+  2.2 Environment overrides ───┤ (depends on 1.1, 2.1)
+  2.3 Unfree cleanup ──────────┘ (depends on 2.1, 2.2)
 ```
 
 ## Common Constraints
