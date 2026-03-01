@@ -1,6 +1,6 @@
 # Task Plan
 
-Task breakdown based on plan.md Section 4 (Improvement Policies).
+Task breakdown based on docs/SPEC.md Section 4 (Improvement Policies).
 Listed in execution order considering dependencies.
 
 ---
