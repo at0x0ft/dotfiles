@@ -143,7 +143,7 @@ Currently all packages/configs are flat in `home.nix` with no environment-specif
 home-manager/
 ├── shell-hook.nix                  # Existing: hook mechanism (shared foundation)
 ├── base.nix                         # New: cross-environment common packages + config
-└── overrides/
+└── platforms/
     ├── wsl.nix                      # New: WSL-specific additions/overrides
     └── darwin.nix                   # New: macOS-specific additions/overrides
 ```
@@ -199,3 +199,31 @@ Currently `flake.nix` only allows `claude-code` as unfree.
 
 - Base: empty list; override: allow environment-specific unfree packages
 - Generate `pkgs-unfree` dynamically based on system
+
+### 4.7 Named User Profile System (Req. 1, 6 extension)
+
+Currently `homeConfigurations` keys use raw system strings (`at0x0ft@x86_64-linux`),
+which exposes internal OS/architecture details to users. Users must specify the Nix
+system triple directly when switching configurations.
+
+**Policy**: Introduce named user profiles that abstract OS/arch details and allow
+multiple profiles per platform.
+
+```
+home-manager/
+├── base.nix
+├── platforms/                       # OS + CPU arch specific modules
+│   ├── wsl.nix
+│   ├── darwin.nix
+│   └── linux.nix
+└── profiles/                        # User-facing named profiles
+    ├── work.nix
+    └── individual.nix
+```
+
+- Define `profileDefs` in `flake.nix`: maps profile name → `{ system, env }` pair
+  - Example: `work = { system = "x86_64-linux"; env = "wsl"; }`
+- Generate `homeConfigurations` from `profileDefs`: keys become `at0x0ft@${profileName}`
+- Module stack per profile: `home.nix` + `base.nix` + `platforms/${env}.nix` + `profiles/${name}.nix`
+- Multiple profiles may share the same `(system, env)` pair with different per-profile settings
+- Usage: `home-manager switch --flake '.#at0x0ft@work'`

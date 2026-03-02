@@ -115,6 +115,58 @@ Listed in execution order considering dependencies.
 
 ---
 
+## Phase 3: Named Profile System
+
+### 3.1 Rename `overrides/` to `platforms/` (Policy 4.7)
+
+**Goal**: Clarify the directory's role as OS + CPU arch platform definitions.
+
+**Current state**: `home-manager/overrides/` — name implies overriding but not platform identity.
+
+**Tasks**:
+
+- [x] Rename `home-manager/overrides/` to `home-manager/platforms/`
+- [x] Update all references in `flake.nix`
+- [x] Verify build
+
+**Changed files**: `home-manager/platforms/` (rename from `overrides/`), `flake.nix` (edit)
+
+---
+
+### 3.2 Introduce `profileDefs` and Profile-based `homeConfigurations` (Policy 4.7)
+
+**Goal**: Replace system-string keys with named user profiles.
+
+**Current state**: `homeConfigurations` keys are `at0x0ft@${system}` (e.g. `at0x0ft@x86_64-linux`).
+
+**Tasks**:
+
+- [x] Define `profileDefs` in `flake.nix`
+  - Example: `work = { system = "x86_64-linux"; env = "wsl"; }`
+- [x] Update `makeHomeConfig` to accept profile name and include `profiles/${name}.nix`
+- [x] Change key generation to `"at0x0ft@${profileName}"`
+- [x] Verify build: `home-manager build --flake '.#at0x0ft@work'`
+
+**Changed files**: `flake.nix` (edit)
+
+---
+
+### 3.3 Create `profiles/` Directory with Initial Profiles (Policy 4.7)
+
+**Goal**: Add initial user profile modules.
+
+**Current state**: No `profiles/` directory exists.
+
+**Tasks**:
+
+- [x] Create `home-manager/profiles/work.nix` (skeleton)
+- [x] Create `home-manager/profiles/individual.nix` (skeleton)
+- [x] Verify build for all profiles
+
+**Changed files**: `home-manager/profiles/work.nix` (new), `home-manager/profiles/individual.nix` (new)
+
+---
+
 ## Dependency Summary
 
 ```
@@ -126,6 +178,11 @@ Phase 2 (Cross-platform)
   2.1 Multi-system support ────┤ (depends on 1.1)
   2.2 Environment overrides ───┤ (depends on 1.1, 2.1)
   2.3 Unfree cleanup ──────────┘ (depends on 2.1, 2.2)
+                               v
+Phase 3 (Named Profiles)       (depends on Phase 2)
+  3.1 Rename overrides/ to platforms/ ─┐
+  3.2 profileDefs + homeConfigurations  ├─ implement together
+  3.3 profiles/ directory ──────────────┘
 ```
 
 ## Common Constraints

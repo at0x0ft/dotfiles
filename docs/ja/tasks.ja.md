@@ -115,6 +115,58 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 ---
 
+## Phase 3: 名前付きプロファイル機構
+
+### 3.1 `overrides/` を `platforms/` にリネーム（改善方針 4.7）
+
+**目的**: ディレクトリの役割を OS + CPU arch のプラットフォーム定義として明確化する。
+
+**現状**: `home-manager/overrides/` という名前は「上書き」を示唆するが、プラットフォーム性が伝わりにくい。
+
+**タスク**:
+
+- [x] `home-manager/overrides/` を `home-manager/platforms/` にリネーム
+- [x] `flake.nix` 内の参照を更新
+- [x] ビルド確認
+
+**変更ファイル**: `home-manager/platforms/`（`overrides/` からリネーム）, `flake.nix`（編集）
+
+---
+
+### 3.2 `profileDefs` の導入とプロファイルベースの `homeConfigurations` 生成（改善方針 4.7）
+
+**目的**: `homeConfigurations` のキーを system 文字列から名前付きプロファイルへ置き換える。
+
+**現状**: `homeConfigurations` のキーが `at0x0ft@${system}`（例: `at0x0ft@x86_64-linux`）になっている。
+
+**タスク**:
+
+- [x] `flake.nix` で `profileDefs` を定義
+  - 例: `work = { system = "x86_64-linux"; env = "wsl"; }`
+- [x] `makeHomeConfig` を更新してプロファイル名を受け取り、`profiles/${name}.nix` をモジュールスタックに含める
+- [x] キー生成を `"at0x0ft@${profileName}"` に変更
+- [x] ビルド確認: `home-manager build --flake '.#at0x0ft@work'`
+
+**変更ファイル**: `flake.nix`（編集）
+
+---
+
+### 3.3 `profiles/` ディレクトリと初期プロファイルの作成（改善方針 4.7）
+
+**目的**: 初期ユーザープロファイルモジュールを追加する。
+
+**現状**: `profiles/` ディレクトリが存在しない。
+
+**タスク**:
+
+- [x] `home-manager/profiles/work.nix` を新規作成（スケルトン）
+- [x] `home-manager/profiles/individual.nix` を新規作成（スケルトン）
+- [x] 全プロファイルのビルド確認
+
+**変更ファイル**: `home-manager/profiles/work.nix`（新規）, `home-manager/profiles/individual.nix`（新規）
+
+---
+
 ## 依存関係まとめ
 
 ```
@@ -126,6 +178,11 @@ Phase 2 (クロスプラットフォーム)
   2.1 複数 system 対応 ────────┤ (1.1 に依存)
   2.2 環境別オーバーライド ────┤ (1.1, 2.1 に依存)
   2.3 unfree 整理 ─────────────┘ (2.1, 2.2 に依存)
+                               v
+Phase 3 (名前付きプロファイル)  (Phase 2 に依存)
+  3.1 overrides/ → platforms/ ─────┐
+  3.2 profileDefs + homeConfigs     ├─ まとめて実施
+  3.3 profiles/ ディレクトリ ───────┘
 ```
 
 ## 共通の制約事項

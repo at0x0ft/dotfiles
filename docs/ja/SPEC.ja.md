@@ -143,7 +143,7 @@ flake.nix (改善後のイメージ)
 home-manager/
 ├── shell-hook.nix                  # 既存: フック機構 (共通基盤)
 ├── base.nix                         # 新規: 全環境共通のパッケージ + 設定
-└── overrides/
+└── platforms/
     ├── wsl.nix                      # 新規: WSL 固有の追加/上書き
     └── darwin.nix                   # 新規: macOS 固有の追加/上書き
 ```
@@ -199,3 +199,30 @@ home.nix (改善後のイメージ)
 
 - base で空リスト、override で環境に応じた unfree パッケージを許可する構造
 - `pkgs-unfree` の生成を system に応じて動的に行う
+
+### 4.7 ユーザープロファイル機構 (要件1, 6 の拡張)
+
+現状 `homeConfigurations` のキーが `at0x0ft@x86_64-linux` のように生の system 文字列になっており、
+OS / CPU arch の内部表現がユーザーに露出している。設定の切り替え時に Nix system トリプルを直接指定する必要がある。
+
+**方針**: OS/arch の詳細を内部に隠蔽した名前付きユーザープロファイルを導入し、
+同一プラットフォームでも複数のプロファイルを持てるようにする。
+
+```
+home-manager/
+├── base.nix
+├── platforms/                       # OS + CPU arch 固有モジュール
+│   ├── wsl.nix
+│   ├── darwin.nix
+│   └── linux.nix
+└── profiles/                        # ユーザー向け名前付きプロファイル
+    ├── work.nix
+    └── individual.nix
+```
+
+- `flake.nix` で `profileDefs` を定義: プロファイル名 → `{ system, env }` のマッピング
+  - 例: `work = { system = "x86_64-linux"; env = "wsl"; }`
+- `profileDefs` から `homeConfigurations` を生成: キーは `at0x0ft@${profileName}`
+- プロファイルごとのモジュールスタック: `home.nix` + `base.nix` + `platforms/${env}.nix` + `profiles/${name}.nix`
+- 同じ `(system, env)` の組み合わせでも、プロファイル固有の設定が異なる複数プロファイルを持てる
+- 使用例: `home-manager switch --flake '.#at0x0ft@work'`

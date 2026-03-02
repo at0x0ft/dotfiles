@@ -13,18 +13,12 @@
   outputs =
     { nixpkgs, home-manager, ... }:
     let
-      supportedSystems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "aarch64-darwin"
-      ];
-
-      # Maps each system string to a logical environment name.
-      # Edit this when adding support for a new machine or system type.
-      systemEnvironment = {
-        "x86_64-linux"   = "wsl";
-        "aarch64-linux"  = "linux";
-        "aarch64-darwin" = "darwin";
+      # Maps profile names to their platform (system + env).
+      # Each profile becomes a homeConfigurations entry named "at0x0ft@${name}".
+      # Multiple profiles may share the same (system, env) with different profiles/${name}.nix.
+      profileDefs = {
+        work       = { system = "x86_64-linux"; env = "wsl"; };
+        individual = { system = "x86_64-linux"; env = "wsl"; };
       };
 
       # Unfree package allowlists per environment.
@@ -36,15 +30,14 @@
         darwin = [];
       };
 
-      overrideModules = {
-        wsl    = ./home-manager/overrides/wsl.nix;
-        linux  = ./home-manager/overrides/linux.nix;
-        darwin = ./home-manager/overrides/darwin.nix;
+      platformModules = {
+        wsl    = ./home-manager/platforms/wsl.nix;
+        linux  = ./home-manager/platforms/linux.nix;
+        darwin = ./home-manager/platforms/darwin.nix;
       };
 
-      makeHomeConfig = system:
+      makeHomeConfig = profileName: { system, env }:
         let
-          env = systemEnvironment.${system};
           pkgs = nixpkgs.legacyPackages.${system};
           pkgs-unfree = import nixpkgs {
             inherit system;
@@ -58,7 +51,8 @@
           inherit pkgs;
           modules = [
             ./home.nix
-            overrideModules.${env}
+            platformModules.${env}
+            (./home-manager/profiles + "/${profileName}.nix")
           ];
           extraSpecialArgs = {
             inherit pkgs-unfree isDarwin isLinux;
@@ -67,12 +61,8 @@
 
     in
     {
-      homeConfigurations = builtins.listToAttrs (map
-        (system: {
-          name  = "at0x0ft@${system}";
-          value = makeHomeConfig system;
-        })
-        supportedSystems
-      );
+      homeConfigurations = nixpkgs.lib.mapAttrs'
+        (name: def: nixpkgs.lib.nameValuePair "at0x0ft@${name}" (makeHomeConfig name def))
+        profileDefs;
     };
 }
