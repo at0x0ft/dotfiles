@@ -1,8 +1,7 @@
-{ config, pkgs, pkgs-unfree, ... }:
+{ config, pkgs, ... }:
 
 {
   home.packages = [
-    pkgs-unfree.claude-code
     pkgs.neovim
     pkgs.direnv
     pkgs.git

@@ -4,13 +4,13 @@
 
 ```bash
 # Apply configuration (run from the dotfiles directory)
-home-manager switch --flake .#at0x0ft
+home-manager switch --flake '.#at0x0ft@x86_64-linux'
 
 # Or with absolute path (run from anywhere)
-home-manager switch --flake ~/Programming/dotfiles#at0x0ft
+home-manager switch --flake '~/Programming/dotfiles#at0x0ft@x86_64-linux'
 
 # Dry-run (build without activating; creates ./result symlink)
-home-manager build --flake .#at0x0ft
+home-manager build --flake '.#at0x0ft@x86_64-linux'
 
 # Update flake inputs (nixpkgs, home-manager)
 nix flake update
@@ -19,10 +19,13 @@ nix flake update
 ## Architecture
 
 ```
-flake.nix          # Entry point: nixpkgs + home-manager inputs, unfree allowlist
+flake.nix          # Entry point: multi-system support, unfree allowlists, override module wiring
   -> home.nix      # Composition root: user identity, imports, home-manager enable
-       -> home-manager/base.nix          # Packages, shell-hook entries, .zshrc generation
-       -> home-manager/shell-hook.nix    # Custom module: load-order-only hook mechanism
+       -> home-manager/base.nix               # Base packages, shell-hook entries, .zshrc generation
+       -> home-manager/shell-hook.nix         # Custom module: load-order-only hook mechanism
+       -> home-manager/overrides/wsl.nix      # WSL-specific packages (claude-code, etc.)
+       -> home-manager/overrides/darwin.nix   # macOS-specific packages (skeleton)
+       -> home-manager/overrides/linux.nix    # aarch64-linux packages (skeleton)
 ```
 
 ### Directory roles
@@ -52,5 +55,5 @@ These are **non-negotiable requirements** — see `docs/SPEC.md` for full contex
 3. **shell-hook must stay simple** — The module handles load-order only (phases + priorities). No dependency resolution, no tool-specific logic.
 4. **Never delete unconfigured packages/code** — Some packages (git, bat, fd, fzf, zsh plugins) have no config here because their config files exist elsewhere and haven't been migrated yet. Do not remove them.
 5. **zinit is a loader only** — zinit sources Nix-managed plugins; it must not manage plugin versions or updates.
-6. **Cross-platform goal** — Currently x86_64-linux only, but design should support future multi-system (arm64-linux, aarch64-darwin) expansion.
-7. **Base + override goal** — Currently flat, but design should support future environment-specific package/config layering.
+6. **Cross-platform goal** — Supports x86_64-linux, aarch64-linux, aarch64-darwin via `systemEnvironment` map in `flake.nix`.
+7. **Base + override goal** — Base packages in `base.nix`; environment-specific deltas in `home-manager/overrides/`.

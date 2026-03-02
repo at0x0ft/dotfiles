@@ -13,30 +13,66 @@
   outputs =
     { nixpkgs, home-manager, ... }:
     let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-      pkgs-unfree = import nixpkgs {
-        inherit system;
-        config.allowUnfreePredicate = pkg:
-          builtins.elem (nixpkgs.lib.getName pkg) [
-            "claude-code"
-          ];
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
+
+      # Maps each system string to a logical environment name.
+      # Edit this when adding support for a new machine or system type.
+      systemEnvironment = {
+        "x86_64-linux"   = "wsl";
+        "aarch64-linux"  = "linux";
+        "aarch64-darwin" = "darwin";
       };
+
+      # Unfree package allowlists per environment.
+      # Defined here (outside modules) because pkgs-unfree must be built
+      # before home-manager module evaluation begins.
+      unfreeAllowlists = {
+        wsl    = [ "claude-code" ];
+        linux  = [];
+        darwin = [];
+      };
+
+      overrideModules = {
+        wsl    = ./home-manager/overrides/wsl.nix;
+        linux  = ./home-manager/overrides/linux.nix;
+        darwin = ./home-manager/overrides/darwin.nix;
+      };
+
+      makeHomeConfig = system:
+        let
+          env = systemEnvironment.${system};
+          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs-unfree = import nixpkgs {
+            inherit system;
+            config.allowUnfreePredicate = pkg:
+              builtins.elem (nixpkgs.lib.getName pkg) unfreeAllowlists.${env};
+          };
+          isDarwin = nixpkgs.lib.hasSuffix "-darwin" system;
+          isLinux  = nixpkgs.lib.hasSuffix "-linux"  system;
+        in
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            ./home.nix
+            overrideModules.${env}
+          ];
+          extraSpecialArgs = {
+            inherit pkgs-unfree isDarwin isLinux;
+          };
+        };
+
     in
     {
-      homeConfigurations."at0x0ft" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-
-        # Specify your home configuration modules here, for example,
-        # the path to your home.nix.
-        modules = [ ./home.nix ];
-
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
-
-        extraSpecialArgs = {
-          inherit pkgs-unfree;
-        };
-      };
+      homeConfigurations = builtins.listToAttrs (map
+        (system: {
+          name  = "at0x0ft@${system}";
+          value = makeHomeConfig system;
+        })
+        supportedSystems
+      );
     };
 }

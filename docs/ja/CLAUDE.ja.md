@@ -4,13 +4,13 @@
 
 ```bash
 # 設定を適用（dotfiles ディレクトリ内から実行）
-home-manager switch --flake .#at0x0ft
+home-manager switch --flake '.#at0x0ft@x86_64-linux'
 
 # 絶対パス指定（どこからでも実行可）
-home-manager switch --flake ~/Programming/dotfiles#at0x0ft
+home-manager switch --flake '~/Programming/dotfiles#at0x0ft@x86_64-linux'
 
 # ドライラン（ビルドのみ、適用なし; ./result シンボリックリンクが生成される）
-home-manager build --flake .#at0x0ft
+home-manager build --flake '.#at0x0ft@x86_64-linux'
 
 # flake 入力の更新（nixpkgs, home-manager）
 nix flake update
@@ -19,10 +19,13 @@ nix flake update
 ## アーキテクチャ
 
 ```
-flake.nix          # エントリポイント: nixpkgs + home-manager 入力、unfree 許可リスト
+flake.nix          # エントリポイント: 複数 system 対応、unfree 許可リスト、override モジュール配線
   -> home.nix      # 構成ルート: ユーザー情報、imports、home-manager 有効化
-       -> home-manager/base.nix          # パッケージ、shell-hook エントリ、.zshrc 生成
-       -> home-manager/shell-hook.nix    # カスタムモジュール: 読み込み順制御のみのフック機構
+       -> home-manager/base.nix               # ベースパッケージ、shell-hook エントリ、.zshrc 生成
+       -> home-manager/shell-hook.nix         # カスタムモジュール: 読み込み順制御のみのフック機構
+       -> home-manager/overrides/wsl.nix      # WSL 固有パッケージ（claude-code 等）
+       -> home-manager/overrides/darwin.nix   # macOS 固有パッケージ（スケルトン）
+       -> home-manager/overrides/linux.nix    # aarch64-linux パッケージ（スケルトン）
 ```
 
 ### ディレクトリの役割
@@ -52,5 +55,5 @@ flake.nix          # エントリポイント: nixpkgs + home-manager 入力、u
 3. **shell-hook はシンプルに保つ** — モジュールは読み込み順（フェーズ + 優先度）のみを扱う。依存関係解決やツール固有ロジックは持たない。
 4. **未設定のパッケージ/コードを絶対に削除しない** — 一部パッケージ（git, bat, fd, fzf, zsh プラグイン）はここに設定がないが、設定ファイルが別に存在しまだ反映されていないだけである。削除しないこと。
 5. **zinit はローダー専任** — zinit は Nix 管理のプラグインを source するのみ。プラグインのバージョン管理やアップデートは行わない。
-6. **クロスプラットフォーム目標** — 現状は x86_64-linux のみだが、将来の複数 system（arm64-linux, aarch64-darwin）対応を見据えた設計にすること。
-7. **base + override 目標** — 現状はフラット構成だが、将来の環境別パッケージ/設定レイヤリングを見据えた設計にすること。
+6. **クロスプラットフォーム目標** — `flake.nix` の `systemEnvironment` マップにより x86_64-linux, aarch64-linux, aarch64-darwin をサポート。
+7. **base + override 目標** — ベースパッケージは `base.nix`、環境固有の差分は `home-manager/overrides/` で管理。

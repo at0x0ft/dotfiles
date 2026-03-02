@@ -59,13 +59,13 @@ Listed in execution order considering dependencies.
 
 **Tasks**:
 
-- [ ] Define `supportedSystems` list
+- [x] Define `supportedSystems` list
   - `[ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ]`
-- [ ] Use `nixpkgs.lib.genAttrs` etc. to generate `homeConfigurations` per system
-  - Naming: `"at0x0ft@${system}"` or switch `"at0x0ft"` by system argument
-- [ ] Generate `pkgs-unfree` dynamically per system (linked with 4.6)
-- [ ] Pass `system` info via `extraSpecialArgs` so modules can branch conditionally
-- [ ] Verify build on existing x86_64-linux (`home-manager build --flake .#at0x0ft@x86_64-linux`)
+- [x] Use `builtins.listToAttrs + map` to generate `homeConfigurations` per system
+  - Naming: `"at0x0ft@${system}"`
+- [x] Generate `pkgs-unfree` dynamically per system (linked with 4.6)
+- [x] Pass `isDarwin` / `isLinux` flags via `extraSpecialArgs` so modules can branch conditionally
+- [x] Verify build on existing x86_64-linux (`home-manager build --flake '.#at0x0ft@x86_64-linux'`)
 
 **Changed files**: `flake.nix` (edit)
 
@@ -81,16 +81,15 @@ Listed in execution order considering dependencies.
 
 **Tasks**:
 
-- [ ] Create `home-manager/overrides/` directory
-- [ ] Create `home-manager/overrides/wsl.nix`
-  - WSL-specific additional packages (e.g. `claude-code` for WSL only)
-  - WSL-specific hook entries (if any)
-- [ ] Create `home-manager/overrides/darwin.nix` (skeleton)
+- [x] Create `home-manager/overrides/` directory
+- [x] Create `home-manager/overrides/wsl.nix`
+  - WSL-specific additional packages (`claude-code`)
+- [x] Create `home-manager/overrides/darwin.nix` (skeleton)
   - macOS-specific additional packages
-  - macOS-specific hook entries
-- [ ] In `flake.nix`, add appropriate override modules to `imports` based on system/environment
+- [x] Create `home-manager/overrides/linux.nix` (skeleton, aarch64-linux)
+- [x] In `flake.nix`, add override modules to `modules` list based on system/environment
   - Pass `isDarwin` / `isLinux` flags via `extraSpecialArgs`
-- [ ] Verify build
+- [x] Verify build
 
 **Changed files**: `flake.nix` (edit), `home-manager/overrides/wsl.nix` (new), `home-manager/overrides/darwin.nix` (new)
 
@@ -104,11 +103,11 @@ Listed in execution order considering dependencies.
 
 **Tasks**:
 
-- [ ] Make unfree allowlist injectable from override modules
-  - Base: empty list
-  - Override (e.g. `wsl.nix`): `[ "claude-code" ]`, etc.
-- [ ] Generate `pkgs-unfree` dynamically based on both allowlist and system
-- [ ] Verify build
+- [x] Make unfree allowlist injectable per environment
+  - `unfreeAllowlists` attr set in `flake.nix`: base = `[]`, wsl = `["claude-code"]`
+  - Note: allowlist stays in `flake.nix` (must be defined before module evaluation)
+- [x] Generate `pkgs-unfree` dynamically based on both allowlist and system
+- [x] Verify build
 
 **Changed files**: `flake.nix` (edit), `home-manager/overrides/wsl.nix` (edit)
 

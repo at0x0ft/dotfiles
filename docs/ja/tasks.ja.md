@@ -59,13 +59,13 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 **タスク**:
 
-- [ ] `supportedSystems` リストを定義
+- [x] `supportedSystems` リストを定義
   - `[ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ]`
-- [ ] `nixpkgs.lib.genAttrs` 等で system ごとに `homeConfigurations` を生成
-  - 命名規則: `"at0x0ft@${system}"` または `"at0x0ft"` を system 引数で切り替え
-- [ ] `pkgs-unfree` の生成を各 system で動的に行う（4.6 と連動）
-- [ ] `extraSpecialArgs` に `system` 情報を渡し、モジュール内で条件分岐可能にする
-- [ ] 既存の x86_64-linux 環境でのビルド確認（`home-manager build --flake .#at0x0ft@x86_64-linux`）
+- [x] `builtins.listToAttrs + map` で system ごとに `homeConfigurations` を生成
+  - 命名規則: `"at0x0ft@${system}"`
+- [x] `pkgs-unfree` の生成を各 system で動的に行う（4.6 と連動）
+- [x] `isDarwin` / `isLinux` フラグを `extraSpecialArgs` で渡し、モジュール内で条件分岐可能にする
+- [x] 既存の x86_64-linux 環境でのビルド確認（`home-manager build --flake '.#at0x0ft@x86_64-linux'`）
 
 **変更ファイル**: `flake.nix`（編集）
 
@@ -81,18 +81,17 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 **タスク**:
 
-- [ ] `home-manager/overrides/` ディレクトリを作成
-- [ ] `home-manager/overrides/wsl.nix` を新規作成
-  - WSL 固有の追加パッケージ（例: `claude-code` は WSL 環境のみ等）
-  - WSL 固有のフックエントリ（あれば）
-- [ ] `home-manager/overrides/darwin.nix` を新規作成（スケルトン）
+- [x] `home-manager/overrides/` ディレクトリを作成
+- [x] `home-manager/overrides/wsl.nix` を新規作成
+  - WSL 固有の追加パッケージ（`claude-code`）
+- [x] `home-manager/overrides/darwin.nix` を新規作成（スケルトン）
   - macOS 固有の追加パッケージ
-  - macOS 固有のフックエントリ
-- [ ] `flake.nix` で system / 環境に応じて適切な override モジュールを `imports` に追加
-  - `isDarwin` / `isLinux` 等のフラグを `extraSpecialArgs` で渡す
-- [ ] ビルド確認
+- [x] `home-manager/overrides/linux.nix` を新規作成（スケルトン、aarch64-linux 用）
+- [x] `flake.nix` で system / 環境に応じた override モジュールを `modules` リストに追加
+  - `isDarwin` / `isLinux` フラグを `extraSpecialArgs` で渡す
+- [x] ビルド確認
 
-**変更ファイル**: `flake.nix`（編集）, `home-manager/overrides/wsl.nix`（新規）, `home-manager/overrides/darwin.nix`（新規）
+**変更ファイル**: `flake.nix`（編集）, `home-manager/overrides/wsl.nix`（新規）, `home-manager/overrides/darwin.nix`（新規）, `home-manager/overrides/linux.nix`（新規）
 
 ---
 
@@ -104,15 +103,15 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 **タスク**:
 
-- [ ] unfree 許可リストを override モジュールから注入可能にする
-  - base: 空リスト
-  - override（例: `wsl.nix`）: `[ "claude-code" ]` 等
-- [ ] `pkgs-unfree` の生成を許可リストと system の両方に基づいて動的に行う
-- [ ] ビルド確認
+- [x] unfree 許可リストを環境別に定義可能にする
+  - `flake.nix` 内の `unfreeAllowlists` attr set: base = `[]`、wsl = `["claude-code"]`
+  - 注意: モジュール評価前に `pkgs-unfree` を構築する必要があるため、許可リストは `flake.nix` 内で定義
+- [x] `pkgs-unfree` の生成を許可リストと system の両方に基づいて動的に行う
+- [x] ビルド確認
 
-**変更ファイル**: `flake.nix`（編集）, `home-manager/overrides/wsl.nix`（編集）
+**変更ファイル**: `flake.nix`（編集）, `home-manager/overrides/wsl.nix`（新規）
 
-**注意**: 3.1 および 3.2 と密接に連動するため、同時に実施するのが望ましい。
+**注意**: 2.1 および 2.2 と密接に連動するため、同時に実施した。
 
 ---
 
