@@ -15,17 +15,17 @@ Listed in execution order considering dependencies.
 
 **Tasks**:
 
-- [x] Create `modules/base.nix`
+- [x] Create `home-manager/base.nix`
   - Move `home.packages` list from home.nix
   - Move `shell.hook.entries` list from home.nix
   - Move `.zshrc` generation logic from home.nix
 - [x] Reduce home.nix to minimal composition
   - `home.username` / `home.homeDirectory` / `home.stateVersion`
-  - `imports = [ ./modules/shell-hook.nix ./modules/base.nix ]`
+  - `imports = [ ./home-manager/shell-hook.nix ./home-manager/base.nix ]`
   - `programs.home-manager.enable = true`
 - [x] Verify no-diff build with `home-manager build --flake .#at0x0ft` (preserve existing behavior)
 
-**Changed files**: `home.nix` (edit), `modules/base.nix` (new)
+**Changed files**: `home.nix` (edit), `home-manager/base.nix` (new)
 
 **Note**: Ensure `pkgs-unfree` argument passing works in base.nix by maintaining the `extraSpecialArgs` pathway.
 
@@ -45,7 +45,7 @@ Listed in execution order considering dependencies.
 - [x] Do not modify phase/priority control logic (req. 3: keep it simple)
 - [x] Verify build
 
-**Changed files**: `modules/shell-hook.nix` (edit)
+**Changed files**: `home-manager/shell-hook.nix` (edit)
 
 ---
 
@@ -69,7 +69,7 @@ Listed in execution order considering dependencies.
 
 **Changed files**: `flake.nix` (edit)
 
-**Note**: `shell-hook-sources/` requires no changes (already portable).
+**Note**: `config/` requires no changes (already portable).
 
 ---
 
@@ -81,18 +81,18 @@ Listed in execution order considering dependencies.
 
 **Tasks**:
 
-- [ ] Create `modules/overrides/` directory
-- [ ] Create `modules/overrides/wsl.nix`
+- [ ] Create `home-manager/overrides/` directory
+- [ ] Create `home-manager/overrides/wsl.nix`
   - WSL-specific additional packages (e.g. `claude-code` for WSL only)
   - WSL-specific hook entries (if any)
-- [ ] Create `modules/overrides/darwin.nix` (skeleton)
+- [ ] Create `home-manager/overrides/darwin.nix` (skeleton)
   - macOS-specific additional packages
   - macOS-specific hook entries
 - [ ] In `flake.nix`, add appropriate override modules to `imports` based on system/environment
   - Pass `isDarwin` / `isLinux` flags via `extraSpecialArgs`
 - [ ] Verify build
 
-**Changed files**: `flake.nix` (edit), `modules/overrides/wsl.nix` (new), `modules/overrides/darwin.nix` (new)
+**Changed files**: `flake.nix` (edit), `home-manager/overrides/wsl.nix` (new), `home-manager/overrides/darwin.nix` (new)
 
 ---
 
@@ -110,7 +110,7 @@ Listed in execution order considering dependencies.
 - [ ] Generate `pkgs-unfree` dynamically based on both allowlist and system
 - [ ] Verify build
 
-**Changed files**: `flake.nix` (edit), `modules/overrides/wsl.nix` (edit)
+**Changed files**: `flake.nix` (edit), `home-manager/overrides/wsl.nix` (edit)
 
 **Note**: Tightly linked with 3.1 and 3.2 — best implemented together.
 

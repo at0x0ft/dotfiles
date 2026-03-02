@@ -15,17 +15,17 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 **タスク**:
 
-- [x] `modules/base.nix` を新規作成
+- [x] `home-manager/base.nix` を新規作成
   - `home.packages` のリストを home.nix から移動
   - `shell.hook.entries` のリストを home.nix から移動
   - `.zshrc` 生成ロジックを home.nix から移動
 - [x] home.nix を最小構成に整理
   - `home.username` / `home.homeDirectory` / `home.stateVersion`
-  - `imports = [ ./modules/shell-hook.nix ./modules/base.nix ]`
+  - `imports = [ ./home-manager/shell-hook.nix ./home-manager/base.nix ]`
   - `programs.home-manager.enable = true`
 - [x] `home-manager build --flake .#at0x0ft` で差分なしビルドを確認（既存動作の維持）
 
-**変更ファイル**: `home.nix`（編集）, `modules/base.nix`（新規）
+**変更ファイル**: `home.nix`（編集）, `home-manager/base.nix`（新規）
 
 **注意**: `pkgs-unfree` の引数渡しが base.nix でも使えるよう `extraSpecialArgs` の経路を維持すること。
 
@@ -45,7 +45,7 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 - [x] フェーズ/優先度の制御ロジックには手を加えない（要件3: シンプルさ維持）
 - [x] ビルド確認
 
-**変更ファイル**: `modules/shell-hook.nix`（編集）
+**変更ファイル**: `home-manager/shell-hook.nix`（編集）
 
 ---
 
@@ -69,7 +69,7 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 **変更ファイル**: `flake.nix`（編集）
 
-**注意**: `shell-hook-sources/` は変更不要（既にポータブル）。
+**注意**: `config/` は変更不要（既にポータブル）。
 
 ---
 
@@ -81,18 +81,18 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 **タスク**:
 
-- [ ] `modules/overrides/` ディレクトリを作成
-- [ ] `modules/overrides/wsl.nix` を新規作成
+- [ ] `home-manager/overrides/` ディレクトリを作成
+- [ ] `home-manager/overrides/wsl.nix` を新規作成
   - WSL 固有の追加パッケージ（例: `claude-code` は WSL 環境のみ等）
   - WSL 固有のフックエントリ（あれば）
-- [ ] `modules/overrides/darwin.nix` を新規作成（スケルトン）
+- [ ] `home-manager/overrides/darwin.nix` を新規作成（スケルトン）
   - macOS 固有の追加パッケージ
   - macOS 固有のフックエントリ
 - [ ] `flake.nix` で system / 環境に応じて適切な override モジュールを `imports` に追加
   - `isDarwin` / `isLinux` 等のフラグを `extraSpecialArgs` で渡す
 - [ ] ビルド確認
 
-**変更ファイル**: `flake.nix`（編集）, `modules/overrides/wsl.nix`（新規）, `modules/overrides/darwin.nix`（新規）
+**変更ファイル**: `flake.nix`（編集）, `home-manager/overrides/wsl.nix`（新規）, `home-manager/overrides/darwin.nix`（新規）
 
 ---
 
@@ -110,7 +110,7 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 - [ ] `pkgs-unfree` の生成を許可リストと system の両方に基づいて動的に行う
 - [ ] ビルド確認
 
-**変更ファイル**: `flake.nix`（編集）, `modules/overrides/wsl.nix`（編集）
+**変更ファイル**: `flake.nix`（編集）, `home-manager/overrides/wsl.nix`（編集）
 
 **注意**: 3.1 および 3.2 と密接に連動するため、同時に実施するのが望ましい。
 

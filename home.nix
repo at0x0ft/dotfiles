@@ -6,8 +6,8 @@
   home.stateVersion = "25.11";
 
   imports = [
-    ./modules/shell-hook.nix
-    ./modules/base.nix
+    ./home-manager/shell-hook.nix
+    ./home-manager/base.nix
   ];
 
   programs.home-manager.enable = true;

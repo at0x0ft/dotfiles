@@ -73,7 +73,7 @@ in
       # generate hook.sh from template
       {
         "${hook.scriptPath}".source = pkgs.replaceVars
-          ../shell-hook-sources/hook.sh.tmpl
+          ./hook.sh.tmpl
           { base_dir = "${config.xdg.configHome}/${hook.baseDir}"; };
       }
     ];

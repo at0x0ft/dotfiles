@@ -22,37 +22,37 @@
     {
       loader = "main";
       priority = 10;
-      source = ../shell-hook-sources/zsh/zinit.zsh;
+      source = ../config/zinit/zinit.zsh;
     }
     {
       loader = "main";
       priority = 50;
-      source = ../shell-hook-sources/zsh/envvar.zsh;
+      source = ../config/zsh/envvar.zsh;
     }
     {
       loader = "main";
       priority = 50;
-      source = ../shell-hook-sources/zsh/option.zsh;
+      source = ../config/zsh/option.zsh;
     }
     {
       loader = "main";
       priority = 50;
-      source = ../shell-hook-sources/zsh/keybind.zsh;
+      source = ../config/zsh/keybind.zsh;
     }
     {
       loader = "main";
       priority = 50;
-      source = ../shell-hook-sources/common/lsd.sh;
+      source = ../config/lsd/aliases.sh;
     }
     {
       loader = "main";
       priority = 50;
-      source = ../shell-hook-sources/common/delta.sh;
+      source = ../config/delta/functions.sh;
     }
     {
       loader = "postload";
       priority = 90;
-      source = ../shell-hook-sources/zsh/direnv.zsh;
+      source = ../config/direnv/hook.zsh;
     }
   ];
 

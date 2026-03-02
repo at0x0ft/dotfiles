@@ -25,7 +25,7 @@ field to hook entries and building automatic shell-type filtering into the
 Do not add shell-type filtering to `shell-hook`. The module stays load-order
 only (phases + priorities).
 
-`shell-hook-sources/` is organized for human readability only — it is **not**
+`config/` is organized for human readability only — it is **not**
 auto-loaded. Users explicitly register desired snippets in `base.nix`. Whether
 a package is installed (and thus its init snippet is needed) is entirely the
 user's decision. The module must not infer loading behavior from directory
