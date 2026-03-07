@@ -167,6 +167,51 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 ---
 
+## Phase 4: zinit 統合
+
+### 4.1 zinit モジュール（`home-manager/zinit.nix`）
+
+**目的**: zinit の初期化とプラグインロードを専用モジュールに抽象化し、実装の詳細を `base.nix` から隠蔽する。
+
+**タスク**:
+
+- [ ] `home-manager/zinit-init.zsh.tmpl` を新規作成
+  - テンプレート内容: `source "@zinit_path@/zinit.zsh"`
+- [ ] `home-manager/zinit.nix` を新規作成
+  - `imports = [ ./shell-hook.nix ]` で依存を明示
+  - `options.zsh.zinit.enable`（`mkEnableOption`）
+  - `options.zsh.zinit.plugins` — サブモジュールのリスト。フィールド: `verb`（enum: snippet/light/load）、`path`（str）、`ices`（str のリスト）
+  - `config`: `home.packages` に `pkgs.zinit` を追加、hook エントリを 2 件登録（priority 10: `pkgs.replaceVars` による init、priority 20: `pkgs.writeText` によるプラグインロード。plugins リストが空の場合は priority 20 を省略）
+- [ ] `home.nix` を更新: `./home-manager/shell-hook.nix` を `./home-manager/zinit.nix` に置き換え（shell-hook は zinit.nix が推移的に引き込む）
+- [ ] `home-manager/base.nix` を更新: `pkgs.zinit` をパッケージリストから削除、zinit hook エントリを削除、`zsh.zinit.enable = true` および `zsh.zinit.plugins = [...]` を追加
+- [ ] `config/zinit/zinit.zsh` は非 Nix 環境向け standalone fallback としてそのまま残す（変更なし）
+- [ ] ビルド確認
+
+**変更ファイル**: `home-manager/zinit.nix`（新規）、`home-manager/zinit-init.zsh.tmpl`（新規）、`home.nix`（編集）、`home-manager/base.nix`（編集）
+
+---
+
+## Phase 5: バックログ
+
+### 5.1 再利用可能なモジュールの別リポジトリへの切り出し
+
+**目的**: `shell-hook` および `zinit` モジュールをスタンドアロンの flake として公開し、他ユーザーが再利用できるようにする。
+
+**背景**: これらのモジュール（shell-hook、zinit）はこの dotfiles リポジトリ固有ではなく汎用的なものである。切り出すことで再利用性が向上し、他ユーザーが flake input として利用できるようになる。
+
+**タスク**（大まかなスコープ、詳細は TBD）:
+
+- [ ] 新リポジトリを作成（例: `nix-zsh-modules` など）
+- [ ] `home-manager/shell-hook.nix` + `hook.sh.tmpl` を移行
+- [ ] `home-manager/zinit.nix` + `zinit-init.zsh.tmpl` を移行
+- [ ] flake outputs として home-manager モジュールを公開
+- [ ] この dotfiles リポジトリを新 flake の input として利用するよう更新
+- [ ] 最小限のドキュメント / README を作成
+
+**注記**: zinit モジュール（4.1）が安定してモジュールインターフェースが確定した後に実施する。
+
+---
+
 ## 依存関係まとめ
 
 ```
@@ -183,6 +228,12 @@ Phase 3 (名前付きプロファイル)  (Phase 2 に依存)
   3.1 overrides/ → platforms/ ─────┐
   3.2 profileDefs + homeConfigs     ├─ まとめて実施
   3.3 profiles/ ディレクトリ ───────┘
+                               v
+Phase 4 (zinit 統合)           (Phase 1 に依存)
+  4.1 zinit モジュール ───────── (shell-hook モジュールに依存)
+                               v
+Phase 5 (バックログ)
+  5.1 モジュールの別リポジトリへの切り出し ── (4.1 安定後)
 ```
 
 ## 共通の制約事項

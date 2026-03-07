@@ -82,3 +82,58 @@ verbose and hard to maintain as profiles grow.
 - Adding a new profile = one entry in `profileDefs` + one skeleton `.nix` in `profiles/`
 - `overrides/` is renamed to `platforms/` (Phase 3.1)
 - Module stack per profile: `home.nix` + `base.nix` + `platforms/${env}.nix` + `profiles/${name}.nix`
+
+---
+
+## [2026-03-08] zinit Module: Namespace, Architecture, and Plugin Extensibility
+
+**Status**: Accepted
+
+### Context
+
+When designing the zinit Nix module (Phase 4.1), several decisions were made:
+
+**Namespace**: `shell.zinit` was the initial candidate since `shell.hook` already exists.
+`zinit.enable` (flat) was also considered.
+
+**Architecture**: Two approaches for embedding the Nix store path were compared:
+- Inline `pkgs.writeText` in `base.nix` directly
+- A dedicated module (`zinit.nix`) with a template file, mirroring the `shell-hook.nix` + `hook.sh.tmpl` pattern
+
+**Plugin loading extensibility**: zinit supports multiple load verbs (`snippet`, `light`, `load`)
+and arbitrary ice modifiers. A simple `plugins = [package]` list cannot express these.
+
+**Module dependency**: `zinit.nix` uses `shell.hook.entries`, which is defined by `shell-hook.nix`.
+Without explicit declaration, the dependency is implicit and breaks standalone use.
+
+### Decisions
+
+**Namespace → `zsh.zinit`**: `shell.zinit` was rejected because zinit is zsh-specific, not
+shell-agnostic. `shell.hook` is appropriate for a shell-agnostic load-order mechanism, but
+zinit has no meaning outside zsh. `zsh.zinit` was chosen over the flat `zinit.enable` because
+other zsh-specific plugins share the same structural problem (installed but not loaded), and a
+`zsh.*` namespace provides a natural home for all of them.
+
+**Module architecture → template + module (mirroring shell-hook pattern)**:
+Embedding `pkgs.writeText` directly in `base.nix` exposes implementation details (Nix store
+paths, zinit command structure) at the composition layer. Instead, `zinit.nix` encapsulates
+this with a `zinit-init.zsh.tmpl` template processed via `pkgs.replaceVars` (for the init
+script) and `pkgs.writeText` with Nix string interpolation (for the dynamic plugin list).
+The two scripts are registered as separate hook entries (priority 10: init, priority 20: plugins).
+
+**Plugin option → submodule with `verb`, `path`, `ices`**: A plain package list cannot express
+different load verbs or ice modifiers. The submodule maps directly to zinit's command structure:
+`zi ice <ices...>` followed by `zi <verb> <path>`. This covers all current use cases and
+remains open to new ices without module changes.
+
+**Module dependency → explicit `imports`**: `zinit.nix` declares `imports = [ ./shell-hook.nix ]`
+to make the dependency self-contained. The Nix module system deduplicates identical import paths,
+so this is safe even when the caller also imports `shell-hook.nix`. As a result, `home.nix` only
+needs to import `zinit.nix` directly.
+
+### Consequences
+
+- `base.nix` declares `zsh.zinit.enable = true` and `zsh.zinit.plugins = [...]`; no Nix store paths or zinit commands appear there
+- `home.nix` imports only `zinit.nix`; `shell-hook.nix` is pulled in transitively
+- `config/zinit/zinit.zsh` is kept as a non-Nix standalone fallback (no change)
+- The `zsh.*` namespace is now established for future zsh-specific modules (e.g., per-plugin modules)

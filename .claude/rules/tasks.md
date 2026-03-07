@@ -91,7 +91,7 @@ Listed in execution order considering dependencies.
   - Pass `isDarwin` / `isLinux` flags via `extraSpecialArgs`
 - [x] Verify build
 
-**Changed files**: `flake.nix` (edit), `home-manager/overrides/wsl.nix` (new), `home-manager/overrides/darwin.nix` (new)
+**Changed files**: `flake.nix` (edit), `home-manager/overrides/wsl.nix` (new), `home-manager/overrides/darwin.nix` (new), `home-manager/overrides/linux.nix` (new)
 
 ---
 
@@ -111,7 +111,7 @@ Listed in execution order considering dependencies.
 
 **Changed files**: `flake.nix` (edit), `home-manager/overrides/wsl.nix` (edit)
 
-**Note**: Tightly linked with 3.1 and 3.2 — best implemented together.
+**Note**: Tightly linked with 2.1 and 2.2 — best implemented together.
 
 ---
 
@@ -167,6 +167,51 @@ Listed in execution order considering dependencies.
 
 ---
 
+## Phase 4: zinit Integration
+
+### 4.1 zinit Module (`home-manager/zinit.nix`)
+
+**Goal**: Abstract zinit initialization and plugin loading into a dedicated module, removing implementation details from `base.nix`.
+
+**Tasks**:
+
+- [ ] Create `home-manager/zinit-init.zsh.tmpl`
+  - Template: `source "@zinit_path@/zinit.zsh"`
+- [ ] Create `home-manager/zinit.nix`
+  - `imports = [ ./shell-hook.nix ]` to declare dependency explicitly
+  - `options.zsh.zinit.enable` (`mkEnableOption`)
+  - `options.zsh.zinit.plugins` — list of submodule with `verb` (enum: snippet/light/load), `path` (str), `ices` (list of str)
+  - `config`: add `pkgs.zinit` to `home.packages`, register two hook entries (priority 10: init via `pkgs.replaceVars`, priority 20: plugins via `pkgs.writeText`; omit if plugins list is empty)
+- [ ] Update `home.nix`: replace `./home-manager/shell-hook.nix` with `./home-manager/zinit.nix` (shell-hook is pulled in transitively)
+- [ ] Update `home-manager/base.nix`: remove `pkgs.zinit` from packages, remove zinit hook entry, add `zsh.zinit.enable = true` and `zsh.zinit.plugins = [...]`
+- [ ] Keep `config/zinit/zinit.zsh` as non-Nix standalone fallback (no change)
+- [ ] Verify build
+
+**Changed files**: `home-manager/zinit.nix` (new), `home-manager/zinit-init.zsh.tmpl` (new), `home.nix` (edit), `home-manager/base.nix` (edit)
+
+---
+
+## Phase 5: Backlog
+
+### 5.1 Extract Reusable Modules to Separate Repository
+
+**Goal**: Publish `shell-hook` and `zinit` modules as a standalone flake for reuse by other users.
+
+**Background**: These modules (shell-hook, zinit) are general-purpose and not specific to this dotfiles repo. Extracting them improves reusability and allows other users to consume them as a flake input.
+
+**Tasks** (rough scope, TBD):
+
+- [ ] Create a new repository (e.g., `nix-zsh-modules` or similar)
+- [ ] Move `home-manager/shell-hook.nix` + `hook.sh.tmpl`
+- [ ] Move `home-manager/zinit.nix` + `zinit-init.zsh.tmpl`
+- [ ] Expose as a home-manager module via flake outputs
+- [ ] Update this dotfiles repo to consume the new flake as an input
+- [ ] Write minimal documentation / README
+
+**Note**: Implement after zinit module (4.1) is stable and the module interface is confirmed.
+
+---
+
 ## Dependency Summary
 
 ```
@@ -183,6 +228,12 @@ Phase 3 (Named Profiles)       (depends on Phase 2)
   3.1 Rename overrides/ to platforms/ ─┐
   3.2 profileDefs + homeConfigurations  ├─ implement together
   3.3 profiles/ directory ──────────────┘
+                               v
+Phase 4 (zinit Integration)    (depends on Phase 1)
+  4.1 zinit module ────────────── (depends on shell-hook module)
+                               v
+Phase 5 (Backlog)
+  5.1 Extract modules to separate repo ── (depends on 4.1 stable)
 ```
 
 ## Common Constraints

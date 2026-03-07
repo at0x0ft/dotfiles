@@ -82,3 +82,58 @@ Phase 2（マルチシェル対応）の計画中、`shell-hook` モジュール
 - 新しいプロファイルの追加 = `profileDefs` へのエントリ1件 + `profiles/` にスケルトン `.nix` 1件
 - `overrides/` を `platforms/` にリネーム（Phase 3.1）
 - プロファイルごとのモジュールスタック: `home.nix` + `base.nix` + `platforms/${env}.nix` + `profiles/${name}.nix`
+
+---
+
+## [2026-03-08] zinit モジュール: 名前空間・アーキテクチャ・プラグイン拡張性
+
+**ステータス**: 採用済み
+
+### 背景
+
+zinit の Nix モジュール設計（Phase 4.1）において、以下の複数の論点があった。
+
+**名前空間**: `shell.hook` が既に存在するため `shell.zinit` が最初の候補として挙がった。
+フラットな `zinit.enable` も検討された。
+
+**アーキテクチャ**: Nix ストアパスの埋め込み方法として 2 つのアプローチを比較した:
+- `base.nix` に直接 `pkgs.writeText` をインライン記述する方法
+- `shell-hook.nix` + `hook.sh.tmpl` のパターンを踏襲し、専用モジュール（`zinit.nix`）とテンプレートファイルで構成する方法
+
+**プラグインロードの拡張性**: zinit は複数のロード動詞（`snippet`, `light`, `load`）と
+任意の ice modifier をサポートする。単純な `plugins = [package]` リストではこれらを表現できない。
+
+**モジュール依存関係**: `zinit.nix` は `shell.hook.entries` を使用するが、これは `shell-hook.nix`
+が定義する。明示的な宣言がなければ依存は暗黙的となり、単体利用時に問題になる。
+
+### 決定
+
+**名前空間 → `zsh.zinit`**: zinit は zsh 固有のツールであり、シェル非依存ではないため
+`shell.zinit` を却下した。`shell.hook` はシェル非依存のロード順制御機構として適切だが、
+zinit は zsh 以外に意味をなさない。フラットな `zinit.enable` より `zsh.zinit` を選んだ理由は、
+他の zsh 固有プラグインも同じ構造的課題（インストールされているがロードされていない）を抱えており、
+`zsh.*` 名前空間がそれらの自然な置き場になるため。
+
+**モジュールアーキテクチャ → テンプレート + モジュール（shell-hook パターンの踏襲）**:
+`pkgs.writeText` を `base.nix` に直接埋め込む方法では、Nix ストアパスや zinit コマンド構造という
+実装の詳細が構成層に露出してしまう。代わりに `zinit.nix` がこれをカプセル化し、
+init スクリプトは `pkgs.replaceVars` で処理する `zinit-init.zsh.tmpl` テンプレートを使用し、
+動的なプラグインリストは Nix 文字列補間で `pkgs.writeText` により生成する。
+2 つのスクリプトは別々の hook エントリとして登録される（priority 10: init、priority 20: plugins）。
+
+**プラグインオプション → `verb`・`path`・`ices` を持つサブモジュール**: パッケージのリストだけでは
+異なるロード動詞や ice modifier を表現できない。サブモジュールは zinit のコマンド構造に直接対応する:
+`zi ice <ices...>` に続けて `zi <verb> <path>`。現時点のユースケースをすべてカバーしつつ、
+モジュールを変更せずに新しい ice を追加できる。
+
+**モジュール依存関係 → 明示的な `imports`**: `zinit.nix` が `imports = [ ./shell-hook.nix ]`
+を宣言することで依存を自己完結させる。Nix モジュールシステムは同じ import パスを重複排除するため、
+呼び出し側が `shell-hook.nix` を import していても安全。結果として `home.nix` は `zinit.nix`
+のみを import すればよい。
+
+### 結果
+
+- `base.nix` では `zsh.zinit.enable = true` と `zsh.zinit.plugins = [...]` を宣言するだけ。Nix ストアパスや zinit コマンドは現れない
+- `home.nix` は `zinit.nix` のみを import し、`shell-hook.nix` は推移的に引き込まれる
+- `config/zinit/zinit.zsh` は非 Nix 環境向け standalone fallback として変更なく残す
+- `zsh.*` 名前空間が確立され、将来の zsh 固有モジュール（プラグインごとのモジュール等）の置き場になる

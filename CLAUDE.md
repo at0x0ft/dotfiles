@@ -46,6 +46,12 @@ Provides **load-order control only** via phases and numeric priorities:
 - **Loader**: `hook.sh` generated from `home-manager/hook.sh.tmpl` via `pkgs.replaceVars`; walks `??-*.d` dirs at runtime
 - **Wiring**: `.zshrc` sources `hook.sh`; hook scripts live in `config/{zsh,zinit,direnv,lsd,delta}/`
 
+## Editing Rules
+
+These rules apply to all edits made by Claude, without exception.
+
+1. **Always edit both language versions together** — Whenever any Markdown file is created or modified, the counterpart file in the other language must be updated in the same operation. English files live at the repo root or under `docs/`; Japanese counterparts live under `docs/ja/` with the `.ja.md` suffix (e.g. `CLAUDE.md` ↔ `docs/ja/CLAUDE.ja.md`, `tasks.md` ↔ `docs/ja/tasks.ja.md`). Never leave one version out of sync.
+
 ## Design Constraints (from docs/SPEC.md)
 
 These are **non-negotiable requirements** — see `docs/SPEC.md` for full context (`docs/ja/SPEC.ja.md` for Japanese).

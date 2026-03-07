@@ -46,6 +46,12 @@ flake.nix          # エントリポイント: 複数 system 対応、unfree 許
 - **ローダー**: `home-manager/hook.sh.tmpl` を `pkgs.replaceVars` で処理して `hook.sh` を生成; 実行時に `??-*.d` グロブでディレクトリを走査
 - **接続**: `.zshrc` が `hook.sh` を source する; フックスクリプトは `config/{zsh,zinit,direnv,lsd,delta}/` に配置
 
+## 編集ルール
+
+以下のルールは Claude が行うすべての編集に例外なく適用される。
+
+1. **常に両言語版を同時に編集する** — Markdown ファイルを新規作成または編集する際は、必ず同じ操作で対応する他言語版も更新すること。英語ファイルはリポジトリルートまたは `docs/` 以下に配置され、日本語版は `docs/ja/` 以下に `.ja.md` サフィックスで対応する（例: `CLAUDE.md` ↔ `docs/ja/CLAUDE.ja.md`、`tasks.md` ↔ `docs/ja/tasks.ja.md`）。片方だけ更新して不整合な状態にしてはならない。
+
 ## 設計制約（plan.ja.md より）
 
 以下は**絶対遵守の要件** — 詳細は `plan.ja.md` を参照（英語版は `plan.md`）。
