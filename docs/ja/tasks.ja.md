@@ -191,9 +191,36 @@ plan.ja.md セクション4（改善方針）に基づくタスク分解。
 
 ---
 
-## Phase 5: バックログ
+## Phase 5: Neovim 設定の移行
 
-### 5.1 再利用可能なモジュールの別リポジトリへの切り出し
+### 5.1 `config/neovim/rc.vim` を Lua 形式へ移行
+
+**目的**: Neovim 設定を VimScript から Lua 形式へ刷新し、`base.nix` の `xdg.configFile` によるデプロイを追加する。
+
+**現状**: `config/neovim/rc.vim` は Vim 互換設定を含む VimScript ファイルであり、Nix からはまだ配置されていない。
+
+**タスク**:
+
+- [ ] `config/neovim/init.lua` を新規作成（エントリポイント: `require("options")` と `require("keymaps")`）
+- [ ] `config/neovim/lua/options.lua` を新規作成
+  - 全 `set ...` を `vim.opt.*` に変換
+  - Neovim のデフォルト設定（`nocompatible`、`fenc=utf-8` 等）を削除
+  - ハイライト設定を `vim.api.nvim_set_hl()` に変換
+  - `laststatus` を 3 に更新（Neovim 0.7+ のグローバルステータスライン）
+- [ ] `config/neovim/lua/keymaps.lua` を新規作成
+  - `nmap` を `vim.keymap.set()` に変換
+- [ ] `home-manager/base.nix` に `xdg.configFile."nvim"` エントリを追加
+  - `config/neovim/` を `~/.config/nvim/` へ再帰的にデプロイ
+- [ ] `config/neovim/rc.vim` を削除
+- [ ] ビルド確認
+
+**変更ファイル**: `config/neovim/init.lua`（新規）, `config/neovim/lua/options.lua`（新規）, `config/neovim/lua/keymaps.lua`（新規）, `config/neovim/rc.vim`（削除）, `home-manager/base.nix`（編集）
+
+---
+
+## Phase 6: バックログ
+
+### 6.1 再利用可能なモジュールの別リポジトリへの切り出し
 
 **目的**: `shell-hook` および `zinit` モジュールをスタンドアロンの flake として公開し、他ユーザーが再利用できるようにする。
 
@@ -232,8 +259,11 @@ Phase 3 (名前付きプロファイル)  (Phase 2 に依存)
 Phase 4 (zinit 統合)           (Phase 1 に依存)
   4.1 zinit モジュール ───────── (shell-hook モジュールに依存)
                                v
-Phase 5 (バックログ)
-  5.1 モジュールの別リポジトリへの切り出し ── (4.1 安定後)
+Phase 5 (Neovim 設定の移行)    (独立; Phase 1 完了後いつでも実施可)
+  5.1 rc.vim → Lua 移行 ──────── (フェーズ依存なし)
+                               v
+Phase 6 (バックログ)
+  6.1 モジュールの別リポジトリへの切り出し ── (4.1 安定後)
 ```
 
 ## 共通の制約事項

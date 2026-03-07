@@ -191,9 +191,36 @@ Listed in execution order considering dependencies.
 
 ---
 
-## Phase 5: Backlog
+## Phase 5: Neovim Config Migration
 
-### 5.1 Extract Reusable Modules to Separate Repository
+### 5.1 Migrate `config/neovim/rc.vim` to Lua
+
+**Goal**: Modernize the Neovim config from VimScript to Lua format, and wire up deployment via `xdg.configFile` in `base.nix`.
+
+**Current state**: `config/neovim/rc.vim` is a VimScript file with Vim-compatibility settings; not yet deployed by Nix.
+
+**Tasks**:
+
+- [ ] Create `config/neovim/init.lua` (entry point: `require("options")` and `require("keymaps")`)
+- [ ] Create `config/neovim/lua/options.lua`
+  - Convert all `set ...` to `vim.opt.*`
+  - Remove Neovim-default settings (`nocompatible`, `fenc=utf-8`, etc.)
+  - Update highlight settings to `vim.api.nvim_set_hl()`
+  - Update `laststatus` to 3 (global statusline, Neovim 0.7+)
+- [ ] Create `config/neovim/lua/keymaps.lua`
+  - Convert `nmap` to `vim.keymap.set()`
+- [ ] Add `xdg.configFile."nvim"` entry in `home-manager/base.nix`
+  - Deploy `config/neovim/` directory recursively to `~/.config/nvim/`
+- [ ] Remove `config/neovim/rc.vim`
+- [ ] Verify build
+
+**Changed files**: `config/neovim/init.lua` (new), `config/neovim/lua/options.lua` (new), `config/neovim/lua/keymaps.lua` (new), `config/neovim/rc.vim` (delete), `home-manager/base.nix` (edit)
+
+---
+
+## Phase 6: Backlog
+
+### 6.1 Extract Reusable Modules to Separate Repository
 
 **Goal**: Publish `shell-hook` and `zinit` modules as a standalone flake for reuse by other users.
 
@@ -232,8 +259,11 @@ Phase 3 (Named Profiles)       (depends on Phase 2)
 Phase 4 (zinit Integration)    (depends on Phase 1)
   4.1 zinit module ────────────── (depends on shell-hook module)
                                v
-Phase 5 (Backlog)
-  5.1 Extract modules to separate repo ── (depends on 4.1 stable)
+Phase 5 (Neovim Config Migration)  (independent; deployable any time after Phase 1)
+  5.1 rc.vim → Lua migration ──── (no phase dependencies)
+                               v
+Phase 6 (Backlog)
+  6.1 Extract modules to separate repo ── (depends on 4.1 stable)
 ```
 
 ## Common Constraints
