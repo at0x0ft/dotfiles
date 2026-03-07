@@ -4,13 +4,13 @@
 
 ```bash
 # 設定を適用（dotfiles ディレクトリ内から実行）
-home-manager switch --flake '.#at0x0ft@x86_64-linux'
+home-manager switch --flake '.#at0x0ft@work'
 
 # 絶対パス指定（どこからでも実行可）
-home-manager switch --flake '~/Programming/dotfiles#at0x0ft@x86_64-linux'
+home-manager switch --flake '~/Programming/dotfiles#at0x0ft@work'
 
 # ドライラン（ビルドのみ、適用なし; ./result シンボリックリンクが生成される）
-home-manager build --flake '.#at0x0ft@x86_64-linux'
+home-manager build --flake '.#at0x0ft@work'
 
 # flake 入力の更新（nixpkgs, home-manager）
 nix flake update
@@ -19,13 +19,13 @@ nix flake update
 ## アーキテクチャ
 
 ```
-flake.nix          # エントリポイント: 複数 system 対応、unfree 許可リスト、override モジュール配線
+flake.nix          # エントリポイント: 名前付きプロファイル、unfree 許可リスト、プラットフォームモジュール配線
   -> home.nix      # 構成ルート: ユーザー情報、imports、home-manager 有効化
        -> home-manager/base.nix               # ベースパッケージ、shell-hook エントリ、.zshrc 生成
        -> home-manager/shell-hook.nix         # カスタムモジュール: 読み込み順制御のみのフック機構
-       -> home-manager/overrides/wsl.nix      # WSL 固有パッケージ（claude-code 等）
-       -> home-manager/overrides/darwin.nix   # macOS 固有パッケージ（スケルトン）
-       -> home-manager/overrides/linux.nix    # aarch64-linux パッケージ（スケルトン）
+       -> home-manager/platforms/wsl.nix      # WSL 固有パッケージ（claude-code 等）
+       -> home-manager/platforms/darwin.nix   # macOS 固有パッケージ（スケルトン）
+       -> home-manager/platforms/linux.nix    # aarch64-linux パッケージ（スケルトン）
 ```
 
 ### ディレクトリの役割
@@ -52,14 +52,6 @@ flake.nix          # エントリポイント: 複数 system 対応、unfree 許
 
 1. **常に両言語版を同時に編集する** — Markdown ファイルを新規作成または編集する際は、必ず同じ操作で対応する他言語版も更新すること。英語ファイルはリポジトリルートまたは `docs/` 以下に配置され、日本語版は `docs/ja/` 以下に `.ja.md` サフィックスで対応する（例: `CLAUDE.md` ↔ `docs/ja/CLAUDE.ja.md`、`tasks.md` ↔ `docs/ja/tasks.ja.md`）。片方だけ更新して不整合な状態にしてはならない。
 
-## 設計制約（plan.ja.md より）
+## 設計制約
 
-以下は**絶対遵守の要件** — 詳細は `plan.ja.md` を参照（英語版は `plan.md`）。
-
-1. **`programs.*` を使わない** — home-manager はパッケージインストール（`home.packages`）とファイル配置（`xdg.configFile`, `home.file`）に限定する。ツール設定は `config/` 内の素のシェルスクリプトであり、`programs.git` や `programs.fzf` 等で生成しない。
-2. **ログインシェルを管理しない** — `programs.zsh` を使わず、ログインシェルの選択も管理しない。シェル RC ファイル（`.zshrc`）は `home.file` で配置する。
-3. **shell-hook はシンプルに保つ** — モジュールは読み込み順（フェーズ + 優先度）のみを扱う。依存関係解決やツール固有ロジックは持たない。
-4. **未設定のパッケージ/コードを絶対に削除しない** — 一部パッケージ（git, bat, fd, fzf, zsh プラグイン）はここに設定がないが、設定ファイルが別に存在しまだ反映されていないだけである。削除しないこと。
-5. **zinit はローダー専任** — zinit は Nix 管理のプラグインを source するのみ。プラグインのバージョン管理やアップデートは行わない。
-6. **クロスプラットフォーム目標** — `flake.nix` の `systemEnvironment` マップにより x86_64-linux, aarch64-linux, aarch64-darwin をサポート。
-7. **base + override 目標** — ベースパッケージは `base.nix`、環境固有の差分は `home-manager/overrides/` で管理。
+設計原則と絶対遵守の制約については `docs/ja/SPEC.ja.md` を参照（英語版は `docs/SPEC.md`）。
