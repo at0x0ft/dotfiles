@@ -6,10 +6,6 @@ let
     chmod -R u+w "$out"
     rm -f "$out"/modules/Src/aloxaf/fzftab.so "$out"/modules/Src/aloxaf/fzftab.bundle
   '';
-
-  zshCompletionsLoader = pkgs.writeText "zsh-completions-loader.zsh" ''
-    fpath+=("${pkgs.zsh-completions}/share/zsh/site-functions")
-  '';
 in
 
 {
@@ -23,7 +19,7 @@ in
     pkgs.delta
     pkgs.fzf
     pkgs.zsh-fzf-tab
-    pkgs.zsh-completions
+    pkgs.zsh-autosuggestions
     pkgs.zsh-history-search-multi-word
     pkgs.zsh-fast-syntax-highlighting
   ];
@@ -36,16 +32,19 @@ in
         path = "${zshFzfTabWithoutModule}";
       }
       {
-        verb = "snippet";
-        path = "${zshCompletionsLoader}";
+        verb = "light";
+        path = "${pkgs.zsh-autosuggestions}/share/zsh/plugins/zsh-autosuggestions";
+        ices = [ "wait" "lucid" "atload\"!_zsh_autosuggest_start\"" ];
       }
       {
         verb = "light";
         path = "${pkgs.zsh-history-search-multi-word}/share/zsh/zsh-history-search-multi-word";
+        ices = [ "wait\"1\"" "lucid" ];
       }
       {
         verb = "light";
         path = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting";
+        ices = [ "wait" "lucid" "atinit\"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay\"" ];
       }
     ];
   };
