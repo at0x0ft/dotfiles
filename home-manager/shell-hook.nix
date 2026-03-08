@@ -5,7 +5,10 @@ let
   hook = config.shell.hook;
 
   entryToFileName = entry:
-    lib.fixedWidthNumber 2 entry.priority + "-" + baseNameOf entry.source;
+    let
+      sourceName = baseNameOf (builtins.unsafeDiscardStringContext (toString entry.source));
+    in
+    lib.fixedWidthNumber 2 entry.priority + "-" + sourceName;
 in
 {
   options.shell.hook = {

@@ -1,5 +1,17 @@
 { config, pkgs, ... }:
 
+let
+  zshFzfTabWithoutModule = pkgs.runCommand "zsh-fzf-tab-without-module" { } ''
+    cp -r ${pkgs.zsh-fzf-tab}/share/fzf-tab "$out"
+    chmod -R u+w "$out"
+    rm -f "$out"/modules/Src/aloxaf/fzftab.so "$out"/modules/Src/aloxaf/fzftab.bundle
+  '';
+
+  zshCompletionsLoader = pkgs.writeText "zsh-completions-loader.zsh" ''
+    fpath+=("${pkgs.zsh-completions}/share/zsh/site-functions")
+  '';
+in
+
 {
   home.packages = [
     pkgs.neovim
@@ -10,19 +22,35 @@
     pkgs.fd
     pkgs.delta
     pkgs.fzf
-    pkgs.zinit
     pkgs.zsh-fzf-tab
     pkgs.zsh-completions
     pkgs.zsh-history-search-multi-word
     pkgs.zsh-fast-syntax-highlighting
   ];
 
+  zsh.zinit = {
+    enable = true;
+    plugins = [
+      {
+        verb = "light";
+        path = "${zshFzfTabWithoutModule}";
+      }
+      {
+        verb = "snippet";
+        path = "${zshCompletionsLoader}";
+      }
+      {
+        verb = "light";
+        path = "${pkgs.zsh-history-search-multi-word}/share/zsh/zsh-history-search-multi-word";
+      }
+      {
+        verb = "light";
+        path = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting";
+      }
+    ];
+  };
+
   shell.hook.entries = [
-    {
-      loader = "main";
-      priority = 10;
-      source = ../config/zinit/zinit.zsh;
-    }
     {
       loader = "main";
       priority = 50;

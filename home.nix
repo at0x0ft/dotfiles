@@ -6,7 +6,7 @@
   home.stateVersion = "25.11";
 
   imports = [
-    ./home-manager/shell-hook.nix
+    ./home-manager/zinit.nix
     ./home-manager/base.nix
   ];
 
