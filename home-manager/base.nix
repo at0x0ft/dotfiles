@@ -76,6 +76,11 @@ in
       source = ../config/delta/functions.sh;
     }
     {
+      loader = "main";
+      priority = 50;
+      source = ../config/claude/envvar.sh;
+    }
+    {
       loader = "postload";
       priority = 90;
       source = ../config/direnv/hook.zsh;
@@ -95,4 +100,8 @@ in
       printf 'failed to load shell hook script: not found: "%s" load error.\n' "${config.xdg.configHome}/${config.shell.hook.scriptPath}" >&2
     fi
   '';
+
+  xdg.configFile."claude/CLAUDE.md" = {
+    source = ../config/claude/CLAUDE.md;
+  };
 }
