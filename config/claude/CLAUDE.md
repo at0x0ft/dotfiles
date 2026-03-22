@@ -38,7 +38,7 @@ Filename examples: `001-setup.md`, `002-core-features.md`, `003-polish.md`
 
 ### 5. docs/sessions/ (Handoff between sessions)
 
-Create one file per session as `YYYY-MM-DD-NNNN.md` (e.g. `2026-03-22-0001.md`, `2026-03-22-0002.md`). Each entry includes: What was done / Remaining issues / Next steps / Notes and observations. These files are gitignored (local development history only), but the directory structure is tracked. **Exception: Session logs are English-only — no Japanese counterparts.**
+Create one file per session as `YYYY-MM-DD-NNNN.md` (e.g. `2026-03-22-0001.md`, `2026-03-22-0002.md`). Each entry includes: What was done / Remaining issues / Next steps / Notes and observations. These files are gitignored (local development history only), but the directory structure is tracked.
 
 ## Project Root CLAUDE.md
 
