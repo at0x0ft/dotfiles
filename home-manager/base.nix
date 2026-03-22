@@ -18,6 +18,7 @@ in
     pkgs.fd
     pkgs.delta
     pkgs.fzf
+    pkgs.zsh-powerlevel10k
     pkgs.zsh-fzf-tab
     pkgs.zsh-autosuggestions
     pkgs.zsh-history-search-multi-word
@@ -27,6 +28,11 @@ in
   zsh.zinit = {
     enable = true;
     plugins = [
+      {
+        verb = "light";
+        path = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
+        ices = [ "depth\"1\"" ];
+      }
       {
         verb = "light";
         path = "${zshFzfTabWithoutModule}";
@@ -50,6 +56,18 @@ in
   };
 
   shell.hook.entries = [
+    # Powerlevel10k instant prompt (must load early for caching)
+    {
+      loader = "preload";
+      priority = 5;
+      source = "${../config/powerlevel10k}/instant-prompt.zsh";
+    }
+    # Powerlevel10k main config (after powerlevel10k theme loads via zinit)
+    {
+      loader = "main";
+      priority = 25;
+      source = "${../config/powerlevel10k}/p10k.zsh";
+    }
     {
       loader = "main";
       priority = 50;
