@@ -7,3 +7,5 @@ result-*
 
 # Claude Code local-only settings
 .claude/settings.local.json
+docs/SESSION_LOG.md
+docs/ja/SESSION_LOG.ja.md

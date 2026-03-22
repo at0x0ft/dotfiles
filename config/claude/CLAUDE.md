@@ -17,15 +17,17 @@ Describe: tech stack (table format), directory structure (tree format), design p
 
 ### 3. docs/decisions/ (Why we decided that way)
 
-Create one file per decision as `NNN-title.md`. Format:
+Create one file per decision as `NNN-title.md`. Use `##` headings per section — not inline `- Key: value` on a single line. Long prose must be broken into bullet lists under each heading.
+
 ```
 # ADR-NNN: Title
 - Date:
 - Status: Accepted / Rejected / Pending / Deprecated
-- Context: What situation required this decision
-- Decision: What was chosen
-- Rationale: Why it was chosen
-- Rejected alternatives: What else was considered and why it was rejected
+## Context        — Background and options considered (bullet list)
+## Decision       — What was chosen and key points (bullet list)
+## Rationale      — Why it was chosen (1-2 sentences or bullets)
+## Rejected Alternatives — Each alternative as `**Name** — reason` bullets
+## Consequences   — Resulting constraints and impacts (bullet list)
 ```
 Filename examples: `001-state-management.md`, `002-data-persistence.md`
 
