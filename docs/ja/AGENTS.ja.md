@@ -6,7 +6,7 @@ Nix + home-manager ベースのクロスプラットフォーム dotfiles。読�
 
 要件と設計原則は @docs/ja/SPEC.ja.md を参照。
 モジュール構成とディレクトリの役割は @docs/ja/ARCHITECTURE.ja.md を参照。
-セッション引き継ぎログは @docs/ja/SESSION_LOG.ja.md を参照。
+セッション引き継ぎログは @docs/sessions/ を参照（YYYY-MM-DD-NNNN.md 形式、英語のみ、gitignore 管理）。
 設計決定記録（ADR）は @docs/ja/decisions/ を参照。
 フェーズ別タスク計画は @docs/ja/tasks/ を参照。
 
@@ -21,7 +21,7 @@ nix flake update                                     # flake 入力の更新
 
 ## 編集ルール
 
-1. **常に両言語版を同時に編集する** — Markdown ファイルを新規作成または編集する際は、必ず同じ操作で対応する他言語版も更新すること。英語ファイルはリポジトリルートまたは `docs/` 以下に配置され、日本語版は `docs/ja/` 以下に `.ja.md` サフィックスで対応する（例: `AGENTS.md` ↔ `docs/ja/AGENTS.ja.md`、`docs/tasks/001-foundation.md` ↔ `docs/ja/tasks/001-foundation.ja.md`）。片方だけ更新して不整合な状態にしてはならない。
+1. **常に両言語版を同時に編集する** — Markdown ファイルを新規作成または編集する際は、必ず同じ操作で対応する他言語版も更新すること。英語ファイルはリポジトリルートまたは `docs/` 以下に配置され、日本語版は `docs/ja/` 以下に `.ja.md` サフィックスで対応する（例: `AGENTS.md` ↔ `docs/ja/AGENTS.ja.md`、`docs/tasks/001-foundation.md` ↔ `docs/ja/tasks/001-foundation.ja.md`）。片方だけ更新して不整合な状態にしてはならない。**例外: `docs/sessions/` は英語のみ管理 — 日本語版は不要。**
 
 ## 設計制約
 

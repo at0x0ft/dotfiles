@@ -36,9 +36,9 @@ Filename examples: `001-state-management.md`, `002-data-persistence.md`
 Create one file per phase as `NNN-phase-name.md`. Each task uses `- [ ]` checkbox format with a one-line "Done when:" immediately below it. Include "Current progress" and "Last updated" at the end of each file.
 Filename examples: `001-setup.md`, `002-core-features.md`, `003-polish.md`
 
-### 5. docs/SESSION_LOG.md (Handoff between sessions)
+### 5. docs/sessions/ (Handoff between sessions)
 
-Prepend new entries at the top (newest first). Each entry includes: What was done / Remaining issues / Next steps / Notes and observations.
+Create one file per session as `YYYY-MM-DD-NNNN.md` (e.g. `2026-03-22-0001.md`, `2026-03-22-0002.md`). Each entry includes: What was done / Remaining issues / Next steps / Notes and observations. These files are gitignored (local development history only), but the directory structure is tracked. **Exception: Session logs are English-only — no Japanese counterparts.**
 
 ## Project Root CLAUDE.md
 
@@ -55,7 +55,7 @@ Target: under 50 lines.
 
 ## Session Rules
 
-- On start: review the latest entry in docs/SESSION_LOG.md and the current phase file in docs/tasks/
-- Before ending: update checkboxes in the current tasks file and prepend a new entry to SESSION_LOG.md
+- On start: review the latest session file in docs/sessions/ (highest NNNN for today) and the current phase file in docs/tasks/
+- Before ending: update checkboxes in the current tasks file and create a new session file in docs/sessions/ with next sequence number
 - On design decisions: create a new ADR file in docs/decisions/
-- Before `/compact`: also update SESSION_LOG.md
+- Before `/compact`: also update the current session file in docs/sessions/
