@@ -13,6 +13,7 @@ in
     pkgs.neovim
     pkgs.direnv
     pkgs.git
+    pkgs.gh
     pkgs.lsd
     pkgs.bat
     pkgs.fd
