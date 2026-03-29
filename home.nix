@@ -7,6 +7,7 @@
 
   imports = [
     ./home-manager/zinit.nix
+    ./home-manager/zinit-fzf-tab-compat.nix
     ./home-manager/base.nix
   ];
 

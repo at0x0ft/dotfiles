@@ -1,13 +1,5 @@
 { config, pkgs, ... }:
 
-let
-  zshFzfTabWithoutModule = pkgs.runCommand "zsh-fzf-tab-without-module" { } ''
-    cp -r ${pkgs.zsh-fzf-tab}/share/fzf-tab "$out"
-    chmod -R u+w "$out"
-    rm -f "$out"/modules/Src/aloxaf/fzftab.so "$out"/modules/Src/aloxaf/fzftab.bundle
-  '';
-in
-
 {
   home.packages = [
     pkgs.neovim
@@ -21,7 +13,6 @@ in
     pkgs.delta
     pkgs.fzf
     pkgs.zsh-powerlevel10k
-    pkgs.zsh-fzf-tab
     pkgs.zsh-autosuggestions
     pkgs.zsh-history-search-multi-word
     pkgs.zsh-fast-syntax-highlighting
@@ -36,8 +27,9 @@ in
         ices = [ "depth\"1\"" ];
       }
       {
-        verb = "light";
-        path = "${zshFzfTabWithoutModule}";
+        verb = "load";
+        path = "${config.zinit.packages.fzf-tab-compat}";
+        ices = [ "wait" "lucid" "blockf" ];
       }
       {
         verb = "light";
