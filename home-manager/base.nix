@@ -14,6 +14,7 @@ in
     pkgs.direnv
     pkgs.git
     pkgs.gh
+    pkgs.uutils-coreutils-noprefix
     pkgs.lsd
     pkgs.bat
     pkgs.fd
@@ -98,6 +99,11 @@ in
       loader = "main";
       priority = 50;
       source = ../config/claude/envvar.sh;
+    }
+    {
+      loader = "main";
+      priority = 60;
+      source = ../config/fzf/envvar.sh;
     }
     {
       loader = "postload";

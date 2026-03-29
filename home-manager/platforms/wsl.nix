@@ -1,6 +1,5 @@
-{ pkgs-unfree, ... }:
+{ pkgs, ... }:
 {
   home.packages = [
-    pkgs-unfree.claude-code
   ];
 }

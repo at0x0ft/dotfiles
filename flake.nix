@@ -18,7 +18,7 @@
       # Multiple profiles may share the same (system, env) with different profiles/${name}.nix.
       profileDefs = {
         work       = { system = "x86_64-linux"; env = "wsl"; };
-        individual = { system = "x86_64-linux"; env = "wsl"; };
+        hobby-wsl = { system = "x86_64-linux"; env = "wsl"; };
       };
 
       # Unfree package allowlists per environment.
