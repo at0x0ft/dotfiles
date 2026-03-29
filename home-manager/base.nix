@@ -27,6 +27,11 @@
         ices = [ "depth\"1\"" ];
       }
       {
+        verb = "snippet";
+        path = "${pkgs.fzf}/share/fzf/completion.zsh";
+        ices = [ ];
+      }
+      {
         verb = "load";
         path = "${config.zinit.packages.fzf-tab-compat}";
         ices = [ "wait" "lucid" "blockf" ];
@@ -91,6 +96,11 @@
       loader = "main";
       priority = 60;
       source = ../config/fzf/envvar.sh;
+    }
+    {
+      loader = "main";
+      priority = 70;
+      source = ../config/fzf-tab/completion.zsh;
     }
     {
       loader = "postload";
