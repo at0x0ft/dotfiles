@@ -7,8 +7,9 @@ let
   entryToFileName = entry:
     let
       sourceName = baseNameOf (builtins.unsafeDiscardStringContext (toString entry.source));
+      baseName = if entry.name != null then entry.name else sourceName;
     in
-    lib.fixedWidthNumber 2 entry.priority + "-" + sourceName;
+    lib.fixedWidthNumber 2 entry.priority + "-" + baseName;
 in
 {
   options.shell.hook = {
@@ -51,6 +52,12 @@ in
           source = lib.mkOption {
             type = types.path;
             description = "Source file to be sourced by shell";
+          };
+
+          name = lib.mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Override deployed symlink filename (without priority prefix). Defaults to source basename.";
           };
         };
       });

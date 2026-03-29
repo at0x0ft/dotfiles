@@ -7,8 +7,9 @@
 
   shell.hook.entries = [
     {
+      name = "claude-envvar";
       loader = "main";
-      priority = 50;
+      priority = 40;
       source = ../../config/claude/envvar.sh;
     }
   ];

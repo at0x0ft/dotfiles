@@ -20,36 +20,52 @@
 
   zsh.zinit = {
     enable = true;
+    initLoader = "preload";
+    initPriority = 10;
     plugins = [
       {
+        name = "p10k-init";
         verb = "light";
         path = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k";
         ices = [ "depth\"1\"" ];
+        priority = 10;
       }
       {
-        verb = "snippet";
-        path = "${pkgs.fzf}/share/fzf/completion.zsh";
-        ices = [ ];
-      }
-      {
-        verb = "load";
-        path = "${config.zinit.packages.fzf-tab-compat}";
-        ices = [ "wait" "lucid" "blockf" ];
-      }
-      {
-        verb = "light";
-        path = "${pkgs.zsh-autosuggestions}/share/zsh/plugins/zsh-autosuggestions";
-        ices = [ "wait" "lucid" "atload\"!_zsh_autosuggest_start\"" ];
-      }
-      {
-        verb = "light";
-        path = "${pkgs.zsh-history-search-multi-word}/share/zsh/zsh-history-search-multi-word";
-        ices = [ "wait\"1\"" "lucid" ];
-      }
-      {
+        name = "fast-syntax-highlighting";
         verb = "light";
         path = "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting";
         ices = [ "wait" "lucid" "atinit\"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay\"" ];
+        # ices = [ "wait" "lucid" ];
+        priority = 20;
+      }
+      {
+        name = "autosuggestions";
+        verb = "light";
+        path = "${pkgs.zsh-autosuggestions}/share/zsh/plugins/zsh-autosuggestions";
+        ices = [ "wait" "lucid" "atload\"!_zsh_autosuggest_start\"" ];
+        priority = 30;
+      }
+      {
+        name = "history-search-multi-word";
+        verb = "light";
+        path = "${pkgs.zsh-history-search-multi-word}/share/zsh/zsh-history-search-multi-word";
+        ices = [ "wait\"1\"" "lucid" ];
+        priority = 31;
+      }
+      {
+        name = "fzf-completion";
+        verb = "snippet";
+        path = "${pkgs.fzf}/share/fzf/completion.zsh";
+        ices = [ ];
+        priority = 50;
+      }
+      {
+        name = "fzf-tab";
+        verb = "load";
+        path = "${config.zinit.packages.fzf-tab-compat}";
+        ices = [ "wait" "lucid" "blockf" ];
+        # ices = [ "lucid" "blockf" "atload\"zicompinit; zicdreplay\"" ];
+        priority = 52;
       }
     ];
   };
@@ -57,52 +73,62 @@
   shell.hook.entries = [
     # Powerlevel10k instant prompt (must load early for caching)
     {
+      name = "p10k-instant-prompt";
       loader = "preload";
       priority = 5;
       source = "${../config/powerlevel10k}/instant-prompt.zsh";
     }
     # Powerlevel10k main config (after powerlevel10k theme loads via zinit)
     {
+      name = "p10k-main";
       loader = "main";
-      priority = 25;
+      priority = 11;
       source = "${../config/powerlevel10k}/p10k.zsh";
     }
     {
+      name = "general-envvar";
       loader = "main";
-      priority = 50;
+      priority = 40;
       source = ../config/zsh/envvar.zsh;
     }
     {
+      name = "general-option";
       loader = "main";
-      priority = 50;
+      priority = 40;
       source = ../config/zsh/option.zsh;
     }
     {
+      name = "general-keybind";
       loader = "main";
-      priority = 50;
+      priority = 40;
       source = ../config/zsh/keybind.zsh;
     }
     {
+      name = "lsd-alias";
       loader = "main";
-      priority = 50;
-      source = ../config/lsd/aliases.sh;
+      priority = 40;
+      source = ../config/lsd/alias.sh;
     }
     {
+      name = "delta-function";
       loader = "main";
-      priority = 50;
-      source = ../config/delta/functions.sh;
+      priority = 40;
+      source = ../config/delta/function.sh;
     }
     {
+      name = "fzf-envvar";
       loader = "main";
-      priority = 60;
+      priority = 51;
       source = ../config/fzf/envvar.sh;
     }
     {
+      name = "fzf-tab-completion";
       loader = "main";
-      priority = 70;
+      priority = 53;
       source = ../config/fzf-tab/completion.zsh;
     }
     {
+      name = "direnv-hook";
       loader = "postload";
       priority = 90;
       source = ../config/direnv/hook.zsh;

@@ -3,19 +3,45 @@
 let
   cfg = config.zsh.zinit;
 
-  pluginLines = lib.concatMapStringsSep "\n" (plugin:
+  # Group plugins by priority
+  groupedByPriority = lib.foldl' (acc: plugin:
     let
-      iceLine = lib.optionalString (plugin.ices != [])
-        "zi ice ${lib.concatStringsSep " " plugin.ices}\n";
+      p = toString plugin.priority;
+      existing = acc.${p} or [];
     in
-    ''
-      ${iceLine}zi ${plugin.verb} "${plugin.path}"
-    ''
-  ) cfg.plugins;
+    acc // { ${p} = existing ++ [ plugin ]; }
+  ) {} cfg.plugins;
 
-  pluginScript = pkgs.writeText "zinit-plugins.zsh" ''
-    ${pluginLines}
-  '';
+  # Generate a zinit script for a list of plugins
+  pluginLinesToScript = plugins:
+    lib.concatMapStringsSep "\n" (plugin:
+      let
+        iceLine = lib.optionalString (plugin.ices != [])
+          "zi ice ${lib.concatStringsSep " " plugin.ices}\n";
+      in
+      ''
+        ${iceLine}zi ${plugin.verb} "${plugin.path}"
+      ''
+    ) plugins;
+
+  # Derive a group name from the first plugin that has a name, or fall back to priority
+  groupName = priority: plugins:
+    let
+      named = lib.filter (p: p.name != null) plugins;
+      base = if named != [] then (lib.head named).name else "plugins-${priority}";
+    in
+    "zinit-${base}.zsh";
+
+  # Generate one script file per priority group
+  priorityScripts = lib.mapAttrsToList (priority: plugins:
+    let
+      fileName = groupName priority plugins;
+    in
+    {
+      inherit priority fileName;
+      source = pkgs.writeText fileName (pluginLinesToScript plugins);
+    }
+  ) groupedByPriority;
 
   initScript = pkgs.replaceVars ./zinit-init.zsh.tmpl {
     zinit_path = "${pkgs.zinit}/share/zinit";
@@ -26,6 +52,18 @@ in
 
   options.zsh.zinit = {
     enable = lib.mkEnableOption "zinit plugin loader for zsh";
+
+    initLoader = lib.mkOption {
+      type = lib.types.str;
+      default = "main";
+      description = "Shell-hook loader phase for the zinit initialization script (must be a key in shell.hook.phaseOrder)";
+    };
+
+    initPriority = lib.mkOption {
+      type = lib.types.int;
+      default = 10;
+      description = "Shell-hook priority for the zinit initialization script (must load before any plugins)";
+    };
 
     plugins = lib.mkOption {
       type = lib.types.listOf (lib.types.submodule ({ ... }: {
@@ -45,6 +83,18 @@ in
             default = [];
             description = "zinit ice options";
           };
+
+          priority = lib.mkOption {
+            type = lib.types.int;
+            default = 20;
+            description = "Shell-hook priority for this plugin (lower loads earlier)";
+          };
+
+          name = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
+            description = "Name for the generated script and shell-hook symlink (without 'zinit-' prefix and '.zsh' suffix)";
+          };
         };
       }));
       default = [];
@@ -58,17 +108,17 @@ in
     shell.hook.entries =
       [
         {
-          loader = "main";
-          priority = 10;
+          loader = cfg.initLoader;
+          priority = cfg.initPriority;
+          name = "zinit-init.zsh";
           source = initScript;
         }
       ]
-      ++ lib.optionals (cfg.plugins != []) [
-        {
-          loader = "main";
-          priority = 20;
-          source = pluginScript;
-        }
-      ];
+      ++ map (ps: {
+        loader = "main";
+        priority = lib.toInt ps.priority;
+        name = ps.fileName;
+        source = ps.source;
+      }) priorityScripts;
   };
 }
