@@ -13,7 +13,7 @@
       source = ../../config/claude/envvar.sh;
     }
     {
-      name = "claude-envvar";
+      name = "claude-alias";
       loader = "main";
       priority = 40;
       source = ../../config/claude/alias.sh;
