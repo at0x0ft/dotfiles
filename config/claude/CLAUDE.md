@@ -1,61 +1,63 @@
-# Global Settings
+# グローバル設定
 
-Communicate in English. Write commit messages in English using Conventional Commits format.
+## 言語
 
-## Development Process
+- 思考 (thinking) は英語で行う。
+- docs/ 配下のドキュメントは日本語で書く。見出しやテンプレートの項目名も日本語にする。
+- コミットメッセージは英語で、Conventional Commits 形式で書く。
 
-For new projects, create the following documents under docs/ in order before writing any code.
-For existing projects, prepare these documents before implementation if docs/ is not yet set up.
+## 開発プロセス
 
-### 1. docs/SPEC.md (What to build)
+新規プロジェクトでは、コードを書く前に、以下のドキュメントを docs/ 配下に順に作成する。
+既存プロジェクトで docs/ が未整備の場合は、実装の前にこれらを用意する。
 
-Define: purpose (1-2 sentences), use cases (bullet list), out of scope (what NOT to build), non-functional requirements, and success criteria.
+### 1. docs/SPEC.md (何を作るか)
 
-### 2. docs/ARCHITECTURE.md (How to build it)
+目的 (1〜2 文)、ユースケース (箇条書き)、対象外 (作らないもの)、非機能要件、成功基準を定義する。
 
-Describe: tech stack (table format), directory structure (tree format), design principles (3-5 items), and data model (type definitions).
+### 2. docs/ARCHITECTURE.md (どう作るか)
 
-### 3. docs/decisions/ (Why we decided that way)
+技術スタック (表形式)、ディレクトリ構成 (ツリー形式)、設計原則 (3〜5 項目)、データモデル (型定義) を記述する。
 
-Create one file per decision as `NNN-title.md`. Use `##` headings per section — not inline `- Key: value` on a single line. Long prose must be broken into bullet lists under each heading.
+### 3. docs/decisions/ (なぜそう決めたか)
+
+決定 1 件につき 1 ファイルを `NNN-title.md` として作成する。日付と状態以外のセクションは `##` 見出しを使い、1 行に `- キー: 値` の形で並べない。長い文章は各見出しの下で箇条書きに分ける。
 
 ```
-# ADR-NNN: Title
-- Date:
-- Status: Accepted / Rejected / Pending / Deprecated
-## Context        — Background and options considered (bullet list)
-## Decision       — What was chosen and key points (bullet list)
-## Rationale      — Why it was chosen (1-2 sentences or bullets)
-## Rejected Alternatives — Each alternative as `**Name** — reason` bullets
-## Consequences   — Resulting constraints and impacts (bullet list)
+# ADR-NNN: タイトル
+- 日付:
+- 状態: 採用 / 却下 / 保留 / 廃止
+## 背景           — 経緯と検討した選択肢 (箇条書き)
+## 決定           — 選んだものと要点 (箇条書き)
+## 理由           — 選んだ理由 (1〜2 文または箇条書き)
+## 却下した代替案 — 各案を `**名前** — 理由` の箇条書きで
+## 影響           — 結果として生じる制約と影響 (箇条書き)
 ```
-Filename examples: `001-state-management.md`, `002-data-persistence.md`
+ファイル名の例: `001-state-management.md`、`002-data-persistence.md`
 
-### 4. docs/tasks/ (What to do and in what order)
+### 4. docs/tasks/ (何をどの順で行うか)
 
-Create one file per phase as `NNN-phase-name.md`. Each task uses `- [ ]` checkbox format with a one-line "Done when:" immediately below it. Include "Current progress" and "Last updated" at the end of each file.
-Filename examples: `001-setup.md`, `002-core-features.md`, `003-polish.md`
+フェーズ 1 つにつき 1 ファイルを `NNN-phase-name.md` として作成する。各タスクは `- [ ]` のチェックボックス形式で書き、直下に 1 行の「完了条件:」を置く。各ファイルの末尾に「現在の進捗」と「最終更新」を入れる。
+ファイル名の例: `001-setup.md`、`002-core-features.md`、`003-polish.md`
 
-### 5. docs/sessions/ (Handoff between sessions)
+### 5. docs/sessions/ (セッション間の引き継ぎ)
 
-Create one file per session as `YYYY-MM-DD-NNNN.md` (e.g. `2026-03-22-0001.md`, `2026-03-22-0002.md`). Each entry includes: What was done / Remaining issues / Next steps / Notes and observations. These files are gitignored (local development history only), but the directory structure is tracked.
+セッション 1 つにつき 1 ファイルを `YYYY-MM-DD-NNNN.md` として作成する (例: `2026-03-22-0001.md`、`2026-03-22-0002.md`)。各ファイルには「実施内容」「残課題」「次のステップ」「メモ・気づき」を書く。これらのファイルは gitignore する (ローカルの開発履歴のみ) が、ディレクトリ構成は追跡する。
 
-## Project Root CLAUDE.md
+## プロジェクトルートの CLAUDE.md
 
-Once the above documents are in place, create a CLAUDE.md at the project root.
+上記のドキュメントが揃ったら、プロジェクトのルートに CLAUDE.md を作成する。
 
-Include:
-- Project summary (1 line)
-- Reference links in `See @docs/SPEC.md` format
-- Build, test, and lint command list
-- Code rules (project-specific)
+含めるもの:
+- プロジェクトの概要 (1 行)
+- `See @docs/SPEC.md` 形式の参照リンク
+- ビルド・テスト・lint のコマンド一覧
+- コード規約 (プロジェクト固有のもの)
 
-Do not include: detailed design rationale, decision history, or task lists (all delegated to docs/).
-Target: under 50 lines.
+含めないもの: 設計理由の詳細、決定の履歴、タスク一覧 (すべて docs/ に任せる)。
+目安: 50 行未満。
 
-## Session Rules
+## セッションのルール
 
-- On start: review the latest session file in docs/sessions/ (highest NNNN for today) and the current phase file in docs/tasks/
-- Before ending: update checkboxes in the current tasks file and create a new session file in docs/sessions/ with next sequence number
-- On design decisions: create a new ADR file in docs/decisions/
-- Before `/compact`: also update the current session file in docs/sessions/
+- 開始時: docs/sessions/ の最新のセッションファイル (今日の日付で NNNN が最大のもの) と、docs/tasks/ の現在のフェーズのファイルを確認する。
+- 設計上の決定をしたとき: docs/decisions/ に ADR を作るかどうかをユーザーに確認する。

@@ -16,6 +16,7 @@
     pkgs.zsh-autosuggestions
     pkgs.zsh-history-search-multi-word
     pkgs.zsh-fast-syntax-highlighting
+    pkgs.tree
   ];
 
   zsh.zinit = {

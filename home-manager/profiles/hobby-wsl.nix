@@ -17,4 +17,7 @@
   xdg.configFile."claude/CLAUDE.md" = {
     source = ../../config/claude/CLAUDE.md;
   };
+  xdg.configFile."claude/settings.json" = {
+    source = ../../config/claude/settings.json;
+  };
 }
