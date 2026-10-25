@@ -12,6 +12,12 @@
       priority = 40;
       source = ../../config/claude/envvar.sh;
     }
+    {
+      name = "claude-envvar";
+      loader = "main";
+      priority = 40;
+      source = ../../config/claude/alias.sh;
+    }
   ];
 
   xdg.configFile."claude/CLAUDE.md" = {
