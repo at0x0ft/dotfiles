@@ -2,8 +2,4 @@
     "language": "japanese",
     "alwaysThinkingEnabled": true,
     "autoMemoryEnabled": true
-    // "statusLine": {
-    //     "type": "command",
-    //     "command": "python3 ~/.claude/statusline-2.py"
-    // }
 }
