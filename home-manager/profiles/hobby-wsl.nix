@@ -3,6 +3,7 @@
   home.packages = [
     # hobby WSL machine-specific packages
     pkgs-unfree.claude-code
+    pkgs.devenv
   ];
 
   shell.hook.entries = [
